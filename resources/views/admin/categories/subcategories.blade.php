@@ -5,32 +5,34 @@
     <div class="sl-mainpanel">
       <div class="sl-pagebody">
         <div class="sl-page-title">
-          <h5>Categories Table</h5>
+          <h5>Subcategories Table</h5>
         </div><!-- sl-page-title -->
 
         <div class="card pd-20 pd-sm-40">
           <h6 class="card-body-title">
-            Categories List
-            <a href="" class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#modaldemo3">Add New Category</a>
+            Subcategories List
+            <a href="" class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#modaldemo3">Add New subcategory</a>
         </h6>
 
           <div class="table-wrapper">
             <table id="datatable1" class="table display responsive nowrap">
               <thead>
                 <tr>
-                  <th class="wd-15p">Category ID</th>
+                  <th class="wd-15p">Subcategory ID</th>
+                  <th class="wd-15p">Subcategory Name</th>
                   <th class="wd-15p">Category Name</th>
                   <th class="wd-20p">Action</th>
                 </tr>
               </thead>
               <tbody>
-                @foreach ($categories as $key => $category)
+                @foreach ($subcategories as $key => $subcategory)
                     <tr>
                         <td>{{ $key + 1 }}</td>
-                        <td>{{ $category->category_name }}</td>
+                        <td>{{ $subcategory->subcategory_name }}</td>
+                        <td>{{ $subcategory->category->category_name }}</td>
                         <td>
-                            <a href ='{{ route('admin.categories.edit', $category->id) }}' class="btn btn-sm btn-info">Edit</a>
-                            <a href ='{{ route('admin.categories.delete', $category->id) }}' class="btn btn-sm btn-danger" id="delete">Delete</a>
+                            <a href ='{{ route('admin.subcategories.edit', $subcategory->id) }}' class="btn btn-sm btn-info">Edit</a>
+                            <a href ='{{ route('admin.subcategories.delete', $subcategory->id) }}' class="btn btn-sm btn-danger" id="delete">Delete</a>
                         </td>
                     </tr>
                 @endforeach
@@ -47,7 +49,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content tx-size-sm">
                         <div class="modal-header pd-x-20">
-                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Add New Category</h6>
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Add New Subcategory</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -63,12 +65,21 @@
                             </div>
                         @endif
 
-                        <form action ='{{ route('admin.categories.store') }}' method="POST">
+                        <form action ='{{ route('admin.subcategories.store') }}' method="POST">
                             @csrf
                             <div class="modal-body pd-20">
                                 <div class="form-group">
-                                <label for="exampleInputEmail1">Category Name</label>
-                                <input type="text" class="form-control" name="category_name">
+                                    <label for="exampleInputEmail1">Subcategory Name</label>
+                                    <input type="text" class="form-control" name="subcategory_name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Category Name</label>
+                                    <select class="form-control" name="category_id">
+                                        <option value=""></option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div><!-- modal-body -->
                             <div class="modal-footer">

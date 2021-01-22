@@ -192,8 +192,8 @@
                             </ul>
                             
                             <div class="menu_contact">
-                                <div class="menu_contact_item"><div class="menu_contact_icon"><img src="{{ asset('public/frontend/images/phone_white.png')}}" alt=""></div>+38 068 005 3570</div>
-                                <div class="menu_contact_item"><div class="menu_contact_icon"><img src="{{ asset('public/frontend/images/mail_white.png')}}" alt=""></div><a href="mailto:fastsales@gmail.com">fastsales@gmail.com</a></div>
+                                <div class="menu_contact_item"><div class="menu_contact_icon"><img src="{{ asset('frontend/images/phone_white.png')}}" alt=""></div>+38 068 005 3570</div>
+                                <div class="menu_contact_item"><div class="menu_contact_icon"><img src="{{ asset('frontend/images/mail_white.png')}}" alt=""></div><a href="mailto:fastsales@gmail.com">fastsales@gmail.com</a></div>
                             </div>
                         </div>
                     </div>
@@ -206,10 +206,10 @@
     <!-- Banner -->
 
     <div class="banner">
-        <div class="banner_background" style="background-image:url({{ asset('public/frontend/images/banner_background.jpg')}})"></div>
+        <div class="banner_background" style="background-image:url({{ asset('frontend/images/banner_background.jpg')}})"></div>
         <div class="container fill_height">
             <div class="row fill_height">
-                <div class="banner_product_image"><img src="{{ asset('public/frontend/images/banner_product.png')}}" alt=""></div>
+                <div class="banner_product_image"><img src="{{ asset('frontend/images/banner_product.png')}}" alt=""></div>
                 <div class="col-lg-5 offset-lg-4 fill_height">
                     <div class="banner_content">
                         <h1 class="banner_text">new era of smartphones</h1>

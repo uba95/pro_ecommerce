@@ -25,6 +25,28 @@ Route::get('/admin/Change/Password','AdminController@ChangePassword')->name('adm
 Route::post('/admin/password/update','AdminController@Update_pass')->name('admin.password.update'); 
 Route::get('admin/logout', 'AdminController@logout')->name('admin.logout');
 
+Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function () {
 
-Route::get('admin/categories', 'Admin\Category\CategoryController@categories')->name('categories');
+        Route::resource('categories', 'Admin\Category\CategoryController', ['as' => 'admin'])->only('index', 'store', 'edit', 'update');
+        Route::get('admin/categories/{category}/delete', 'Admin\Category\CategoryController@destroy')->name('admin.categories.delete');
 
+        Route::resource('subcategories', 'Admin\Category\SubCategoryController', ['as' => 'admin'])->only('index', 'store', 'edit', 'update');
+        Route::get('admin/subcategories/{subcategory}/delete', 'Admin\Category\SubCategoryController@destroy')->name('admin.subcategories.delete');
+
+        Route::resource('brands', 'Admin\Category\BrandController', ['as' => 'admin'])->only('index', 'store', 'edit', 'update');
+        Route::get('admin/brands/{brand}/delete', 'Admin\Category\BrandController@destroy')->name('admin.brands.delete');
+});
+
+
+
+
+
+
+
+
+
+
+// Route::get('admin/categories', 'Admin\Category\CategoryController@index')->name('admin.categories.index');
+// Route::post('admin/categories', 'Admin\Category\CategoryController@store')->name('admin.categories.store');
+// Route::get('admin/categories/{category}/edit', 'Admin\Category\CategoryController@edit')->name('admin.categories.edit');
+// Route::patch('admin/categories/{category}', 'Admin\Category\CategoryController@update')->name('admin.categories.update');
