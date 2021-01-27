@@ -12,31 +12,48 @@ Route::get('/password-change', 'HomeController@changePassword')->name('password.
 Route::post('/password-update', 'HomeController@updatePassword')->name('password.update');
 Route::get('/user/logout', 'HomeController@Logout')->name('user.logout');
 
-//admin=======
-Route::get('admin/home', 'AdminController@index');
-Route::get('admin', 'Admin\LoginController@showLoginForm')->name('admin.login');
-Route::post('admin', 'Admin\LoginController@login');
+Route::group(['prefix' => 'admin', 'namespace' => 'Admin\\Auth'], function () {
+
+        //admin=======
+        Route::get('home', 'AdminController@index');
+        Route::get('/', 'LoginController@showLoginForm')->name('admin.login');
+        Route::post('/', 'LoginController@login');
+
         // Password Reset Routes...
-Route::get('admin/password/reset', 'Admin\ForgotPasswordController@showLinkRequestForm')->name('admin.password.request');
-Route::post('admin-password/email', 'Admin\ForgotPasswordController@sendResetLinkEmail')->name('admin.password.email');
-Route::get('admin/reset/password/{token}', 'Admin\ResetPasswordController@showResetForm')->name('admin.password.reset');
-Route::post('admin/update/reset', 'Admin\ResetPasswordController@reset')->name('admin.reset.update');
-Route::get('/admin/Change/Password','AdminController@ChangePassword')->name('admin.password.change');
-Route::post('/admin/password/update','AdminController@Update_pass')->name('admin.password.update'); 
-Route::get('admin/logout', 'AdminController@logout')->name('admin.logout');
-
-Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin'], function () {
-
-        Route::resource('categories', 'Admin\Category\CategoryController', ['as' => 'admin'])->only('index', 'store', 'edit', 'update');
-        Route::get('admin/categories/{category}/delete', 'Admin\Category\CategoryController@destroy')->name('admin.categories.delete');
-
-        Route::resource('subcategories', 'Admin\Category\SubCategoryController', ['as' => 'admin'])->only('index', 'store', 'edit', 'update');
-        Route::get('admin/subcategories/{subcategory}/delete', 'Admin\Category\SubCategoryController@destroy')->name('admin.subcategories.delete');
-
-        Route::resource('brands', 'Admin\Category\BrandController', ['as' => 'admin'])->only('index', 'store', 'edit', 'update');
-        Route::get('admin/brands/{brand}/delete', 'Admin\Category\BrandController@destroy')->name('admin.brands.delete');
+        Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('admin.password.request');
+        Route::post('admin-password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('admin.password.email');
+        Route::get('reset/password/{token}', 'ResetPasswordController@showResetForm')->name('admin.password.reset');
+        Route::post('update/reset', 'ResetPasswordController@reset')->name('admin.reset.update');
+        Route::get('Change/Password','AdminController@ChangePassword')->name('admin.password.change');
+        Route::post('password/update','AdminController@Update_pass')->name('admin.password.update'); 
+        Route::get('logout', 'AdminController@logout')->name('admin.logout');
 });
 
+
+Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin', 'namespace' => 'Admin', 'as' => 'admin.'], function () {
+
+        Route::resource('categories', 'Category\CategoryController')->except('destroy');
+        Route::get('categories/{category}/delete', 'Category\CategoryController@destroy')->name('categories.delete');
+
+        Route::resource('subcategories', 'Category\SubCategoryController')->only('index', 'store', 'edit', 'update');
+        Route::get('subcategories/{subcategory}/delete', 'Category\SubCategoryController@destroy')->name('subcategories.delete');
+
+        Route::resource('brands', 'Category\BrandController')->only('index', 'store', 'edit', 'update');
+        Route::get('brands/{brand}/delete', 'Category\BrandController@destroy')->name('brands.delete');
+        
+        Route::resource('coupons', 'CouponController')->only('index', 'store', 'edit', 'update');
+        Route::get('coupons/{coupon}/delete', 'CouponController@destroy')->name('coupons.delete');
+
+        Route::get('newslaters', 'NewslaterController@index')->name('newslaters.index');
+        Route::get('newslaters/{newslater}/delete', 'NewslaterController@destroy')->name('newslaters.delete');
+
+        Route::resource('products', 'ProductController')->except('destroy');
+        Route::get('products/{product}/delete', 'ProductController@destroy')->name('products.delete');
+        Route::get('products/{product}/status', 'ProductController@changeStatus')->name('products.status');
+
+});
+
+Route::post('newslaters', 'Admin\NewslaterController@store')->name('newslaters.store');
 
 
 

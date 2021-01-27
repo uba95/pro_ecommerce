@@ -73,10 +73,10 @@
                                     <input type="text" class="form-control" name="subcategory_name">
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1">Category Name</label>
-                                    <select class="form-control" name="category_id">
-                                        <option value=""></option>
-                                        @foreach ($categories as $category)
+                                    <label class="d-block" for="exampleInputEmail1">Category Name</label>
+                                    <select class="form-control select2" id="select2insidemodal" name="category_id" data-placeholder="Choose Category">
+                                      <option label="Category Category"></option>
+                                      @foreach ($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->category_name }}</option>
                                         @endforeach
                                     </select>
@@ -91,5 +91,8 @@
                     </div>
                 </div><!-- modal-dialog -->
             </div><!-- modal -->
-      
+
+            @push('styles')
+              <style>.select2-container {width: 100% !important}</style>
+            @endpush
 @endsection

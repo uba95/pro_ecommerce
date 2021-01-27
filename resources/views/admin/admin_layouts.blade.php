@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    @stack('styles')
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Twitter -->
     <meta name="twitter:site" content="@themepixels">
     <meta name="twitter:creator" content="@themepixels">
@@ -44,6 +44,10 @@
     <link href="{{asset('backend/lib/datatables/jquery.dataTables.css')}}" rel="stylesheet">
     <link href="{{asset('backend/lib/select2/css/select2.min.css')}}" rel="stylesheet">
 
+    <!-- Forms -->
+    <link href="{{asset('backend/lib/spectrum/spectrum.css')}}" rel="stylesheet">
+    <link href="{{asset('backend/lib/summernote/summernote-bs4.css')}}" rel="stylesheet">
+
     <!-- Starlight CSS -->
     <link rel="stylesheet" href="{{asset('backend/css/starlight.css')}}">
   </head>
@@ -55,7 +59,7 @@
 @else
 
     <!-- ########## START: LEFT PANEL ########## -->
-    <div class="sl-logo"><a href=""><i class="icon ion-android-star-outline"></i> Ecommmerce</a></div>
+    <div class="sl-logo"><a href='{{ url('admin/home') }}'><i class="icon ion-android-star-outline"></i> Ecommmerce</a></div>
     <div class="sl-sideleft">
       <div class="sl-sideleft-menu">
         <a href='{{ url('admin/home') }}' class="sl-menu-link active">
@@ -79,78 +83,33 @@
         <a href="#" class="sl-menu-link">
           <div class="sl-menu-item">
             <i class="menu-item-icon icon ion-ios-gear-outline tx-24"></i>
-            <span class="menu-item-label">Forms</span>
+            <span class="menu-item-label">Coupons</span>
             <i class="menu-item-arrow fa fa-angle-down"></i>
           </div><!-- menu-item -->
         </a><!-- sl-menu-link -->
         <ul class="sl-menu-sub nav flex-column">
-          <li class="nav-item"><a href="form-elements.html" class="nav-link">Form Elements</a></li>
-          <li class="nav-item"><a href="form-layouts.html" class="nav-link">Form Layouts</a></li>
-          <li class="nav-item"><a href="form-validation.html" class="nav-link">Form Validation</a></li>
-          <li class="nav-item"><a href="form-wizards.html" class="nav-link">Form Wizards</a></li>
-          <li class="nav-item"><a href="form-editor-text.html" class="nav-link">Text Editor</a></li>
+          <li class="nav-item"><a href ='{{ route('admin.coupons.index') }}' class="nav-link">Coupon</a></li>
         </ul>
         <a href="#" class="sl-menu-link">
           <div class="sl-menu-item">
             <i class="menu-item-icon icon ion-ios-filing-outline tx-24"></i>
-            <span class="menu-item-label">UI Elements</span>
+            <span class="menu-item-label">Products</span>
             <i class="menu-item-arrow fa fa-angle-down"></i>
           </div><!-- menu-item -->
         </a><!-- sl-menu-link -->
         <ul class="sl-menu-sub nav flex-column">
-          <li class="nav-item"><a href="accordion.html" class="nav-link">Accordion</a></li>
-          <li class="nav-item"><a href="alerts.html" class="nav-link">Alerts</a></li>
-          <li class="nav-item"><a href="buttons.html" class="nav-link">Buttons</a></li>
-          <li class="nav-item"><a href="cards.html" class="nav-link">Cards</a></li>
-          <li class="nav-item"><a href="icons.html" class="nav-link">Icons</a></li>
-          <li class="nav-item"><a href="modal.html" class="nav-link">Modal</a></li>
-          <li class="nav-item"><a href="navigation.html" class="nav-link">Navigation</a></li>
-          <li class="nav-item"><a href="pagination.html" class="nav-link">Pagination</a></li>
-          <li class="nav-item"><a href="popups.html" class="nav-link">Tooltip &amp; Popover</a></li>
-          <li class="nav-item"><a href="progress.html" class="nav-link">Progress</a></li>
-          <li class="nav-item"><a href="spinners.html" class="nav-link">Spinners</a></li>
-          <li class="nav-item"><a href="typography.html" class="nav-link">Typography</a></li>
+          <li class="nav-item"><a href ='{{ route('admin.products.index') }}' class="nav-link">Products</a></li>
+          <li class="nav-item"><a href ='{{ route('admin.products.create') }}' class="nav-link">Add New Product</a></li>
         </ul>
         <a href="#" class="sl-menu-link">
           <div class="sl-menu-item">
-            <i class="menu-item-icon icon ion-ios-bookmarks-outline tx-20"></i>
-            <span class="menu-item-label">Tables</span>
+            <i class="menu-item-icon icon ion-ios-filing-outline tx-24"></i>
+            <span class="menu-item-label">Others</span>
             <i class="menu-item-arrow fa fa-angle-down"></i>
           </div><!-- menu-item -->
         </a><!-- sl-menu-link -->
         <ul class="sl-menu-sub nav flex-column">
-          <li class="nav-item"><a href="table-basic.html" class="nav-link">Basic Table</a></li>
-          <li class="nav-item"><a href="table-datatable.html" class="nav-link">Data Table</a></li>
-        </ul>
-        <a href="#" class="sl-menu-link">
-          <div class="sl-menu-item">
-            <i class="menu-item-icon icon ion-ios-navigate-outline tx-24"></i>
-            <span class="menu-item-label">Maps</span>
-            <i class="menu-item-arrow fa fa-angle-down"></i>
-          </div><!-- menu-item -->
-        </a><!-- sl-menu-link -->
-        <ul class="sl-menu-sub nav flex-column">
-          <li class="nav-item"><a href="map-google.html" class="nav-link">Google Maps</a></li>
-          <li class="nav-item"><a href="map-vector.html" class="nav-link">Vector Maps</a></li>
-        </ul>
-        <a href="mailbox.html" class="sl-menu-link">
-          <div class="sl-menu-item">
-            <i class="menu-item-icon icon ion-ios-email-outline tx-24"></i>
-            <span class="menu-item-label">Mailbox</span>
-          </div><!-- menu-item -->
-        </a><!-- sl-menu-link -->
-        <a href="#" class="sl-menu-link">
-          <div class="sl-menu-item">
-            <i class="menu-item-icon icon ion-ios-paper-outline tx-22"></i>
-            <span class="menu-item-label">Pages</span>
-            <i class="menu-item-arrow fa fa-angle-down"></i>
-          </div><!-- menu-item -->
-        </a><!-- sl-menu-link -->
-        <ul class="sl-menu-sub nav flex-column">
-          <li class="nav-item"><a href="blank.html" class="nav-link">Blank Page</a></li>
-          <li class="nav-item"><a href="page-signin.html" class="nav-link">Signin Page</a></li>
-          <li class="nav-item"><a href="page-signup.html" class="nav-link">Signup Page</a></li>
-          <li class="nav-item"><a href="page-notfound.html" class="nav-link">404 Page Not Found</a></li>
+          <li class="nav-item"><a href ='{{ route('admin.newslaters.index') }}' class="nav-link">Newslaters</a></li>
         </ul>
       </div><!-- sl-sideleft-menu -->
 
@@ -360,11 +319,12 @@
     <script src="{{asset('backend/lib/bootstrap/bootstrap.js')}}"></script>
     <script src="{{asset('backend/lib/jquery-ui/jquery-ui.js')}}"></script>
     <script src="{{asset('backend/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js')}}"></script>
-
+    @stack('scripts')
     <script src="{{asset('backend/lib/highlightjs/highlight.pack.js')}}"></script>
     <script src="{{asset('backend/lib/datatables/jquery.dataTables.js')}}"></script>
     <script src="{{asset('backend/lib/datatables-responsive/dataTables.responsive.js')}}"></script>
     <script src="{{asset('backend/lib/select2/js/select2.min.js')}}"></script>
+    <script src="{{asset('backend/lib/spectrum/spectrum.js')}}"></script>
     <script>
       $(function(){
         'use strict';
@@ -389,6 +349,93 @@
 
       });
     </script>
+
+
+<script>
+  $(function(){
+
+    'use strict';
+
+    $('.select2').select2({
+      minimumResultsForSearch: Infinity
+    });
+
+    // Select2 by showing the search
+    $('.select2-show-search').select2({
+      minimumResultsForSearch: ''
+    });
+
+    // Select2 with tagging support
+    $('.select2-tag').select2({
+      tags: true,
+      tokenSeparators: [',', ' '],
+    });
+
+    $('.select2-tag').on('select2:open select2:opening', function( event ) {
+      $('.select2-results').css('display', 'none');
+    });
+
+    $("#select2insidemodal").select2({
+    dropdownParent: $("#modaldemo3")
+    });
+
+    $(".select2_empty").select2({
+      allowClear: true,
+    });
+
+    // Datepicker
+    $('.fc-datepicker').datepicker({
+      showOtherMonths: true,
+      selectOtherMonths: true
+    });
+
+    $('#datepickerNoOfMonths').datepicker({
+      showOtherMonths: true,
+      selectOtherMonths: true,
+      numberOfMonths: 2
+    });
+
+    // Color picker
+    $('#colorpicker').spectrum({
+      color: '#17A2B8'
+    });
+
+    $('#showAlpha').spectrum({
+      color: 'rgba(23,162,184,0.5)',
+      showAlpha: true
+    });
+
+    $('#showPaletteOnly').spectrum({
+        showPaletteOnly: true,
+        showPalette:true,
+        color: '#DC3545',
+        palette: [
+            ['#1D2939', '#fff', '#0866C6','#23BF08', '#F49917'],
+            ['#DC3545', '#17A2B8', '#6610F2', '#fa1e81', '#72e7a6']
+        ]
+    });
+
+  });
+</script>
+
+
+<script src="{{asset('backend/lib/medium-editor/medium-editor.js')}}"></script>
+<script src="{{asset('backend/lib/summernote/summernote-bs4.min.js')}}"></script>
+
+<script>
+  $(function(){
+    'use strict';
+
+    // Inline editor
+    var editor = new MediumEditor('.editable');
+
+    // Summernote editor
+    $('#summernote').summernote({
+      height: 150,
+      tooltip: false
+    })
+  });
+</script>
 
     <script src="{{asset('backend/lib/jquery.sparkline.bower/jquery.sparkline.min.js')}}"></script>
     <script src="{{asset('backend/lib/d3/d3.js')}}"></script>
@@ -448,5 +495,6 @@
             });
     </script>
 
+    
   </body>
 </html>

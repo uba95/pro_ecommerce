@@ -6,11 +6,11 @@
     <div class="sl-mainpanel">
       <div class="sl-pagebody">
         <div class="sl-page-title">
-          <h5>Edit Subcategory</h5>
+          <h5>Edit Coupon</h5>
         </div><!-- sl-page-title -->
 
         <div class="card pd-20 pd-sm-40">
-          <h6 class="card-body-title">Edit Subcategory</h6>
+          <h6 class="card-body-title">Edit Coupon</h6>
           <div class="table-wrapper">
             @if ($errors->any())
             <div class="alert alert-danger">
@@ -22,25 +22,17 @@
             </div>
         @endif
 
-        <form action ='{{ route('admin.subcategories.update', $subcategory->id) }}' method="POST">
+        <form action ='{{ route('admin.coupons.update', $coupon->id) }}' method="POST">
             @csrf
             @method('PUT')
             <div class="modal-body pd-20">
               <div class="form-group">
-                <label for="exampleInputEmail1">Subcategory Name</label>
-                <input type="text" class="form-control" name="subcategory_name" value="{{ $subcategory->subcategory_name }}">
+                <label for="exampleInputEmail1">Coupon Code</label>
+                <input type="text" class="form-control" name="coupon_name" value="{{ $coupon->coupon_name }}">
               </div>
               <div class="form-group">
-
-                <label for="exampleInputEmail1">Category Name</label>
-                <select class="form-control select2" name="category_id" data-placeholder="Choose Category">
-                  <option label="Category Category"></option>
-                  @foreach ($categories as $category)
-                    <option value="{{ $category->id }}" {{ $subcategory->category->id === $category->id ? 'selected' : '' }}>
-                      {{ $category->category_name }}
-                    </option>
-                  @endforeach
-                </select>
+                <label for="exampleInputEmail1">Discount Percentage %</label>
+                <input type="number" class="form-control" name="discount" value="{{ $coupon->discount }}">
               </div>
             </div><!-- modal-body -->
             <div class="modal-footer">

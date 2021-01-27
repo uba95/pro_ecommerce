@@ -29,12 +29,7 @@ class SubCategoryController extends Controller
     
         Subcategory::create($validatedData);
 
-        $notification=array(
-            'messege'=>'New Subcategory Added Successfully',
-            'alert-type'=>'success'
-        );
-
-        return redirect()->back()->with($notification);
+        return redirect()->back()->with(toastNotification('Subcategory', 'added'));
 
     }
 
@@ -44,12 +39,7 @@ class SubCategoryController extends Controller
         $subcategory = Subcategory::with('category')->find($id);
 
         if (!$subcategory) {
-            $notification=array(
-                'messege'=>'Subcategory Not Found',
-                'alert-type'=>'error'
-            );
-            
-            return redirect()->back()->with($notification);
+            return redirect()->back()->with(toastNotification('Subcategory', 'not_found'));
         }
 
         return view('admin.categories.subcategories_edit', compact('categories', 'subcategory'));
@@ -60,12 +50,7 @@ class SubCategoryController extends Controller
         $subcategory = Subcategory::find($id);
 
         if (!$subcategory) {
-            $notification=array(
-                'messege'=>'Subcategory Not Found',
-                'alert-type'=>'error'
-            );
-
-            return redirect()->route('admin.subcategories.index')->with($notification);
+            return redirect()->route('admin.subcategories.index')->with(toastNotification('Subcategory', 'not_found'));
         }
 
         $validatedData = $request->validate([
@@ -78,12 +63,8 @@ class SubCategoryController extends Controller
 
         $subcategory->update($validatedData);
 
-        $notification=array(
-            'messege'=>'Subcategory Updated Successfully',
-            'alert-type'=>'success'
-        );
+        return redirect()->route('admin.subcategories.index')->with(toastNotification('Category', 'updated'));
 
-        return redirect()->route('admin.subcategories.index')->with($notification);
 
     }
 
@@ -92,12 +73,7 @@ class SubCategoryController extends Controller
         $subcategory = Subcategory::find($id);
 
         if (!$subcategory) {
-            $notification=array(
-                'messege'=>'Subcategory Not Found',
-                'alert-type'=>'error'
-            );
-
-            return redirect()->back()->with($notification);
+            return redirect()->back()->with(toastNotification('Subcategory', 'not_found'));
         }
 
         $subcategory->delete();
@@ -107,7 +83,7 @@ class SubCategoryController extends Controller
             'alert-type'=>'success'
         );
 
-        return redirect()->back()->with($notification);
+        return redirect()->back()->with(toastNotification('Subcategory', 'deleted'));
 
     }
 

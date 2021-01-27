@@ -1,5 +1,6 @@
 @extends('admin.admin_layouts')
 
+
 @section('admin_content')
     <!-- ########## START: MAIN PANEL ########## -->
     <div class="sl-mainpanel">

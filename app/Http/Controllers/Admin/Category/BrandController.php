@@ -32,12 +32,8 @@ class BrandController extends Controller
 
         Brand::create($validatedData);
 
-        $notification=array(
-            'messege'=>'New Brand Added Successfully',
-            'alert-type'=>'success'
-        );
+        return redirect()->back()->with(toastNotification('Brand', 'added'));
 
-        return redirect()->back()->with($notification);
 
     }
 
@@ -46,12 +42,7 @@ class BrandController extends Controller
         $brand = Brand::find($id);
 
         if (!$brand) {
-            $notification=array(
-                'messege'=>'Brand Not Found',
-                'alert-type'=>'error'
-            );
-            
-            return redirect()->back()->with($notification);
+            return redirect()->back()->with(toastNotification('Brand', 'not_found'));
         }
 
         return view('admin.categories.brands_edit', compact('brand'));
@@ -62,12 +53,7 @@ class BrandController extends Controller
         $brand = Brand::find($id);
 
         if (!$brand) {
-            $notification=array(
-                'messege'=>'Brand Not Found',
-                'alert-type'=>'error'
-            );
-
-            return redirect()->route('admin.brands.index')->with($notification);
+            return redirect()->route('admin.brands.index')->with(toastNotification('Brand', 'not_found'));
         }
 
         $validatedData = $request->validate([
@@ -89,12 +75,7 @@ class BrandController extends Controller
 
         $brand->update($validatedData);
 
-        $notification=array(
-            'messege'=>'Brand Updated Successfully',
-            'alert-type'=>'success'
-        );
-
-        return redirect()->route('admin.brands.index')->with($notification);
+        return redirect()->route('admin.brands.index')->with(toastNotification('Brand', 'updated'));
 
     }
 
@@ -108,18 +89,13 @@ class BrandController extends Controller
                 'alert-type'=>'error'
             );
 
-            return redirect()->back()->with($notification);
+            return redirect()->back()->with(toastNotification('Brand', 'not_found'));
         }
         // Storage::disk('public')->delete($brand->getOriginal('brand_logo'));
         Storage::disk('public')->delete($brand->getAttributes()['brand_logo']);
         $brand->delete();
-
-        $notification=array(
-            'messege'=>'Brand Deleted Successfully',
-            'alert-type'=>'success'
-        );
-
-        return redirect()->back()->with($notification);
+        
+        return redirect()->back()->with(toastNotification('Brand', 'deleted'));
 
     }
 

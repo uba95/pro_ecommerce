@@ -16,6 +16,11 @@ class CategoryController extends Controller
         return view('admin.categories.index', compact('categories'));
     }
 
+    public function show(Request $request, Category $category) {
+     
+        return $request->expectsJson() ? response()->json($category->subcategories) : redirect()->route('admin.categories.index');
+    }
+
     public function store(Request $request) {
      
         $validatedData = $request->validate([
@@ -24,12 +29,7 @@ class CategoryController extends Controller
     
         Category::create($validatedData);
 
-        $notification=array(
-            'messege'=>'New Category Added Successfully',
-            'alert-type'=>'success'
-        );
-
-        return redirect()->back()->with($notification);
+        return redirect()->back()->with(toastNotification('Category', 'added'));
 
     }
 
@@ -38,12 +38,8 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (!$category) {
-            $notification=array(
-                'messege'=>'Category Not Found',
-                'alert-type'=>'error'
-            );
-            
-            return redirect()->back()->with($notification);
+
+            return redirect()->back()->with(toastNotification('Category', 'not_found'));
         }
 
         return view('admin.categories.edit', compact('category'));
@@ -54,12 +50,8 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (!$category) {
-            $notification=array(
-                'messege'=>'Category Not Found',
-                'alert-type'=>'error'
-            );
 
-            return redirect()->route('admin.categories.index')->with($notification);
+            return redirect()->route('admin.categories.index')->with(toastNotification('Category', 'not_found'));
         }
 
         $validatedData = $request->validate([
@@ -68,12 +60,7 @@ class CategoryController extends Controller
 
         $category->update($validatedData);
 
-        $notification=array(
-            'messege'=>'Category Updated Successfully',
-            'alert-type'=>'success'
-        );
-
-        return redirect()->route('admin.categories.index')->with($notification);
+        return redirect()->route('admin.categories.index')->with(toastNotification('Category', 'updated'));
 
     }
     
@@ -82,22 +69,12 @@ class CategoryController extends Controller
         $category = Category::find($id);
 
         if (!$category) {
-            $notification=array(
-                'messege'=>'Category Not Found',
-                'alert-type'=>'error'
-            );
-
-            return redirect()->back()->with($notification);
+            return redirect()->back()->with(toastNotification('Category', 'not_found'));
         }
 
         $category->delete();
 
-        $notification=array(
-            'messege'=>'Category Deleted Successfully',
-            'alert-type'=>'success'
-        );
-
-        return redirect()->back()->with($notification);
+        return redirect()->back()->with(toastNotification('Category', 'deleted'));
 
     }
 }

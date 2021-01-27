@@ -1,5 +1,6 @@
 @extends('admin.admin_layouts')
 
+
 @section('admin_content')
     <div class="d-flex align-items-center justify-content-center bg-sl-primary ht-100v">
 

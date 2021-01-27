@@ -6,32 +6,36 @@
     <div class="sl-mainpanel">
       <div class="sl-pagebody">
         <div class="sl-page-title">
-          <h5>Categories Table</h5>
+          <h5>Newslaters Table</h5>
         </div><!-- sl-page-title -->
 
         <div class="card pd-20 pd-sm-40">
           <h6 class="card-body-title">
-            Categories List
-            <a href="" class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#modaldemo3">Add New Category</a>
+            Newslaters List
+            <a href="" class="btn btn-sm btn-danger float-right" data-toggle="modal" data-target="#modaldemo3">Delete All</a>
         </h6>
 
           <div class="table-wrapper">
             <table id="datatable1" class="table display responsive nowrap">
               <thead>
                 <tr>
-                  <th class="wd-15p">Category ID</th>
-                  <th class="wd-15p">Category Name</th>
+                  <th class="wd-15p">ID</th>
+                  <th class="wd-15p">Email</th>
+                  <th class="wd-15p">Subscription Date</th>
                   <th class="wd-20p">Action</th>
                 </tr>
               </thead>
               <tbody>
-                @foreach ($categories as $key => $category)
+                @foreach ($newslaters as $key => $newslater)
                     <tr>
-                        <td>{{ $key + 1 }}</td>
-                        <td>{{ $category->category_name }}</td>
                         <td>
-                            <a href ='{{ route('admin.categories.edit', $category->id) }}' class="btn btn-sm btn-info">Edit</a>
-                            <a href ='{{ route('admin.categories.delete', $category->id) }}' class="btn btn-sm btn-danger" id="delete">Delete</a>
+                            <input type="checkbox" name="delete[]" value="{{ $newslater->id }}">
+                            {{ $key + 1 }}
+                        </td>
+                        <td>{{ $newslater->email }}</td>
+                        <td>{{ $newslater->created_at->diffForHumans() }}</td>
+                        <td>
+                            <a href ='{{ route('admin.newslaters.delete', $newslater->id) }}' class="btn btn-sm btn-danger" id="delete">Delete</a>
                         </td>
                     </tr>
                 @endforeach
@@ -48,7 +52,7 @@
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content tx-size-sm">
                         <div class="modal-header pd-x-20">
-                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Add New Category</h6>
+                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Add New Newslater</h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -63,21 +67,6 @@
                                 </ul>
                             </div>
                         @endif
-
-                        <form action ='{{ route('admin.categories.store') }}' method="POST">
-                            @csrf
-                            <div class="modal-body pd-20">
-                                <div class="form-group">
-                                  <label for="exampleInputEmail1">Category Name</label>
-                                  <input type="text" class="form-control" name="category_name">
-                                </div>
-                            </div><!-- modal-body -->
-                            <div class="modal-footer">
-                                    <button type="submit" class="btn btn-info pd-x-20">Add</button>
-                                    <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
-                            </div>
-                            
-                        </form>
                     </div>
                 </div><!-- modal-dialog -->
             </div><!-- modal -->

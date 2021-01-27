@@ -1,5 +1,6 @@
 @extends('admin.admin_layouts')
 
+
 @section('admin_content')
     <!-- ########## START: MAIN PANEL ########## -->
     <div class="sl-mainpanel">
@@ -30,12 +31,15 @@
                 <input type="text" class="form-control" name="brand_name" value="{{ $brand->brand_name }}">
               </div>
               <div class="form-group">
-                <label for="exampleInputEmail1">Brand Logo</label>
-                <input type="file" class="form-control" name="brand_logo" onchange="preview_image(event)">
+                <label class="d-block" for="exampleInputEmail1">Brand Logo</label>
+                <label class="custom-file">
+                  <input type="file" id="file" class="custom-file-input" name="brand_logo" onchange="preview_image(event)">
+                  <span class="custom-file-control"></span>
+                </label>
               </div>
               <div class="form-group">
                 <label for="exampleInputEmail1">Brand Logo</label>
-                <img id="output_image" src="{{ $brand->brand_logo }}" alt="">
+                <img id="output_image" src="{{ $brand->brand_logo }}" alt="" height="40" width="100">
               </div>
             </div><!-- modal-body -->
             <div class="modal-footer">
