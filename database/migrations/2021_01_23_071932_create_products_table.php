@@ -22,24 +22,24 @@ class CreateProductsTable extends Migration
 
             $table->string('product_name');
             $table->string('product_code');
-            $table->string('product_quantity');
+            $table->unsignedInteger('product_quantity');
             $table->text('product_details');
             $table->string('product_color');
             $table->string('product_size');
-            $table->string('selling_price');
+            $table->unsignedInteger('selling_price');
             
-            $table->string('discount_price')->nullable();
+            $table->unsignedInteger('discount_price')->nullable();
             $table->string('video_link')->nullable();
-            $table->integer('main_slider')->nullable();
-            $table->integer('hot_deal')->nullable();
-            $table->integer('best_rated')->nullable();
-            $table->integer('mid_slider')->nullable();
-            $table->integer('hot_new')->nullable();
-            $table->integer('trend')->nullable();
+            $table->boolean('main_slider')->nullable();
+            $table->boolean('hot_deal')->nullable();
+            $table->boolean('best_rated')->nullable();
+            $table->boolean('mid_slider')->nullable();
+            $table->boolean('hot_new')->nullable();
+            $table->boolean('trend')->nullable();
             $table->string('image_one')->nullable();
             $table->string('image_two')->nullable();
             $table->string('image_three')->nullable();
-            $table->integer('status')->nullable();
+            $table->boolean('status')->nullable();
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');

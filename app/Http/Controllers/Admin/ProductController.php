@@ -93,6 +93,12 @@ class ProductController extends Controller
         $attributes = $request->validated();
         $attributes['product_size'] = json_encode($request->product_size);
         $attributes['product_color'] = json_encode($request->product_color);
+        $attributes['main_slider'] = $request->main_slider;
+        $attributes['hot_deal'] = $request->hot_deal;
+        $attributes['best_rated'] = $request->best_rated;
+        $attributes['trend'] = $request->trend;
+        $attributes['mid_slider'] = $request->mid_slider;
+        $attributes['hot_new'] = $request->hot_new;
     
         $image_one = $request->image_one;
         $image_two = $request->image_two;

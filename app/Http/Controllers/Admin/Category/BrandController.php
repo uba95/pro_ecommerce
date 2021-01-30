@@ -84,11 +84,6 @@ class BrandController extends Controller
         $brand = Brand::find($id);
 
         if (!$brand) {
-            $notification=array(
-                'messege'=>'Brand Not Found',
-                'alert-type'=>'error'
-            );
-
             return redirect()->back()->with(toastNotification('Brand', 'not_found'));
         }
         // Storage::disk('public')->delete($brand->getOriginal('brand_logo'));

@@ -36,7 +36,7 @@ class ProductRequest extends FormRequest
             'product_size' => 'required',
             'product_color' => 'required',
             'selling_price' => 'required|numeric',
-            'product_details' => 'required',
+            'product_details' => 'required|min:30',
             'video_link' => 'max:60',
             'main_slider' => 'boolean',
             'hot_deal' => 'boolean',

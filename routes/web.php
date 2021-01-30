@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', 'Frontend\LandingPageController')->name('pages.index');
 
-Route::get('/', function () {return view('pages.index');});
+// Route::get('/', function () {return view('pages.index');});
 //auth & user
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
@@ -51,9 +52,16 @@ Route::group(['middleware' => 'auth:admin', 'prefix' => 'admin', 'namespace' => 
         Route::get('products/{product}/delete', 'ProductController@destroy')->name('products.delete');
         Route::get('products/{product}/status', 'ProductController@changeStatus')->name('products.status');
 
+        Route::resource('blog_categories', 'Blog\BlogCategoryController')->only('index', 'store', 'edit', 'update');
+        Route::get('blog_categories/{blog_category}/delete', 'Blog\BlogCategoryController@destroy')->name('blog_categories.delete');
+
+        Route::resource('blog_posts', 'Blog\BlogPostController')->except('show', 'destroy');
+        Route::get('blog_posts/{blog_post}/delete', 'Blog\BlogPostController@destroy')->name('blog_posts.delete');
+
 });
 
 Route::post('newslaters', 'Admin\NewslaterController@store')->name('newslaters.store');
+// Route::get('categories', 'Admin\NewslaterController@store')->name('newslaters.store');
 
 
 

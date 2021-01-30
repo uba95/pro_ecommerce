@@ -10,15 +10,19 @@ use App\Http\Controllers\Controller;
 class CategoryController extends Controller
 {
     
-    public function index() {
+    public function index(Request $request) {
      
         $categories = Category::all();
-        return view('admin.categories.index', compact('categories'));
+        $categoriesWithSubcategories = Category::with('subcategories:category_id,subcategory_name')->get();
+
+        return $request->expectsJson() ? response()->json($categoriesWithSubcategories) 
+        : view('admin.categories.index', compact('categories'));
     }
 
     public function show(Request $request, Category $category) {
      
-        return $request->expectsJson() ? response()->json($category->subcategories) : redirect()->route('admin.categories.index');
+        return $request->expectsJson() ? response()->json($category->subcategories) 
+        : redirect()->route('admin.categories.index');
     }
 
     public function store(Request $request) {

@@ -46,5 +46,10 @@ class Product extends Model
         return json_decode($value);
     }
 
+    public function  scopeSelection($q){
+
+        return $q -> select('id','brand_id', 'product_name', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'image_one', 'status');
+
+    }
 
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCouponsTable extends Migration
+class CreateBlogPostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,16 @@ class CreateCouponsTable extends Migration
      */
     public function up()
     {
-        Schema::create('coupons', function (Blueprint $table) {
+        Schema::create('blog_posts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('coupon_name')->unique();
-            $table->unsignedTinyInteger('discount');
+            $table->unsignedBigInteger('category_id');
+            $table->string('post_title');
+            $table->string('post_image');
+            $table->text('details');
             $table->timestamps();
+
+            $table->foreign('category_id')->references('id')->on('blog_categories')->onDelete('cascade');
+
         });
     }
 
@@ -28,6 +33,6 @@ class CreateCouponsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('coupons');
+        Schema::dropIfExists('blog_posts');
     }
 }
