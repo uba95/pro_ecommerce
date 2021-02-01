@@ -17,6 +17,7 @@
 
     <!-- toastr -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
+    @stack('styles')
 
 </head>
 
@@ -59,9 +60,29 @@
                                 </ul>
                             </div>
                             <div class="top_bar_user">
-                                <div class="user_icon"><img src="{{ asset('frontend/images/user.svg')}}" alt=""></div>
-                                <div><a href ='{{ route('register') }}'>Register</a></div>
-                                <div><a href ='{{ route('login') }}'>Sign in</a></div>
+
+                                @guest
+                                <div>
+                                    <a href="{{ route('login') }}">
+                                        <div class="user_icon">
+                                            <img src="{{ asset('frontend/images/user.svg')}}" alt="">
+                                        </div> 
+                                        Register/Login
+                                    </a>
+                                </div>
+                                @else
+                                <ul class="standard_dropdown top_bar_dropdown">
+                                    <li>
+                                        <a href="{{ route('home') }}">
+                                            <div class="user_icon">
+                                                <img src="{{ asset('frontend/images/user.svg')}}" alt="">
+                                            </div> 
+                                            Profile<i class="fas fa-chevron-down"></i>
+                                        </a>
+                                    </li>
+                                </ul> 
+                                @endguest
+                                
                             </div>
                         </div>
                     </div>
@@ -95,11 +116,11 @@
                                                 <i class="fas fa-chevron-down"></i>
                                                 <ul class="custom_list clc">
                                                     <li><a class="clc" href="#">All Categories</a></li>
-                                                    @foreach ($categories as $category)
+                                                    {{-- @foreach ($categories as $category)
                                                         <li class="hassubs">
                                                             <a href="#">{{ $category->category_name }}</i></a>
                                                         </li>  
-                                                    @endforeach            
+                                                    @endforeach             --}}
                                                 </ul>
                                             </div>
                                         </div>
@@ -125,7 +146,7 @@
                             <div class="cart">
                                 <div class="cart_container d-flex flex-row align-items-center justify-content-end">
                                     <div class="cart_icon">
-                                        <img src="images/cart.png" alt="">
+                                        <img src="{{ asset('frontend/images/cart.png')}}" alt="">
                                         <div class="cart_count"><span>10</span></div>
                                     </div>
                                     <div class="cart_content">
@@ -282,7 +303,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     @endif
  </script>  
 
-@stack('name')
+@stack('scripts')
 </body>
 
 </html>

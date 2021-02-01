@@ -7,68 +7,41 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 
-class CouponController extends Controller
+class CouponController extends ParentController
 {
     
     public function index() {
      
-        $coupons = Coupon::all();
-        return view('admin.coupons.index', compact('coupons'));
+        return (new ParentController([Coupon::all()], ["coupons"], 'admin.coupons.index'))->index();
     }
 
     public function store(Request $request) {
      
-        $validatedData = $request->validate([
+        $data = [[
             'coupon_name' => 'required|unique:coupons|max:255',
             'discount' => 'required|numeric|between:0,100',
-        ]);
-    
-        Coupon::create($validatedData);
+        ]];
 
-        return redirect()->back()->with(toastNotification('Coupon', 'added'));
-
+        return (new ParentController([Coupon::class], "Coupon", '', $data))->store($request);
     }
 
     public function edit($id) {
 
-        $coupon = Coupon::find($id);
-
-        if (!$coupon) {
-            return redirect()->back()->with(toastNotification('Coupon', 'not_found'));
-        }
-
-        return view('admin.coupons.edit', compact('coupon'));
+        return (new ParentController([Coupon::find($id)], ["coupon"], 'admin.coupons.edit'))->edit($id);
     }
 
-    public function update($id, Request $request) {
+    public function update(Request $request, $id) {
 
-        $coupon = Coupon::find($id);
-
-        if (!$coupon) {
-            return redirect()->route('admin.coupons.index')->with(toastNotification('Coupon', 'not_found'));
-        }
-
-        $validatedData = $request->validate([
-            'coupon_name' => ['required', 'max:255', Rule::unique('coupons')->ignore($coupon->id)],
+        $data = [[
+            'coupon_name' => ['required', 'max:255', Rule::unique('coupons')->ignore($id)],
             'discount' => 'required|numeric|between:0,100',
-        ]);
+        ]];
 
-        $coupon->update($validatedData);
-
-        return redirect()->route('admin.coupons.index')->with(toastNotification('Coupon', 'updated'));
-
+        return (new ParentController([Coupon::class], "Coupon", 'admin.coupons.index', $data))->update($request, $id);
     }
     
     public function destroy($id) {
 
-        $coupon = Coupon::find($id);
-
-        if (!$coupon) {
-            return redirect()->back()->with(toastNotification('Coupon', 'not_found'));
-        }
-
-        $coupon->delete();
-
-        return redirect()->back()->with(toastNotification('Coupon', 'deleted'));
+        return (new ParentController([Coupon::class], "Coupon"))->destroy($id);
     }
 }

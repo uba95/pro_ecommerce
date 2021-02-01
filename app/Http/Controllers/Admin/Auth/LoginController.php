@@ -40,7 +40,7 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-         if (Auth::id()) {
+         if ($this->guard()->check()) {
              return redirect()->back();
          }else{
             return view('admin.auth.login');

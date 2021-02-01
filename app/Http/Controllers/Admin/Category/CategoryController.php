@@ -2,21 +2,18 @@
 
 namespace App\Http\Controllers\Admin\Category;
 
+use App\Http\Controllers\Admin\ParentController;
 use Illuminate\Http\Request;
 use App\Model\Admin\Category;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 
-class CategoryController extends Controller
+class CategoryController extends ParentController
 {
     
-    public function index(Request $request) {
+    public function index() {
      
-        $categories = Category::all();
-        $categoriesWithSubcategories = Category::with('subcategories:category_id,subcategory_name')->get();
-
-        return $request->expectsJson() ? response()->json($categoriesWithSubcategories) 
-        : view('admin.categories.index', compact('categories'));
+        return (new ParentController([Category::all()], ["categories"], 'admin.categories.index'))->index();
     }
 
     public function show(Request $request, Category $category) {
@@ -27,58 +24,29 @@ class CategoryController extends Controller
 
     public function store(Request $request) {
      
-        $validatedData = $request->validate([
+        $data = [[
             'category_name' => 'required|unique:categories|max:255',
-        ]);
-    
-        Category::create($validatedData);
+        ]];
 
-        return redirect()->back()->with(toastNotification('Category', 'added'));
-
+        return (new ParentController([Category::class], "Category", '', $data))->store($request);
     }
 
     public function edit($id) {
 
-        $category = Category::find($id);
-
-        if (!$category) {
-
-            return redirect()->back()->with(toastNotification('Category', 'not_found'));
-        }
-
-        return view('admin.categories.edit', compact('category'));
+        return (new ParentController([Category::find($id)], ["category"], 'admin.categories.edit'))->edit($id);
     }
 
-    public function update($id, Request $request) {
+    public function update(Request $request, $id) {
 
-        $category = Category::find($id);
+        $data = [[
+            'category_name' => ['required', 'max:255', Rule::unique('categories')->ignore($id)]
+        ]];
 
-        if (!$category) {
-
-            return redirect()->route('admin.categories.index')->with(toastNotification('Category', 'not_found'));
-        }
-
-        $validatedData = $request->validate([
-            'category_name' => ['required', 'max:255', Rule::unique('categories')->ignore($category->id)],
-        ]);
-
-        $category->update($validatedData);
-
-        return redirect()->route('admin.categories.index')->with(toastNotification('Category', 'updated'));
-
+        return (new ParentController([Category::class], "Category", 'admin.categories.index', $data))->update($request, $id);
     }
     
     public function destroy($id) {
 
-        $category = Category::find($id);
-
-        if (!$category) {
-            return redirect()->back()->with(toastNotification('Category', 'not_found'));
-        }
-
-        $category->delete();
-
-        return redirect()->back()->with(toastNotification('Category', 'deleted'));
-
+        return (new ParentController([Category::class], "Category"))->destroy($id);
     }
 }

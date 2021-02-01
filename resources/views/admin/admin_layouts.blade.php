@@ -54,9 +54,7 @@
 
   <body>
 
-@guest
-
-@else
+@if(Auth::guard('admin')->check())
 
     <!-- ########## START: LEFT PANEL ########## -->
     <div class="sl-logo"><a href='{{ url('admin/home') }}'><i class="icon ion-android-star-outline"></i> Ecommmerce</a></div>
@@ -313,7 +311,7 @@
     <!-- ########## END: RIGHT PANEL ########## --->
 
 
-@endguest
+@endif
 
 @yield('admin_content')
 

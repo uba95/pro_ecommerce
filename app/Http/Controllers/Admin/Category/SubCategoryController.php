@@ -2,89 +2,54 @@
 
 namespace App\Http\Controllers\Admin\Category;
 
+use App\Http\Controllers\Admin\ParentController;
 use Illuminate\Http\Request;
 use App\Model\Admin\Category;
 use Illuminate\Validation\Rule;
 use App\Model\Admin\Subcategory;
 use App\Http\Controllers\Controller;
 
-class SubCategoryController extends Controller
+class SubCategoryController extends ParentController
 {
     public function index() {
      
-        $categories = Category::all();
-        $subcategories = Subcategory::with('category')->get();
-        return view('admin.categories.subcategories', compact('categories', 'subcategories'));
+        return (new ParentController([Subcategory::with('category')->get(), Category::all()], ["subcategories", "categories"], 'admin.categories.subcategories'))->index();
     }
 
     public function store(Request $request) {
      
-        $validatedData = $request->validate([
+        $data = [[
             'subcategory_name' => 'required|unique:subcategories|max:255',
             'category_id' => 'required|numeric',
         ], 
         [
             'category_id.required' => 'The category name field is required.'
-        ]);
-    
-        Subcategory::create($validatedData);
+        ]];
 
-        return redirect()->back()->with(toastNotification('Subcategory', 'added'));
-
+        return (new ParentController([Subcategory::class], "Subcategory", '', $data))->store($request);
     }
 
     public function edit($id) {
 
-        $categories = Category::all();
-        $subcategory = Subcategory::with('category')->find($id);
-
-        if (!$subcategory) {
-            return redirect()->back()->with(toastNotification('Subcategory', 'not_found'));
-        }
-
-        return view('admin.categories.subcategories_edit', compact('categories', 'subcategory'));
+        return (new ParentController([Subcategory::with('category')->find($id), Category::all()], ["subcategory", "categories"], 'admin.categories.subcategories_edit'))->edit($id);
     }
 
-    public function update($id, Request $request) {
+    public function update(Request $request, $id) {
 
-        $subcategory = Subcategory::find($id);
-
-        if (!$subcategory) {
-            return redirect()->route('admin.subcategories.index')->with(toastNotification('Subcategory', 'not_found'));
-        }
-
-        $validatedData = $request->validate([
-            'subcategory_name' => ['required', 'max:255', Rule::unique('subcategories')->ignore($subcategory->id)],
+        $data = [[
+            'subcategory_name' => ['required', 'max:255', Rule::unique('subcategories')->ignore($id)],
             'category_id' => ['required', 'numeric'],
         ], 
         [
             'category_id.required' => 'The category name field is required.'
-        ]);
+        ]];
 
-        $subcategory->update($validatedData);
-
-        return redirect()->route('admin.subcategories.index')->with(toastNotification('Category', 'updated'));
-
-
+        return (new ParentController([Subcategory::class], "Subcategory", 'admin.subcategories.index', $data))->update($request, $id);
     }
 
     public function destroy($id) {
 
-        $subcategory = Subcategory::find($id);
-
-        if (!$subcategory) {
-            return redirect()->back()->with(toastNotification('Subcategory', 'not_found'));
-        }
-
-        $subcategory->delete();
-
-        $notification=array(
-            'messege'=>'Subcategory Deleted Successfully',
-            'alert-type'=>'success'
-        );
-
-        return redirect()->back()->with(toastNotification('Subcategory', 'deleted'));
-
+        return (new ParentController([Subcategory::class], "Subcategory"))->destroy($id);
     }
 
 }
