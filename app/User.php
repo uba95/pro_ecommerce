@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Model\Frontend\Wishlist;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -36,4 +37,15 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function wishlist() {
+        
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function isProductOnUserWishlist($product_id) {
+
+        return $this->wishlist->where('product_id', $product_id)->isNotEmpty();
+    }
+
 }

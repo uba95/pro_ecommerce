@@ -33,8 +33,10 @@
                         <td>{{ $coupon->discount }}%</td>
                         <td>
                             <a href ='{{ route('admin.coupons.edit', $coupon->id) }}' class="btn btn-sm btn-info">Edit</a>
-                            <a href ='{{ route('admin.coupons.delete', $coupon->id) }}' class="btn btn-sm btn-danger" id="delete">Delete</a>
-                        </td>
+                            <form method="POST" action='{{ route('admin.coupons.destroy', $coupon->id) }}' class="btn btn-sm btn-danger delete">
+                              @csrf @method('DELETE') Delete
+                            </form>
+                          </td>
                     </tr>
                 @endforeach
               </tbody>

@@ -35,8 +35,10 @@
                         <td>{{ $newslater->email }}</td>
                         <td>{{ $newslater->created_at->diffForHumans() }}</td>
                         <td>
-                            <a href ='{{ route('admin.newslaters.delete', $newslater->id) }}' class="btn btn-sm btn-danger" id="delete">Delete</a>
-                        </td>
+                            <form method="POST" action='{{ route('admin.newslaters.destroy', $newslater->id) }}' class="btn btn-sm btn-danger delete">
+                              @csrf @method('DELETE') Delete
+                            </form>
+                          </td>
                     </tr>
                 @endforeach
               </tbody>

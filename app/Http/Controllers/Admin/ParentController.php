@@ -11,15 +11,15 @@ class ParentController extends Controller
 {
     public $model;
     public $name;
-    public $data;
     public $path;
+    public $data;
 
     public function __construct($model=[], $name=[], $path='', $data=[])
     {
         $this->model = $model;
         $this->name = $name;
-        $this->data = $data;
         $this->path = $path;
+        $this->data = $data;
     }
     /**
      * Display a listing of the resource.
@@ -28,7 +28,6 @@ class ParentController extends Controller
      */
     public function index()
     {
-       
         return view($this->path, array_combine($this->name, $this->model));
     }
 
@@ -59,7 +58,7 @@ class ParentController extends Controller
 
         $this->model[0]::create($validatedData);
 
-        return redirect()->back()->with(toastNotification($this->name, 'added'));
+        return redirect()->back()->with(toastNotification($this->name[0], 'added'));
     }
 
     /**
@@ -81,12 +80,6 @@ class ParentController extends Controller
      */
     public function edit($id)
     {
-        $resource =  $this->model[0];
-
-        if (!$resource) {
-            return redirect()->back()->with(toastNotification(ucfirst($this->name[0]), 'not_found'));
-        }
-
         return view($this->path, array_combine($this->name, $this->model));
     }
 
@@ -99,11 +92,7 @@ class ParentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $resource =  $this->model[0]::find($id);
-
-        if (!$resource) {
-            return redirect()->route($this->path)->with(toastNotification($this->name, 'not_found'));
-        }
+        $resource =  $this->model[0];
         
         $validatedData = $request->validate(...$this->data);
 
@@ -120,7 +109,7 @@ class ParentController extends Controller
 
         $resource->update($validatedData);
 
-        return redirect()->route($this->path)->with(toastNotification($this->name, 'updated'));
+        return redirect()->route($this->path)->with(toastNotification($this->name[0], 'updated'));
     }
 
     /**
@@ -131,11 +120,7 @@ class ParentController extends Controller
      */
     public function destroy($id)
     {
-        $resource = $this->model[0]::find($id);
-
-        if (!$resource) {
-            return redirect()->back()->with(toastNotification($this->name, 'not_found'));
-        }
+        $resource = $this->model[0];
         
         if (isset($resource->getAttributes()['brand_logo'])) {
 
@@ -144,6 +129,6 @@ class ParentController extends Controller
 
         $resource->delete();
 
-        return redirect()->back()->with(toastNotification($this->name, 'deleted'));
+        return redirect()->back()->with(toastNotification($this->name[0], 'deleted'));
     }
 }

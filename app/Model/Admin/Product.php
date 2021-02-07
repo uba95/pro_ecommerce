@@ -2,10 +2,16 @@
 
 namespace App\Model\Admin;
 
+use App\Model\Frontend\Wishlist;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use Gloudemans\Shoppingcart\CanBeBought;
+use Gloudemans\Shoppingcart\Contracts\Buyable;
 
-class Product extends Model
+class Product extends Model implements Buyable
 {
+    use CanBeBought;
+    
     protected $guarded = [];
 
     public function category() {
@@ -21,6 +27,11 @@ class Product extends Model
     public function brand() {
      
         return $this->belongsTo(Brand::class);
+    }
+
+    public function wishlist() {
+     
+        return $this->hasMany(Wishlist::class);
     }
     
     public function getImageOneAttribute($value) {
@@ -50,6 +61,11 @@ class Product extends Model
 
         return $q -> select('id','brand_id', 'product_name', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'image_one', 'status');
 
+    }
+
+    public function isOnUserWishlist($user = null) {
+
+        return $this->wishlist->where('user_id', $user ?? Auth::id())->isNotEmpty();
     }
 
 }

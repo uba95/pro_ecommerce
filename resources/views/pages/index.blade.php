@@ -180,10 +180,18 @@
                                                         <input type="radio" name="product_color" style="background:#000000">
                                                         <input type="radio" name="product_color" style="background:#999999">
                                                     </div>
-                                                    <button class="product_cart_button">Add to Cart</button>
+                                                    <button class="product_cart_button addcart" data-id="{{ $product->id }}">Add to Cart</button>
                                                 </div>
                                             </div>
-                                            <div class="product_fav"><i class="fas fa-heart"></i></div>
+                                            
+                                            @auth
+                                            <form class="addwishlist" data-id="{{ $product->id }}" method="POST"> @csrf
+                                                <div class="product_fav {{ Auth::user()->isProductOnUserWishlist($product->id) ? 'active' : ''}}">
+                                                    <i class="fas fa-heart"></i>
+                                                </div>    
+                                            </form>  
+                                            @endauth
+
                                             <ul class="product_marks">
                                                 <li class="product_mark product_discount">
                                                     -{{ intval((($product->selling_price - $product->discount_price) / $product->selling_price) * 100)  }}%
@@ -229,7 +237,11 @@
                                                     <button class="product_cart_button">Add to Cart</button>
                                                 </div>
                                             </div>
-                                            <div class="product_fav"><i class="fas fa-heart"></i></div>
+
+                                            <div class="product_fav addwishlist" data-id="{{ $product->id }}">
+                                                <i class="fas fa-heart"></i>
+                                            </div>
+
                                             <ul class="product_marks">
                                                 <li class="product_mark product_discount">
                                                     -{{ intval((($product->selling_price - $product->discount_price) / $product->selling_price) * 100)  }}%
@@ -275,7 +287,11 @@
                                                     <button class="product_cart_button">Add to Cart</button>
                                                 </div>
                                             </div>
-                                            <div class="product_fav"><i class="fas fa-heart"></i></div>
+
+                                            <div class="product_fav addwishlist" data-id="{{ $product->id }}">
+                                                <i class="fas fa-heart"></i>
+                                            </div>
+
                                             <ul class="product_marks">
                                                 <li class="product_mark product_discount">
                                                     -{{ intval((($product->selling_price - $product->discount_price) / $product->selling_price) * 100)  }}%
@@ -2836,4 +2852,99 @@
         </div>
     </div>
 
+
+    @push('scripts')
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+          $(document).on('click', '.addcart',function(){
+            var product_id = $(this).data('id');
+            if (product_id) {
+                 $.ajax({
+                     url: `/cart/${product_id}`,
+                     type:"GET",
+                     datType:"json",
+                     success:function(data){
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'bottom-end',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                            })
+     
+                            if ($.isEmptyObject(data.error)) {
+                
+                                Toast.fire({
+                                icon: 'success',
+                                title: data.success
+                                })
+
+                            }else{
+
+                                Toast.fire({
+                                icon: 'error',
+                                title: data.error
+                                })
+                            }
+                },
+            });
+     
+            }else{
+                alert('danger');
+            }
+        });
+     
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+          $(document).on('click', '.addwishlist',function(){
+            var product_id = $(this).data('id');
+
+            if (product_id) {
+                $.ajax({
+                     url: `/wishlist/${product_id}`,
+                     type:"POST",
+                     datType:"json",
+                     data: {"_token": "{{  csrf_token() }}"},
+                     success:function(data){
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'bottom-end',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                            })
+     
+                            if ($.isEmptyObject(data.error)) {
+                
+                                Toast.fire({
+                                icon: 'success',
+                                title: data.success
+                                })
+                            }else{
+                                Toast.fire({
+                                icon: 'error',
+                                title: data.error
+                                })
+                            }
+
+                            $('.wishlist_count').text(data.countWishlist)
+                     },
+                });
+            }else{
+                 alert('danger');
+             }
+          });
+        });
+    </script>
+    @endpush
 @endsection

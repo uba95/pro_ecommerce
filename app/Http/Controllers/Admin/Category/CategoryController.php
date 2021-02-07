@@ -7,46 +7,69 @@ use Illuminate\Http\Request;
 use App\Model\Admin\Category;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\MethodsTrait;
 
 class CategoryController extends ParentController
 {
-    
-    public function index() {
+    use MethodsTrait;
+
+    public static function method($method, $id=null) {
      
-        return (new ParentController([Category::all()], ["categories"], 'admin.categories.index'))->index();
+        switch ($method) {
+            case 'index':
+                return array_values([
+                    'models' => [Category::all()],
+                    'names' => ["categories"],
+                    'path' => 'admin.categories.index',
+                    'data' => [],
+                ]);
+                break;
+
+            case 'store':
+                return array_values([
+                    'models' => [Category::class],
+                    'names' => ["Category"],
+                    'path' => '',
+                    'data' => [[
+                        'category_name' => 'required|unique:categories|max:255',
+                    ]],
+                ]);
+                break;
+            
+            case 'edit':
+                return array_values( [
+                    'models' => [Category::findOrFail($id)],
+                    'names' => ["category"],
+                    'path' => 'admin.categories.edit',
+                    'data' => [],
+                ]);
+                break;
+            
+            case 'update':
+                return array_values( [
+                    'models' => [Category::findOrFail($id)],
+                    'names' => ["Category"],
+                    'path' => 'admin.categories.index',
+                    'data' => [[
+                        'category_name' => ['required', 'max:255', Rule::unique('categories')->ignore($id)]
+                    ]],
+                ]);
+                break;
+            
+            case 'destroy':
+                return array_values([
+                    'models' => [Category::findOrFail($id)],
+                    'names' => ["Category"],
+                    'path' => '',
+                    'data' => [],
+                ]);               
+                break;
+        }
     }
 
     public function show(Request $request, Category $category) {
      
         return $request->expectsJson() ? response()->json($category->subcategories) 
         : redirect()->route('admin.categories.index');
-    }
-
-    public function store(Request $request) {
-     
-        $data = [[
-            'category_name' => 'required|unique:categories|max:255',
-        ]];
-
-        return (new ParentController([Category::class], "Category", '', $data))->store($request);
-    }
-
-    public function edit($id) {
-
-        return (new ParentController([Category::find($id)], ["category"], 'admin.categories.edit'))->edit($id);
-    }
-
-    public function update(Request $request, $id) {
-
-        $data = [[
-            'category_name' => ['required', 'max:255', Rule::unique('categories')->ignore($id)]
-        ]];
-
-        return (new ParentController([Category::class], "Category", 'admin.categories.index', $data))->update($request, $id);
-    }
-    
-    public function destroy($id) {
-
-        return (new ParentController([Category::class], "Category"))->destroy($id);
     }
 }

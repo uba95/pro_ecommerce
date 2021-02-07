@@ -5,26 +5,44 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\Newslater;
+use App\Http\Controllers\MethodsTrait;
 
 class NewslaterController extends ParentController
 {
-    public function index() {
-        
-        return (new ParentController([Newslater::all()], ["newslaters"], 'admin.newslater'))->index();
-    }
-
-    public function store(Request $request) {
-     
-        $data = [[
-            'email' => 'required|unique:newslaters|max:255',
-        ]];
     
-        return (new ParentController([Newslater::class], "Thanks For Subscribing!", '', $data))->store($request);
+    use MethodsTrait;
+
+    public static function method($method, $id=null) {
+     
+        switch ($method) {
+            case 'index':
+                return array_values([
+                    'models' => [Newslater::all()],
+                    'names' => ["newslaters"],
+                    'path' => 'admin.newslater',
+                    'data' => [],
+                ]);
+                break;
+
+            case 'store':
+                return array_values([
+                    'models' => [Newslater::class],
+                    'names' => ["Thanks For Subscribing!"],
+                    'path' => '',
+                    'data' => [[
+                        'email' => 'required|unique:newslaters|max:255',
+                    ]],
+                ]);
+                break;
+                        
+            case 'destroy':
+                return array_values([
+                    'models' => [Newslater::findOrFail($id)],
+                    'names' => ["Newslater"],
+                    'path' => '',
+                    'data' => [],
+                ]);               
+                break;
+        }
     }
-
-    public function destroy($id) {
-
-        return (new ParentController([Newslater::class], "Newslater"))->destroy($id);
-    }
-
 }

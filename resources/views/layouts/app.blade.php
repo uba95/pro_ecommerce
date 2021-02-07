@@ -77,8 +77,12 @@
                                             <div class="user_icon">
                                                 <img src="{{ asset('frontend/images/user.svg')}}" alt="">
                                             </div> 
-                                            Profile<i class="fas fa-chevron-down"></i>
+                                            {{ Auth::user()->name }}
                                         </a>
+                                        <ul>
+                                            <li><a href ='{{ route('home') }}'>Profile</a></li>
+                                            <li><a href ='{{ route('user.logout') }}'>Logout</a></li>
+                                        </ul>
                                     </li>
                                 </ul> 
                                 @endguest
@@ -116,11 +120,11 @@
                                                 <i class="fas fa-chevron-down"></i>
                                                 <ul class="custom_list clc">
                                                     <li><a class="clc" href="#">All Categories</a></li>
-                                                    {{-- @foreach ($categories as $category)
+                                                        @foreach ($categories ?? DB::table('categories')->get('category_name') as $category)
                                                         <li class="hassubs">
                                                             <a href="#">{{ $category->category_name }}</i></a>
                                                         </li>  
-                                                    @endforeach             --}}
+                                                        @endforeach            
                                                 </ul>
                                             </div>
                                         </div>
@@ -134,13 +138,15 @@
                     <!-- Wishlist -->
                     <div class="col-lg-4 col-9 order-lg-3 order-2 text-lg-left text-right">
                         <div class="wishlist_cart d-flex flex-row align-items-center justify-content-end">
+                            @auth
                             <div class="wishlist d-flex flex-row align-items-center justify-content-end">
                                 <div class="wishlist_icon"><img src="{{ asset('frontend/images/heart.png')}}" alt=""></div>
                                 <div class="wishlist_content">
                                     <div class="wishlist_text"><a href="#">Wishlist</a></div>
-                                    <div class="wishlist_count">115</div>
+                                    <div class="wishlist_count">{{ Auth::user()->wishlist()->count() }}</div>
                                 </div>
                             </div>
+                            @endauth
 
                             <!-- Cart -->
                             <div class="cart">
@@ -275,13 +281,14 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="{{ asset('frontend/plugins/greensock/TimelineMax.min.js')}}"></script>
 <script src="{{ asset('frontend/plugins/scrollmagic/ScrollMagic.min.js')}}"></script>
 <script src="{{ asset('frontend/plugins/greensock/animation.gsap.min.js')}}"></script>
-<script src="{{ asset('frontend/plugins/greensock/ScrollToPlugin.min.jsplugins/greensock/ScrollToPlugin.min.js')}}"></script>
+<script src="{{ asset('frontend/plugins/greensock/ScrollToPlugin.min.js')}}"></script>
 <script src="{{ asset('frontend/plugins/OwlCarousel2-2.2.1/owl.carousel.js')}}"></script>
 <script src="{{ asset('frontend/plugins/slick-1.8.0/slick.js')}}"></script>
 <script src="{{ asset('frontend/plugins/easing/easing.js')}}"></script>
 <script src="{{ asset('frontend/js/custom.js')}}"></script>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="{{ asset('https://unpkg.com/sweetalert/dist/sweetalert.min.js')}}"></script>
 <script>
     @if(Session::has('messege'))

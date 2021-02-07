@@ -476,9 +476,12 @@
      </script>  
 
      <script>  
-         $(document).on("click", "#delete", function(e){
+         $(document).on("click", ".delete", function(e){
              e.preventDefault();
-             var link = $(this).attr("href");
+            //  var link = $(this).attr("href") ?? $(this).attr("action");
+             var form =  $(this).closest("form");
+
+            //  console.log(link);
                 swal({
                   title: "Are you Want to delete?",
                   text: "Once Delete, This will be Permanently Delete!",
@@ -488,7 +491,8 @@
                 })
                 .then((willDelete) => {
                   if (willDelete) {
-                       window.location.href = link;
+                      //  window.location.href = link;
+                      form.submit();
                   } else {
                     swal("Safe Data!");
                   }

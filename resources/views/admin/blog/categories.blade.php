@@ -30,8 +30,10 @@
                         <td>{{ $category->category_name }}</td>
                         <td>
                             <a href ='{{ route('admin.blog_categories.edit', $category->id) }}' class="btn btn-sm btn-info">Edit</a>
-                            <a href ='{{ route('admin.blog_categories.delete', $category->id) }}' class="btn btn-sm btn-danger" id="delete">Delete</a>
-                        </td>
+                            <form method="POST" action='{{ route('admin.blog_categories.destroy', $category->id) }}' class="btn btn-sm btn-danger delete">
+                              @csrf @method('DELETE') Delete
+                            </form>
+                          </td>
                     </tr>
                 @endforeach
               </tbody>

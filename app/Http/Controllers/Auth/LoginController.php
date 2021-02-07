@@ -48,6 +48,14 @@ class LoginController extends Controller
         
     }
 
+    public function authenticated()
+    {
+        if (Auth::check() && Auth::guard() == $this->guard() ) {
+            
+            return  redirect($this->redirectTo);
+        }
+    }
+
     protected function guard()
     {
         return Auth::guard('web');
