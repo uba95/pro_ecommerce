@@ -2,7 +2,8 @@
 
 @section('content')
     
-    @include('layouts.menubar')
+    {{-- @include('layouts.menubar') --}}
+    @include('layouts.main_slider')
 
     <!-- Characteristics -->
 
@@ -155,6 +156,7 @@
                                 <div class="featured_slider slider">
 
                                     <!-- Slider Item -->
+                                    @foreach (range(1,1) as $item)
                                     @foreach ($featured_products as $product)
                                     <div class="featured_slider_item">
                                         <div class="border_active"></div>
@@ -173,20 +175,22 @@
                                                         ${{$product->selling_price}}
                                                     </div>
                                                 @endif
-                                                <div class="product_name"><div><a href="product.html">{{ $product->product_name}}</a></div></div>
+                                                <div class="product_name"><div><a href='{{ route('products.show', $product->product_name) }}'>{{ $product->product_name}}</a></div></div>
                                                 <div class="product_extras">
                                                     <div class="product_color">
                                                         <input type="radio" checked name="product_color" style="background:#b19c83">
                                                         <input type="radio" name="product_color" style="background:#000000">
                                                         <input type="radio" name="product_color" style="background:#999999">
                                                     </div>
-                                                    <button class="product_cart_button addcart" data-id="{{ $product->id }}">Add to Cart</button>
+                                                    {{-- <form class="addcart" data-id="{{ $product->id }}"> @csrf
+                                                        <button class="product_cart_button">Add to Cart</button>
+                                                    </form>   --}}
                                                 </div>
                                             </div>
                                             
                                             @auth
-                                            <form class="addwishlist" data-id="{{ $product->id }}" method="POST"> @csrf
-                                                <div class="product_fav {{ Auth::user()->isProductOnUserWishlist($product->id) ? 'active' : ''}}">
+                                            <form class="addwishlist" data-id="{{ $product->id }}"> @csrf
+                                                <div class="product_fav {{ Auth::user()->hasProductOnWishlist($product->id) ? 'active' : ''}}">
                                                     <i class="fas fa-heart"></i>
                                                 </div>    
                                             </form>  
@@ -194,12 +198,14 @@
 
                                             <ul class="product_marks">
                                                 <li class="product_mark product_discount">
-                                                    -{{ intval((($product->selling_price - $product->discount_price) / $product->selling_price) * 100)  }}%
+                                                    -{{ $product->discount_percent  }}%
                                                 </li>
                                                 <li class="product_mark product_new">new</li>
                                             </ul>
                                         </div>
                                     </div>
+                                    @endforeach
+
                                     @endforeach
                                 </div>
                                 <div class="featured_slider_dots_cover"></div>
@@ -315,7 +321,7 @@
 
     <!-- Popular Categories -->
 
-    <div class="popular_categories">
+    {{-- <div class="popular_categories">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3">
@@ -349,7 +355,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Banner -->
 
@@ -1559,7 +1565,7 @@
                                         <div class="arrivals_slider_item">
                                             <div class="border_active"></div>
                                             <div class="product_item is_new d-flex flex-column align-items-center justify-content-center text-center">
-                                                <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{ asset('frontend/images/featured_1.png')}}{{ asset('frontend/images/new_6.jpg')}}" alt=""></div>
+                                                <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{ asset('frontend/images/new_6.jpg')}}" alt=""></div>
                                                 <div class="product_content">
                                                     <div class="product_price">$379</div>
                                                     <div class="product_name"><div><a href="product.html">Huawei MediaPad...</a></div></div>
@@ -2113,7 +2119,7 @@
                                 <!-- Best Sellers Item -->
                                 <div class="bestsellers_item">
                                     <div class="bestsellers_item_container d-flex flex-row align-items-center justify-content-start">
-                                        <div class="bestsellers_image"><img src="{{ asset('frontend/images/featured_1.png')}}{{ asset('frontend/images/best_6.png')}}" alt=""></div>
+                                        <div class="bestsellers_image"><img src="{{ asset('frontend/images/best_6.png')}}" alt=""></div>
                                         <div class="bestsellers_content">
                                             <div class="bestsellers_category"><a href="#">Headphones</a></div>
                                             <div class="bestsellers_name"><a href="product.html">Xiaomi Redmi Note 4</a></div>
@@ -2855,15 +2861,17 @@
 
     @push('scripts')
     
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
         $(document).ready(function(){
-          $(document).on('click', '.addcart',function(){
+          $(document).on('click', '.addcart',function(e){
+            e.preventDefault();
             var product_id = $(this).data('id');
             if (product_id) {
                  $.ajax({
                      url: `/cart/${product_id}`,
-                     type:"GET",
+                     type:"POST",
                      datType:"json",
+                     data: {"_token": "{{  csrf_token() }}"},
                      success:function(data){
                         const Toast = Swal.mixin({
                             toast: true,
@@ -2945,6 +2953,6 @@
              }
           });
         });
-    </script>
+    </script> --}}
     @endpush
 @endsection

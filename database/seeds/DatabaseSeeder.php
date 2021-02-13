@@ -3,7 +3,9 @@
 use App\Admin;
 use App\Model\Admin\Brand;
 use App\Model\Admin\Category;
+use App\Model\Admin\Product;
 use App\Model\Admin\Subcategory;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -90,6 +92,24 @@ class DatabaseSeeder extends Seeder
             [ 'brand_name' => 'Samsung', 'created_at'=>$now, 'updated_at'=>$now],
             [ 'brand_name' => 'Rolex', 'created_at'=>$now, 'updated_at'=>$now],
             [ 'brand_name' => 'Omega', 'created_at'=>$now, 'updated_at'=>$now],
+        ]);
+
+        Product::insert([[
+            'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
+            'product_name' => 'Product1', 'product_code' => '111', 'product_quantity' => '222',
+            'product_details' => 'Product1', 'product_color' => '["black"]', 'product_size' => '["xl"]',
+            'discount_price' => '99', 'selling_price' => '199', 'status' => '1', 'main_slider' => 1, 'created_at'=>$now, 'updated_at'=>$now
+            ],
+            [
+            'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
+            'product_name' => 'Product2', 'product_code' => '222', 'product_quantity' => '222',
+            'product_details' => 'Product2', 'product_color' => '["black"]', 'product_size' => '["xl"]',
+            'discount_price' => null, 'selling_price' => '99', 'status' => '1', 'main_slider' => 1, 'created_at'=>$now, 'updated_at'=>$now
+            ],
+        ]);
+
+        User::insert([
+            [ 'name' => 'Uba', 'email' => '123@gmail.com', 'password' => bcrypt(111), 'created_at'=>$now, 'updated_at'=>$now],
         ]);
 
     }

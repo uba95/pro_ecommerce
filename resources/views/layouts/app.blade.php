@@ -12,7 +12,11 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/plugins/OwlCarousel2-2.2.1/owl.theme.default.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/plugins/OwlCarousel2-2.2.1/animate.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/plugins/slick-1.8.0/slick.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/main_styles.css') }}">
+
+    @unless (in_array(Route::currentRouteName(), ['products.show', 'cart.show']))
+        <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/main_styles.css') }}">
+    @endunless
+
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/responsive.css') }}">
 
     <!-- toastr -->
@@ -153,11 +157,11 @@
                                 <div class="cart_container d-flex flex-row align-items-center justify-content-end">
                                     <div class="cart_icon">
                                         <img src="{{ asset('frontend/images/cart.png')}}" alt="">
-                                        <div class="cart_count"><span>10</span></div>
-                                    </div>
+                                        <div class="cart_count"><span>{{ Cart::count() }}</span></div>
+                                    </div> 
                                     <div class="cart_content">
-                                        <div class="cart_text"><a href="#">Cart</a></div>
-                                        <div class="cart_price">$85</div>
+                                        <div class="cart_text"><a href ='{{ route('cart.show') }}'>Cart</a></div>
+                                        <div class="cart_price">${{ Cart::subtotal() }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -167,7 +171,7 @@
             </div>
         </div>
         
-
+    @include('layouts.menubar')
     @yield('content')
 
     <!-- Footer -->
@@ -285,30 +289,193 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="{{ asset('frontend/plugins/OwlCarousel2-2.2.1/owl.carousel.js')}}"></script>
 <script src="{{ asset('frontend/plugins/slick-1.8.0/slick.js')}}"></script>
 <script src="{{ asset('frontend/plugins/easing/easing.js')}}"></script>
-<script src="{{ asset('frontend/js/custom.js')}}"></script>
+
+@unless (in_array(Route::currentRouteName(), ['products.show', 'cart.show']))
+    <script src="{{ asset('frontend/js/custom.js')}}"></script>
+@endunless
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script src="{{ asset('https://unpkg.com/sweetalert/dist/sweetalert.min.js')}}"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    @if(Session::has('messege'))
+    @if(Session::has('message'))
       var type="{{Session::get('alert-type','info')}}"
       switch(type){
           case 'info':
-               toastr.info("{{ Session::get('messege') }}");
+               toastr.info("{{ Session::get('message') }}");
                break;
           case 'success':
-              toastr.success("{{ Session::get('messege') }}");
+              toastr.success("{{ Session::get('message') }}");
               break;
           case 'warning':
-             toastr.warning("{{ Session::get('messege') }}");
+             toastr.warning("{{ Session::get('message') }}");
               break;
           case 'error':
-              toastr.error("{{ Session::get('messege') }}");
+              toastr.error("{{ Session::get('message') }}");
               break;
       }
     @endif
- </script>  
+ </script> 
+  
+    <script type="text/javascript">
+        $(document).ready(function(){
+          $(document).on('submit', '.addcart',function(e){
+            e.preventDefault();
+            var product_id = $(this).data('id');
+            if (product_id) {
+                 $.ajax({
+                     url: `/cart/${product_id}`,
+                     type:"POST",
+                     datType:"json",
+                     data: $(this).serializeArray(),
+                     success:function(data){
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'bottom-end',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                            })
+     
+                            if ($.isEmptyObject(data.error)) {
+                
+                                Toast.fire({
+                                icon: 'success',
+                                title: data.success
+                                })
+
+                            }else{
+
+                                Toast.fire({
+                                icon: 'error',
+                                title: data.error
+                                })
+                            }
+
+                            $('.cart_count').text(data.cart_count)
+                            $('.cart_price').text('$' + data.cart_price)
+                },
+            });
+     
+            }else{
+                alert('danger');
+            }
+        });
+     
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+          $(document).on('click', '.addwishlist',function(){
+            var product_id = $(this).data('id');
+
+            if (product_id) {
+                $.ajax({
+                     url: `/wishlist/${product_id}`,
+                     type:"POST",
+                     datType:"json",
+                     data: {"_token": "{{  csrf_token() }}"},
+                     success:function(data){
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'bottom-end',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            onOpen: (toast) => {
+                                toast.addEventListener('mouseenter', Swal.stopTimer)
+                                toast.addEventListener('mouseleave', Swal.resumeTimer)
+                            }
+                            })
+     
+                            if ($.isEmptyObject(data.error)) {
+                
+                                Toast.fire({
+                                icon: 'success',
+                                title: data.success
+                                })
+                            }else{
+                                Toast.fire({
+                                icon: 'error',
+                                title: data.error
+                                })
+                            }
+
+                            $('.wishlist_count').text(data.countWishlist)
+                     },
+                });
+            }else{
+                 alert('danger');
+             }
+          });
+        });
+    </script>
+
+    <script>  
+        function deleteAjax(myclass, mytext) {
+            $(document).on('click', myclass, function (event) { 
+                    event.preventDefault();
+                    var form =  $(this);
+                    var route = form.attr('action');
+
+                    function cart_list_empty() {
+                        return $('.cart_list').fadeOut(1000, function () {
+                            $(this).empty().append(
+                                `<h4 style="padding: 20px;color:#888">Your Cart Is Empty</h4>`
+                            );
+                        }).fadeIn(1000);
+                    }
+
+                    Swal.fire({
+                        title: `Are You Sure You Want To Delete ${mytext} ?`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Delete'
+                        
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: 'Item Has Been Deleted.',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            $.ajax({
+                            url         :       route,
+                            type        :       "DELETE",
+                            data        :       {"_token": "{{  csrf_token() }}"},
+                            success     :       function(data) { 
+
+                                                    if (myclass === '.delete') {
+                                                    form.closest('.cart_item').fadeOut(1000, function () {
+                                                    $(this).remove();
+                                                    });
+
+                                                    $('.cart_list').children().length == 1 ?  cart_list_empty() : '';
+                                                    } else {
+
+                                                    cart_list_empty();
+                                                    }
+
+                                                    $('.order_total_amount').text('$' + data.cart_price);
+                                                    $('.cart_count').text(data.cart_count)
+                                                    $('.cart_price').text('$' + data.cart_price)
+                                                }
+                            });
+                        }
+                    })
+                });
+        }
+
+        deleteAjax('.delete', 'This Item');
+        deleteAjax('.destroyAll', 'All Items');
+    </script>
 
 @stack('scripts')
 </body>

@@ -25,7 +25,7 @@ class CreateProductsTable extends Migration
             $table->unsignedInteger('product_quantity');
             $table->text('product_details');
             $table->string('product_color');
-            $table->string('product_size');
+            $table->string('product_size')->nullable();
             $table->unsignedInteger('selling_price');
             
             $table->unsignedInteger('discount_price')->nullable();

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Gloudemans\Shoppingcart\CanBeBought;
 use Gloudemans\Shoppingcart\Contracts\Buyable;
+use Illuminate\Database\Query\Builder;
 
 class Product extends Model implements Buyable
 {
@@ -57,15 +58,20 @@ class Product extends Model implements Buyable
         return json_decode($value);
     }
 
-    public function  scopeSelection($q){
+    public function  scopeSelection( $q){
 
-        return $q -> select('id','brand_id', 'product_name', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'image_one', 'status');
+        return $q -> select('products.id','brand_id', 'product_name', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'image_one', 'status');
 
     }
 
     public function isOnUserWishlist($user = null) {
 
         return $this->wishlist->where('user_id', $user ?? Auth::id())->isNotEmpty();
+    }
+
+    public function getDiscountPercentAttribute() {
+
+        return intval((($this->selling_price - $this->discount_price) / $this->selling_price) * 100);
     }
 
 }

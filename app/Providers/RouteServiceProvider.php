@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Model\Admin\Product;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,14 @@ class RouteServiceProvider extends ServiceProvider
     protected $namespace = 'App\Http\Controllers';
 
     /**
+     * The path to the "home" route for your application.
+     *
+     * @var string
+     */
+    public const HOME = '/home';
+    public const ADMIN = '/admin/home';
+
+    /**
      * Define your route model bindings, pattern filters, etc.
      *
      * @return void
@@ -26,6 +35,10 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot();
+
+        Route::bind('product_name', function ($value) {
+            return Product::where('product_name', $value)->firstOrFail();
+        });
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -15,10 +16,22 @@ Route::get('/user/logout', 'HomeController@Logout')->name('user.logout');
 
 
 Route::post('newslaters', 'Admin\NewslaterController@store')->name('newslaters.store');
+
 Route::get('wishlist', 'Frontend\WishlistController@index')->name('wishlist.index');
 Route::post('wishlist/{product}', 'Frontend\WishlistController@store')->name('wishlist.store');
-Route::get('cart/{product}', 'Frontend\CartController@store')->name('cart.store');
-Route::get('products/{product}', 'Frontend\ProductController@show')->name('products.show');
+
+Route::get('cart', 'Frontend\CartController@show')->name('cart.show');
+Route::post('cart/{product}', 'Frontend\CartController@store')->name('cart.store');
+Route::delete('cart/{cartItem}', 'Frontend\CartController@destroy')->name('cart.destroy');
+Route::patch('cart/{cartItem}', 'Frontend\CartController@update')->name('cart.update');
+Route::delete('cart', 'Frontend\CartController@destroyAll')->name('cart.destroyAll');
+Route::get('cart/checkout', 'Frontend\CartController@checkout')->name('cart.checkout')->middleware('auth:web');
+
+Route::get('products/{product_name}', 'Frontend\ShowProductController')->name('products.show');
+// Route::get('products/{product_name}', function () {
+//     // Cart::destroy();
+//     dd(Cart::content(), Cart::subtotal(), Cart::count());
+// })->name('products.show');
 
 
 Route::group([], function () {

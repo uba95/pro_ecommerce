@@ -24,34 +24,32 @@
               <div class="col-lg-4">
                 <div class="form-group">
                   <label class="form-control-label">Product Name: </label><br>
-                 <strong>{{ $product->product_name }}</strong>
+                  <h5 style="display: inline-block"><span class="badge badge-primary">{{  $product->product_name }}</span></h5>
                 </div>
               </div><!-- col-4 -->
               <div class="col-lg-4">
                 <div class="form-group">
                   <label class="form-control-label">Product Code: </label><br>
-                 <strong>{{ $product->product_code }}</strong>
+                  <h5 style="display: inline-block"><span class="badge badge-primary">{{  $product->product_code }}</span></h5>
                 </div>
               </div><!-- col-4 -->
               <div class="col-lg-4">
                 <div class="form-group">
                   <label class="form-control-label">Quantity: </label><br>
-                  <strong>{{ $product->product_quantity }}</strong>
-                  
+                  <h5 style="display: inline-block"><span class="badge badge-primary">{{  $product->product_quantity }}</span></h5>
                 </div>
               </div><!-- col-4 -->
               <div class="col-lg-4">
                 <div class="form-group">
                   <label class="form-control-label">Discount Price: </label><br>
-                  <strong>{{ $product->discount_price }}</strong>
+                  <h5 style="display: inline-block"><span class="badge badge-primary">{{  $product->discount_price }}</span></h5>
                 </div>
               </div><!-- col-4 -->
                
               <div class="col-lg-4">
                 <div class="form-group mg-b-10-force">
                   <label class="form-control-label">Category: </label><br>
-                  <strong>{{ $product->category->category_name }}</strong>
-       
+                  <h5 style="display: inline-block"><span class="badge badge-primary">{{  $product->category->category_name }}</span></h5>
                 </div>
               </div><!-- col-4 -->
 
@@ -59,7 +57,7 @@
               <div class="col-lg-4">
                 <div class="form-group mg-b-10-force">
                   <label class="form-control-label">Sub Category: </label><br>
-                  <strong>{{ $product->subcategory->subcategory_name }}</strong>
+                  <h5 style="display: inline-block"><span class="badge badge-primary">{{  $product->subcategory->subcategory_name }}</span></h5>
                 </div>
               </div><!-- col-4 -->
 
@@ -69,25 +67,28 @@
                 <div class="form-group mg-b-10-force">
                   <label class="form-control-label">Brand: </label>
                   <br>
-                  <strong>{{ $product->brand->brand_name }}</strong>
+                  <h5 style="display: inline-block"><span class="badge badge-primary">{{  $product->brand->brand_name }}</span></h5>
                 </div>
               </div><!-- col-4 -->
 
 
-<div class="col-lg-4">
+              <div class="col-lg-4">
                 <div class="form-group">
                   <label class="form-control-label">Product Size: </label>
                     <br>
-                  <strong>{{ $product->getOriginal('product_size') }}</strong>
+                  @foreach ($product->product_size as $size)
+                    <h5 style="display: inline-block"><span class="badge badge-primary">{{ $size }}</span></h5>
+                  @endforeach
                 </div>
               </div><!-- col-4 -->
 
-<div class="col-lg-4">
+              <div class="col-lg-4">
                 <div class="form-group">
                   <label class="form-control-label">Product Color: </label>
                     <br>
-                  <strong>{{ $product->getOriginal('product_color') }}</strong>
- 
+                    @foreach ($product->product_color as $color)
+                      <h5 style="display: inline-block"><span class="badge badge-primary">{{ $color }}</span></h5>
+                    @endforeach
                 </div>
               </div><!-- col-4 -->
 
@@ -95,8 +96,7 @@
                 <div class="form-group">
                   <label class="form-control-label">Selling Price: </label>
                   <br>
-                  <strong>{{ $product->selling_price }}</strong>
-                 
+                  <h5 style="display: inline-block"><span class="badge badge-primary">{{  $product->selling_price }}</span></h5>
                 </div>
               </div><!-- col-4 -->
 

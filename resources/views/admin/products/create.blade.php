@@ -218,6 +218,7 @@
                   success:function(data) { 
                     var d = $('select[name="subcategory_id"]');
                     d.empty();
+                    data.message ? toastr.error(data.message) :
                     data.forEach( (value) => d.append(`<option value="${value.id}">${value.subcategory_name}</option>`) );
                   },
                 });

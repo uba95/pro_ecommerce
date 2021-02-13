@@ -15,7 +15,7 @@ class ProductRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::guard('admin');
+        return isAdmin();
     }
 
     /**
@@ -33,7 +33,7 @@ class ProductRequest extends FormRequest
             'category_id' => 'required|numeric',
             'subcategory_id' => 'numeric|nullable',
             'brand_id' => 'numeric|nullable',
-            'product_size' => 'required',
+            'product_size' => 'nullable',
             'product_color' => 'required',
             'selling_price' => 'required|numeric',
             'product_details' => 'required|min:30',

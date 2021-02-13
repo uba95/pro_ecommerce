@@ -68,7 +68,7 @@
                   <div class="form-group">
                     <label class="form-control-label">Size <span class="tx-danger">*</span></label>
                     <select class="form-control select2-tag" name="product_size[]" multiple>
-                      @foreach ($product->product_size as $size)
+                      @foreach ($product->product_size ?? [] as $size)
                         <option value="{{ $size }}" data-select2-tag="true" selected>
                           {{ $size }}
                         </option>
@@ -238,6 +238,7 @@
                   success:function(data) { 
                     var d = $('select[name="subcategory_id"]');
                     d.empty();
+                    data.message ? toastr.error(data.message) :
                     data.forEach( (value) => d.append(`<option value="${value.id}">${value.subcategory_name}</option>`) );
                   },
                 });

@@ -1,6 +1,17 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
+
+function  productSelectScope( $q){
+
+    return $q -> select('products.id','brand_id', 'product_name', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'image_one', 'status');
+}
+
+function isAdmin() {
+
+    return Auth::guard('admin')->check();
+}
 
 function img_upload($image) {
 
@@ -13,26 +24,26 @@ function toastNotification($entitty, $message = 'empty') {
 
     $notifications = [
         'not_found' => [
-            'messege'=>"$entitty Not Found",
+            'message'=>"$entitty Not Found",
             'alert-type'=>'error'
         ],
 
         'added' => [
-            'messege'=>"New $entitty Added Successfully",
+            'message'=>"New $entitty Added Successfully",
             'alert-type'=>'success'
         ],
 
         'updated' => [            
-            'messege'=>"$entitty Updated Successfully",
+            'message'=>"$entitty Updated Successfully",
             'alert-type'=>'success'
         ],
         
         'deleted' => [            
-            'messege'=>"$entitty Deleted Successfully",
+            'message'=>"$entitty Deleted Successfully",
             'alert-type'=>'success'
         ],
         'empty' => [            
-            'messege'=>"$entitty",
+            'message'=>"$entitty",
             'alert-type'=>'success'
         ],
     ];

@@ -24,6 +24,6 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         
-        // view()->composer('pages.index', 'App\Http\ViewComposers\CategoryComposer@composer');
+        view()->composer('layouts.app', 'App\Http\ViewComposers\CategoryComposer@composer');
     }
 }

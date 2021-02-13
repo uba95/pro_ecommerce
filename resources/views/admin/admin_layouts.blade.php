@@ -54,7 +54,7 @@
 
   <body>
 
-@if(Auth::guard('admin')->check())
+  @auth('admin')
 
     <!-- ########## START: LEFT PANEL ########## -->
     <div class="sl-logo"><a href='{{ url('admin/home') }}'><i class="icon ion-android-star-outline"></i> Ecommmerce</a></div>
@@ -310,8 +310,7 @@
     </div><!-- sl-sideright -->
     <!-- ########## END: RIGHT PANEL ########## --->
 
-
-@endif
+  @endauth
 
 @yield('admin_content')
 
@@ -456,20 +455,20 @@
 
 
     <script>
-        @if(Session::has('messege'))
+        @if(Session::has('message'))
           var type="{{Session::get('alert-type','info')}}"
           switch(type){
               case 'info':
-                   toastr.info("{{ Session::get('messege') }}");
+                   toastr.info("{{ Session::get('message') }}");
                    break;
               case 'success':
-                  toastr.success("{{ Session::get('messege') }}");
+                  toastr.success("{{ Session::get('message') }}");
                   break;
               case 'warning':
-                 toastr.warning("{{ Session::get('messege') }}");
+                 toastr.warning("{{ Session::get('message') }}");
                   break;
               case 'error':
-                  toastr.error("{{ Session::get('messege') }}");
+                  toastr.error("{{ Session::get('message') }}");
                   break;
           }
         @endif

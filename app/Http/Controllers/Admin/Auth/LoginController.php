@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
@@ -26,34 +27,21 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = 'admin/home';
+    protected $redirectTo = RouteServiceProvider::ADMIN;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-     public function __construct()
+    public function __construct()
     {
         $this->middleware('guest:admin')->except('logout');
     }
 
     public function showLoginForm()
     {
-         if ($this->guard()->check()) {
-             return redirect()->back();
-         }else{
-            return view('admin.auth.login');
-         }
-        
-    }
-
-    public function authenticated()
-    {
-        if (Auth::check() && Auth::guard() == $this->guard() ) {
-            
-            return redirect($this->redirectTo);
-        }
+        return view('admin.auth.login');
     }
 
     protected function guard()

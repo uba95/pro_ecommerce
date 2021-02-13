@@ -3,10 +3,13 @@
 namespace App\Exceptions;
 
 use Exception;
+use ReflectionClass;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use ReflectionClass;
 
 class Handler extends ExceptionHandler
 {
@@ -51,7 +54,17 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof ModelNotFoundException) {
 
-            return redirect()->route('admin.home')->with(toastNotification('Page', 'not_found'));
+            if ($request->expectsJson()) {
+
+                return Request::routeIs('admin.*') && isAdmin() ? 
+                    Response::json(toastNotification('Page', 'not_found')) :
+                    Response::json(['error' => 'Product Not Found']);
+            } else {
+
+                return Request::routeIs('admin.*') && isAdmin() ? 
+                    redirect()->route('admin.home')->with(toastNotification('Page', 'not_found')) :
+                    redirect()->route('pages.index')->with(toastNotification('Page', 'not_found'));
+            }
         }
         
         return parent::render($request, $exception);

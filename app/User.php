@@ -43,9 +43,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Wishlist::class);
     }
 
-    public function isProductOnUserWishlist($product_id) {
+    public function hasProductOnWishlist($product_id) {
 
-        return $this->wishlist->where('product_id', $product_id)->isNotEmpty();
+        return $this->wishlist->contains('product_id', $product_id);
     }
 
 }

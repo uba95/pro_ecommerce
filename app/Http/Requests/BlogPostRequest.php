@@ -14,7 +14,7 @@ class BlogPostRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::guard('admin');
+        return isAdmin();
     }
 
     /**
