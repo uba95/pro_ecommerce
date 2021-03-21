@@ -2,6 +2,7 @@
 namespace App\Http\ViewComposers;
 
 use App\Model\Admin\Category;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class CategoryComposer {
@@ -15,6 +16,7 @@ class CategoryComposer {
 
     public function composer(View $view) {
      
-        return $view->with('categories', Category::with('subcategories:category_id,subcategory_name')->get());
+        return $view->with('categories', Cache::get('categories'));
+    
     }
 }

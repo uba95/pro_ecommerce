@@ -2,14 +2,16 @@
 
 namespace App;
 
-use App\Model\Frontend\Wishlist;
+use App\Model\Address;
+use App\Model\Wishlist;
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements MustVerifyEmail 
 {
-    use Notifiable;
+    use HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -41,6 +43,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function wishlist() {
         
         return $this->hasMany(Wishlist::class);
+    }
+
+    public function addresses() {
+        
+        return $this->hasMany(Address::class);
     }
 
     public function hasProductOnWishlist($product_id) {

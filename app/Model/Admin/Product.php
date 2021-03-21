@@ -2,7 +2,7 @@
 
 namespace App\Model\Admin;
 
-use App\Model\Frontend\Wishlist;
+use App\Model\Wishlist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Gloudemans\Shoppingcart\CanBeBought;
@@ -32,7 +32,7 @@ class Product extends Model implements Buyable
 
     public function wishlist() {
      
-        return $this->hasMany(Wishlist::class);
+        return $this->hasMany(Wishlist::class)->where('user_id', Auth::id());
     }
     
     public function getImageOneAttribute($value) {
@@ -64,9 +64,14 @@ class Product extends Model implements Buyable
 
     }
 
-    public function isOnUserWishlist($user = null) {
+    public function isOnUserWishlist() {
 
-        return $this->wishlist->where('user_id', $user ?? Auth::id())->isNotEmpty();
+        return $this->wishlist->isNotEmpty();
+    }
+
+    public static function wishlistProducts() {
+
+        return Product::find(Auth::user()->wishlist->pluck('product_id'), ['id', 'product_name', 'selling_price', 'discount_price', 'hot_new', 'image_one']);
     }
 
     public function getDiscountPercentAttribute() {

@@ -5,12 +5,17 @@ namespace App\Http\Controllers\Frontend;
 use App\Model\Admin\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Model\Frontend\Wishlist;
+use App\Model\Wishlist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
 class WishlistController extends Controller
 {
+    public function index() {
+     
+        return view('pages.wishlist', ['wishlist_products' => Product::wishlistProducts()]);
+    }
+    
     public function store($id) {
 
 

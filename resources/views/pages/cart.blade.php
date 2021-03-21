@@ -70,7 +70,7 @@
                                             <div class="cart_item_total cart_info_col">
                                                 <div class="cart_item_title">Action</div>
                                                 <div class="cart_item_text text-center">
-                                                    <form action ='{{ route('cart.destroy', $cart_product->rowId) }}' class="delete">
+                                                    <form action ='{{ route('cart.destroy', $cart_product->rowId) }}' class="delete" style="cursor:pointer">
                                                         @csrf @method('DELETE')
                                                         <i class="fa fas fa-times btn btn-danger" ></i>
                                                     </form>
@@ -89,7 +89,7 @@
                             <div class="order_total">
                                 <div class="order_total_content text-md-right">
                                     <div class="order_total_title">Order Subtotal:</div>
-                                    <div class="order_total_amount">${{ Cart::subtotal() }}</div>
+                                    <div class="order_total_amount">${{ Cart::priceTotal() }}</div>
                                     <span class="small font-weight-bold text-muted ml-1">Without Taxes Or Shipping Cost</span>
                                 </div>
                             </div>
@@ -99,7 +99,7 @@
                                     @csrf @method('DELETE')
                                     Cancel
                                 </form>
-                                <a href ='{{ route('cart.checkout') }}' class="button cart_button_checkout">Checkout</a>
+                                <a href ='{{ route('checkout.index') }}' class="button cart_button_checkout">Checkout</a>
                             </div>
                         </div>
                     </div>

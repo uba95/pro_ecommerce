@@ -46,6 +46,10 @@ function toastNotification($entitty, $message = 'empty') {
             'message'=>"$entitty",
             'alert-type'=>'success'
         ],
+        'error' => [            
+            'message'=>"$entitty",
+            'alert-type'=>'error'
+        ],
     ];
 
     return $notifications[$message];

@@ -25,15 +25,19 @@ Route::post('cart/{product}', 'Frontend\CartController@store')->name('cart.store
 Route::delete('cart/{cartItem}', 'Frontend\CartController@destroy')->name('cart.destroy');
 Route::patch('cart/{cartItem}', 'Frontend\CartController@update')->name('cart.update');
 Route::delete('cart', 'Frontend\CartController@destroyAll')->name('cart.destroyAll');
-Route::get('cart/checkout', 'Frontend\CartController@checkout')->name('cart.checkout')->middleware('auth:web');
 
 Route::get('products/{product_name}', 'Frontend\ShowProductController')->name('products.show');
-// Route::get('products/{product_name}', function () {
-//     // Cart::destroy();
-//     dd(Cart::content(), Cart::subtotal(), Cart::count());
-// })->name('products.show');
 
+Route::group(['middleware' => 'auth:web'], function () {
 
-Route::group([], function () {
+    Route::get('checkout', 'Frontend\CheckoutController@index')->name('checkout.index');
+    Route::post('checkout/coupon', 'Frontend\CheckoutController@coupon')->name('checkout.coupon');
+    Route::delete('checkout/coupon/delete', 'Frontend\CheckoutController@couponDelete')->name('checkout.coupon.destroy');
+    
+    Route::post('payment/store', 'Frontend\PaymentController@store')->name('payment.store');
+    Route::get('payment/paypal', 'Frontend\PaymentController@paypal')->name('payment.paypal');
+    Route::get('payment/paypal/order', 'Frontend\PaypalController')->name('payment.paypal.order');
+    
+    Route::resource('addresses', 'Frontend\AddressController')->except('show');
 
 });

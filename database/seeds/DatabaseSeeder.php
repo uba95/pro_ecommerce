@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        $this->call(MyCountryTableSeeder::class);
         $now = Carbon::now()->toDateTimeString();
 
         Admin::insert([
@@ -96,13 +96,13 @@ class DatabaseSeeder extends Seeder
 
         Product::insert([[
             'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
-            'product_name' => 'Product1', 'product_code' => '111', 'product_quantity' => '222',
+            'product_name' => 'Product1', 'product_code' => '111', 'product_quantity' => '222', 'product_weight' => '0.5',
             'product_details' => 'Product1', 'product_color' => '["black"]', 'product_size' => '["xl"]',
             'discount_price' => '99', 'selling_price' => '199', 'status' => '1', 'main_slider' => 1, 'created_at'=>$now, 'updated_at'=>$now
             ],
             [
             'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
-            'product_name' => 'Product2', 'product_code' => '222', 'product_quantity' => '222',
+            'product_name' => 'Product2', 'product_code' => '222', 'product_quantity' => '222', 'product_weight' => '0.5',
             'product_details' => 'Product2', 'product_color' => '["black"]', 'product_size' => '["xl"]',
             'discount_price' => null, 'selling_price' => '99', 'status' => '1', 'main_slider' => 1, 'created_at'=>$now, 'updated_at'=>$now
             ],

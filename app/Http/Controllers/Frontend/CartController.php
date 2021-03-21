@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Model\Shipment;
 use App\Model\Admin\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Session\SessionManager;
 use Illuminate\Support\Facades\Response;
 use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
@@ -16,16 +19,13 @@ class CartController extends Controller
 
         return Response::json(array_merge([
             'cart_count' =>  Cart::count(),
-            'cart_price' => Cart::subtotal(),
+            'cart_price' => Cart::priceTotal(),
         ], $push));
     }
 
     public function show() {
-        // dd(Cart::content(), Cart::subtotal(), Cart::total(), Cart::priceTotal());
         return view('pages.cart', [
             'cart_products' => Cart::content(),
-            // 'categories' =>  DB::table('categories')->get(),
-            // 'subcategories' => DB::table('subcategories')->get(),
             'products' => DB::table('products')->get(['id', 'product_quantity']),
         ]);
     }
@@ -59,11 +59,5 @@ class CartController extends Controller
      
         Cart::destroy();
         return $this->cart();
-    }
-
-
-    public function checkout() {
-     
-        return view('pages.checkout');
     }
 }

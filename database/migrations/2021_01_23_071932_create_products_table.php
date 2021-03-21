@@ -26,9 +26,10 @@ class CreateProductsTable extends Migration
             $table->text('product_details');
             $table->string('product_color');
             $table->string('product_size')->nullable();
-            $table->unsignedInteger('selling_price');
+            $table->float('product_weight')->unsigned()->nullable();
+            $table->float('selling_price')->unsigned();
             
-            $table->unsignedInteger('discount_price')->nullable();
+            $table->float('discount_price')->unsigned()->nullable();
             $table->string('video_link')->nullable();
             $table->boolean('main_slider')->nullable();
             $table->boolean('hot_deal')->nullable();

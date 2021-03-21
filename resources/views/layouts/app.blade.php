@@ -146,7 +146,7 @@
                             <div class="wishlist d-flex flex-row align-items-center justify-content-end">
                                 <div class="wishlist_icon"><img src="{{ asset('frontend/images/heart.png')}}" alt=""></div>
                                 <div class="wishlist_content">
-                                    <div class="wishlist_text"><a href="#">Wishlist</a></div>
+                                    <div class="wishlist_text"><a href ='{{ route('wishlist.index') }}'>Wishlist</a></div>
                                     <div class="wishlist_count">{{ Auth::user()->wishlist()->count() }}</div>
                                 </div>
                             </div>
@@ -161,7 +161,7 @@
                                     </div> 
                                     <div class="cart_content">
                                         <div class="cart_text"><a href ='{{ route('cart.show') }}'>Cart</a></div>
-                                        <div class="cart_price">${{ Cart::subtotal() }}</div>
+                                        <div class="cart_price">${{ Cart::priceTotal() }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -170,8 +170,11 @@
                 </div>
             </div>
         </div>
-        
-    @include('layouts.menubar')
+
+    {{-- @unless (in_array(Route::currentRouteName(), ['login', 'home']))
+        @include('layouts.menubar')
+    @endunless --}}
+
     @yield('content')
 
     <!-- Footer -->
@@ -475,6 +478,31 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
         deleteAjax('.delete', 'This Item');
         deleteAjax('.destroyAll', 'All Items');
+    </script>
+
+    <script>  
+        $(document).on("click", ".deleteWithoutAjax", function(e){
+            e.preventDefault();
+        //  var link = $(this).attr("href") ?? $(this).attr("action");
+            var form =  $(this).closest("form");
+
+        //  console.log(link);
+            swal({
+                title: "Are you Want to delete?",
+                text: "Once Delete, This will be Permanently Delete!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    //  window.location.href = link;
+                    form.submit();
+                } else {
+                swal("Safe Data!");
+                }
+            });
+        });
     </script>
 
 @stack('scripts')
