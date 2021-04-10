@@ -3,6 +3,7 @@
 namespace App\Model\Admin;
 
 use App\Model\Wishlist;
+use App\Model\WishlistItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Gloudemans\Shoppingcart\CanBeBought;
@@ -28,11 +29,6 @@ class Product extends Model implements Buyable
     public function brand() {
      
         return $this->belongsTo(Brand::class);
-    }
-
-    public function wishlist() {
-     
-        return $this->hasMany(Wishlist::class)->where('user_id', Auth::id());
     }
     
     public function getImageOneAttribute($value) {
@@ -61,17 +57,6 @@ class Product extends Model implements Buyable
     public function  scopeSelection( $q){
 
         return $q -> select('products.id','brand_id', 'product_name', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'image_one', 'status');
-
-    }
-
-    public function isOnUserWishlist() {
-
-        return $this->wishlist->isNotEmpty();
-    }
-
-    public static function wishlistProducts() {
-
-        return Product::find(Auth::user()->wishlist->pluck('product_id'), ['id', 'product_name', 'selling_price', 'discount_price', 'hot_new', 'image_one']);
     }
 
     public function getDiscountPercentAttribute() {

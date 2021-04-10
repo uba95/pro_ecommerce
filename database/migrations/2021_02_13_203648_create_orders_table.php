@@ -28,7 +28,7 @@ class CreateOrdersTable extends Migration
             $table->float('shipping_cost')->unsigned();
             $table->float('total_price')->unsigned();
 
-            $table->string('status')->nullable();
+            $table->unsignedTinyInteger('status')->default(0)->index();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('address_id')->references('id')->on('addresses')->onDelete('cascade');

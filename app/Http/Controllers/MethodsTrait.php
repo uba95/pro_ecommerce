@@ -13,8 +13,8 @@ trait MethodsTrait
     
     public static function callMethod($request = null, $id = null) {
 
-        $method = Route::getCurrentRoute()->getActionMethod();
-        return (new ParentController(...self::method($method, $id)))->$method(...array_filter([$request, $id]));
+        $methodName = Route::getCurrentRoute()->getActionMethod();
+        return (new ParentController(...self::method($methodName, $id)))->$methodName(...array_filter([$request, $id]));
     }
 
     public function index() {

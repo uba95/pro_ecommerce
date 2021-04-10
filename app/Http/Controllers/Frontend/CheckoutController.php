@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Session;
 class CheckoutController extends Controller
 {
     public function index() {
-        try {
+        // try {
             
             $cart_products = Cart::content();
             $cart_coll = new Collection();
@@ -26,39 +26,44 @@ class CheckoutController extends Controller
             $customer = User::with('addresses')->find(Auth::id());
             $addresses = $customer->addresses;
             $address = request('address_id') ? $addresses->where('id', request('address_id'))->first() : $addresses->first();
-            $shipment = $address && count($cart_products) > 0 ? 
-            $this->createShippingProcess($cart_products, $address) : null;
+            $shipment = $address && count($cart_products) ? 
+            Shipment::setAddress($address)->readyParcel($cart_products)->readyShipment() : null;
             
             if (request()->expectsJson()) {
 
-                $html = $shipment ? view('pages.checkout.rates', compact('shipment'))->render(): 'Not Found';    
+                $html = !$shipment || optional($shipment)->rates 
+                ? view('pages.checkout.rates', compact('shipment'))->render()
+                : 'Sorry No Couries To Your Address'; 
+                   
                 return response()->json(compact('html'));    
             }
             
-            return view('pages.checkout.index', compact('cart_products', 'addresses', 'shipment')) ;
+            return !$shipment || optional($shipment)->rates ? 
+            view('pages.checkout.index', compact('cart_products', 'addresses', 'shipment')) :
+            redirect()->route('home')->with(toastNotification('Sorry No Couries To Your Address', 'error'));
 
-        } catch (\Exception $ex) {
-            abort(500, 'Error, Please Try Later.');
-        }
+        // } catch (\Exception $ex) {
+        //     abort(500);
+        // }
     }
     public function coupon() {
 
         try {
 
-            $coupon = Coupon::where('coupon_name', request('coupon_name'))->first();
+            $coupon = Coupon::valid(request('coupon_name'))->first();
 
             $rate_amount = request('rate_amount');
             $total = Cart::priceTotal() + $rate_amount;
             Cart::setGlobalDiscount(0);
+            Session::forget('coupon');
+            Session::save();
 
             if (!$coupon) {
-                return response()->json(['error' => 'Coupon Not Found.'] + compact('total'));
+                return response()->json(['error' => 'Coupon Not Valid.'] + compact('total'));
             }
-
-            // $rate_amount = (new Shipment())->retrieveRate(request('rate_object_id'))->amount;
             if ($coupon && $rate_amount) {
-
-                Cart::setGlobalDiscount(10);
+                Session::put('coupon', $coupon->coupon_name);
+                Cart::setGlobalDiscount($coupon->discount);
                 $discount =  Cart::discount();
                 $total = Cart::subtotal() + $rate_amount;
             }
@@ -81,10 +86,5 @@ class CheckoutController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['error' => 'Error, Please Try Later.']);
         }
-    }
-
-    private function createShippingProcess($cart_products, $address)
-    {
-        return Shipment::setPickupAddress()->setDeliveryAddress($address)->readyParcel($cart_products)->readyShipment();
     }
 }

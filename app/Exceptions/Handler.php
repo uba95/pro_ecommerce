@@ -58,7 +58,7 @@ class Handler extends ExceptionHandler
 
                 return Request::routeIs('admin.*') && isAdmin() ? 
                     Response::json(toastNotification('Page', 'not_found')) :
-                    Response::json(['error' => 'Product Not Found']);
+                    Response::json(['error' => 'Page Not Found']);
             } else {
 
                 return Request::routeIs('admin.*') && isAdmin() ? 

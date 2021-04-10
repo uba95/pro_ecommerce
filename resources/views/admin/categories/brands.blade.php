@@ -28,7 +28,7 @@
               <tbody>
                 @foreach ($brands as $key => $brand)
                     <tr>
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $brand->id }}</td>
                         <td>{{ $brand->brand_name }}</td>
                         <td>
                             <img src="{{ $brand->brand_logo }}" alt="" width="100" height="40">

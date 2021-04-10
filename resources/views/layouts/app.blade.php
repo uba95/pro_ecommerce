@@ -126,7 +126,7 @@
                                                     <li><a class="clc" href="#">All Categories</a></li>
                                                         @foreach ($categories ?? DB::table('categories')->get('category_name') as $category)
                                                         <li class="hassubs">
-                                                            <a href="#">{{ $category->category_name }}</i></a>
+                                                            <a href="#">{{ $category->category_name }}</a>
                                                         </li>  
                                                         @endforeach            
                                                 </ul>
@@ -147,7 +147,7 @@
                                 <div class="wishlist_icon"><img src="{{ asset('frontend/images/heart.png')}}" alt=""></div>
                                 <div class="wishlist_content">
                                     <div class="wishlist_text"><a href ='{{ route('wishlist.index') }}'>Wishlist</a></div>
-                                    <div class="wishlist_count">{{ Auth::user()->wishlist()->count() }}</div>
+                                    <div class="wishlist_count">{{ Auth::user()->wishlistItems()->count() }}</div>
                                 </div>
                             </div>
                             @endauth
@@ -170,7 +170,7 @@
                 </div>
             </div>
         </div>
-
+    </header>
     {{-- @unless (in_array(Route::currentRouteName(), ['login', 'home']))
         @include('layouts.menubar')
     @endunless --}}
@@ -480,16 +480,20 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         deleteAjax('.destroyAll', 'All Items');
     </script>
 
-    <script>  
-        $(document).on("click", ".deleteWithoutAjax", function(e){
+    <script>
+    function dangerAlert(myclass, mytext = false) {  
+        $(document).on("click", myclass, function(e){
             e.preventDefault();
         //  var link = $(this).attr("href") ?? $(this).attr("action");
             var form =  $(this).closest("form");
-
+            if (mytext) {
+                var title = "Are You Sure Want To Cancel This Order?"
+                var text = ""
+            } 
         //  console.log(link);
             swal({
-                title: "Are you Want to delete?",
-                text: "Once Delete, This will be Permanently Delete!",
+                title: !mytext ? "Are You Sure Want To Delete This Item?" : title,
+                text: !mytext ? "Once Delete, This Will Be Permanently Delete!" : text,
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -498,11 +502,12 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                 if (willDelete) {
                     //  window.location.href = link;
                     form.submit();
-                } else {
-                swal("Safe Data!");
                 }
             });
         });
+    }
+    dangerAlert(".deleteWithoutAjax");
+    dangerAlert(".cancelWithoutAjax", true);
     </script>
 
 @stack('scripts')

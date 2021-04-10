@@ -3,6 +3,7 @@
 namespace App\Model\Admin;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Events\forgetCacheCategories;
 
 class Subcategory extends Model
 {

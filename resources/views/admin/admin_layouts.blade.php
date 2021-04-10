@@ -66,6 +66,7 @@
             <span class="menu-item-label">Dashboard</span>
           </div><!-- menu-item -->
         </a><!-- sl-menu-link -->
+
         <a href="#" class="sl-menu-link">
           <div class="sl-menu-item">
             <i class="menu-item-icon ion-ios-pie-outline tx-20"></i>
@@ -78,6 +79,7 @@
           <li class="nav-item"><a href ='{{ route('admin.subcategories.index') }}' class="nav-link">Subcategories</a></li>
           <li class="nav-item"><a href ='{{ route('admin.brands.index') }}' class="nav-link">Brands</a></li>
         </ul>
+
         <a href="#" class="sl-menu-link">
           <div class="sl-menu-item">
             <i class="menu-item-icon icon ion-ios-filing-outline tx-24"></i>
@@ -89,6 +91,126 @@
           <li class="nav-item"><a href ='{{ route('admin.products.index') }}' class="nav-link">All Products</a></li>
           <li class="nav-item"><a href ='{{ route('admin.products.create') }}' class="nav-link">Add New Product</a></li>
         </ul>
+
+        <a href="#" class="sl-menu-link">
+          <div class="sl-menu-item">
+            <i class="menu-item-icon icon ion-ios-filing-outline tx-24"></i>
+            <span class="menu-item-label">Orders</span>
+            <i class="menu-item-arrow fa fa-angle-down"></i>
+          </div><!-- menu-item -->
+        </a><!-- sl-menu-link -->
+        <ul class="sl-menu-sub nav flex-column">
+          <li class="nav-item"><a href ='{{ route('admin.orders.index') }}' class="nav-link">All Orders</a></li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.orders.index', ['status' => 'pending']) }}' class="nav-link">
+              Pending
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.orders.index', ['status' => 'paid']) }}' class="nav-link">
+              Paid
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.orders.index', ['status' => 'shipped']) }}' class="nav-link">
+              Shipped
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.orders.index', ['status' => 'delivered']) }}' class="nav-link">
+              Delivred
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.orders.index', ['status' => 'canceled']) }}' class="nav-link">
+              Canceled
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.orders.index', ['status' => 'returning']) }}' class="nav-link">
+            Returning
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.orders.index', ['status' => 'returned']) }}' class="nav-link">
+              Returned
+            </a>
+          </li>
+        </ul>
+
+
+        <a href="#" class="sl-menu-link">
+          <div class="sl-menu-item">
+            <i class="menu-item-icon icon ion-ios-filing-outline tx-24"></i>
+            <span class="menu-item-label">Cancel Order Requests</span>
+            <i class="menu-item-arrow fa fa-angle-down"></i>
+          </div><!-- menu-item -->
+        </a><!-- sl-menu-link -->
+        <ul class="sl-menu-sub nav flex-column">
+          <li class="nav-item"><a href ='{{ route('admin.cancel_orders.index') }}' class="nav-link">All Cancel Requests</a></li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.cancel_orders.index', ['status' => 'pending']) }}' class="nav-link">
+              Pending
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.cancel_orders.index', ['status' => 'approved']) }}' class="nav-link">
+              Approved
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.cancel_orders.index', ['status' => 'refunded']) }}' class="nav-link">
+              Refunded
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.cancel_orders.index', ['status' => 'rejected']) }}' class="nav-link">
+              Rejected
+            </a>
+          </li>
+        </ul>
+
+        <a href="#" class="sl-menu-link">
+          <div class="sl-menu-item">
+            <i class="menu-item-icon icon ion-ios-filing-outline tx-24"></i>
+            <span class="menu-item-label">Return Order Requests</span>
+            <i class="menu-item-arrow fa fa-angle-down"></i>
+          </div><!-- menu-item -->
+        </a><!-- sl-menu-link -->
+        <ul class="sl-menu-sub nav flex-column">
+          <li class="nav-item"><a href ='{{ route('admin.return_orders.index') }}' class="nav-link">All Return Requests</a></li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.return_orders.index', ['status' => 'pending']) }}' class="nav-link">
+              Pending
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.return_orders.index', ['status' => 'approved']) }}' class="nav-link">
+              Approved
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.return_orders.index', ['status' => 'shipped']) }}' class="nav-link">
+              Shipped
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.return_orders.index', ['status' => 'returned']) }}' class="nav-link">
+              Returned
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.return_orders.index', ['status' => 'refunded']) }}' class="nav-link">
+              Refunded
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.return_orders.index', ['status' => 'rejected']) }}' class="nav-link">
+              Rejected
+            </a>
+          </li>
+        </ul>
+
         <a href="#" class="sl-menu-link">
           <div class="sl-menu-item">
             <i class="menu-item-icon icon ion-ios-filing-outline tx-24"></i>
@@ -101,6 +223,7 @@
           <li class="nav-item"><a href ='{{ route('admin.blog_posts.index') }}' class="nav-link">Blog Posts</a></li>
           <li class="nav-item"><a href ='{{ route('admin.blog_posts.create') }}' class="nav-link">Add New Post</a></li>
         </ul>
+
         <a href="#" class="sl-menu-link">
           <div class="sl-menu-item">
             <i class="menu-item-icon icon ion-ios-filing-outline tx-24"></i>
@@ -112,6 +235,7 @@
           <li class="nav-item"><a href ='{{ route('admin.coupons.index') }}' class="nav-link">Coupons</a></li>
           <li class="nav-item"><a href ='{{ route('admin.newslaters.index') }}' class="nav-link">Newslaters</a></li>
         </ul>
+
       </div><!-- sl-sideleft-menu -->
 
       <br>
@@ -389,12 +513,6 @@
       selectOtherMonths: true
     });
 
-    $('#datepickerNoOfMonths').datepicker({
-      showOtherMonths: true,
-      selectOtherMonths: true,
-      numberOfMonths: 2
-    });
-
     // Color picker
     $('#colorpicker').spectrum({
       color: '#17A2B8'
@@ -475,28 +593,76 @@
      </script>  
 
      <script>  
-         $(document).on("click", ".delete", function(e){
+function sure(myclass) {
+  $(document).on("click", myclass, function(e){
              e.preventDefault();
             //  var link = $(this).attr("href") ?? $(this).attr("action");
              var form =  $(this).closest("form");
+             var title = "";
+             var text = "";
+             var danger = false;
+             switch (myclass) {
+               case ".approve":
+                 title = "Are You Sure Want To Approve This Request?";
+                 text = "The Order Will Be Canceled";
+                 break;
+               case ".refuned":
+                 title = "Are You Sure Payment Is Refunded?";
+                 break;
+               case ".reject":
+                 title = "Are You Sure Want To Reject This Request?";
+                 danger = true;
+                 break;
 
-            //  console.log(link);
+               case ".cancel":
+                 title = "Are You Sure Want To Cancel This Order?";
+                 danger = true;
+                 break;
+               case ".pay":
+                 title = "Are You Sure Want To Accept Payment To This Order?";
+                 break;
+               case ".ship":
+                 title = "Are You Sure Want To Start Shipping This Order?";
+                 break;
+               case ".deliver":
+                 title = "Are You Sure This Order Is Delivered?";
+                 break;
+             
+               default:
+                 title = "Are You Sure Want To Delete This Item?";
+                 danger = true;
+                 break;
+             }
+
                 swal({
-                  title: "Are you Want to delete?",
-                  text: "Once Delete, This will be Permanently Delete!",
+                  title:  title,
+                  text: text,
                   icon: "warning",
                   buttons: true,
-                  dangerMode: true,
+                  dangerMode: danger,
                 })
                 .then((willDelete) => {
                   if (willDelete) {
                       //  window.location.href = link;
+                      var formaction = $(this).attr('formaction')
+                      if (formaction) {
+                        form.attr('action', formaction)
+                      }
                       form.submit();
-                  } else {
-                    swal("Safe Data!");
                   }
                 });
             });
+}
+sure(".delete");
+
+sure(".approve");
+sure(".refuned");
+sure(".reject");
+
+sure(".cancel");
+sure(".pay");
+sure(".ship");
+sure(".deliver");
     </script>
 
     

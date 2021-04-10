@@ -26,7 +26,7 @@
               <tbody>
                 @foreach ($categories as $key => $category)
                     <tr>
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $category->id }}</td>
                         <td>{{ $category->category_name }}</td>
                         <td>
                             <a href ='{{ route('admin.blog_categories.edit', $category->id) }}' class="btn btn-sm btn-info">Edit</a>

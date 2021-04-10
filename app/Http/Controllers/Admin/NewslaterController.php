@@ -5,44 +5,21 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\Newslater;
-use App\Http\Controllers\MethodsTrait;
 
-class NewslaterController extends ParentController
+class NewslaterController extends Controller
 {
-    
-    use MethodsTrait;
+    public function index() {
+        return view('admin.newslater', ['newslaters' => Newslater::all()]);
+    }
 
-    public static function method($method, $id=null) {
-     
-        switch ($method) {
-            case 'index':
-                return array_values([
-                    'models' => [Newslater::all()],
-                    'names' => ["newslaters"],
-                    'path' => 'admin.newslater',
-                    'data' => [],
-                ]);
-                break;
+    public function store(Request $request) {
+        $validatedData = $request->validate(['email' => 'required|unique:newslaters|max:255']);
+        Newslater::create($validatedData);
+        return redirect()->back()->with(toastNotification('Thanks For Subscribing!'));
+    }
 
-            case 'store':
-                return array_values([
-                    'models' => [Newslater::class],
-                    'names' => ["Thanks For Subscribing!"],
-                    'path' => '',
-                    'data' => [[
-                        'email' => 'required|unique:newslaters|max:255',
-                    ]],
-                ]);
-                break;
-                        
-            case 'destroy':
-                return array_values([
-                    'models' => [Newslater::findOrFail($id)],
-                    'names' => ["Newslater"],
-                    'path' => '',
-                    'data' => [],
-                ]);               
-                break;
-        }
+    public function destroy(Newslater $newslater) {
+        $newslater->delete();
+        return redirect()->back()->with(toastNotification('Newslater', 'deleted'));
     }
 }

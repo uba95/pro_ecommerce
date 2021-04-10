@@ -8,17 +8,19 @@ use Shippo_Object;
 
 class StripeService 
 {
-    public static function charge(float $amount, $courier) {
+    public static function charge(float $amount, $courier, $returnOrder = false) {
 
         Stripe::setApiKey(env('STRIPE_SECRET'));
         
-        $charge = Charge::create([
+        Charge::create([
             'amount' => $amount * 100,
             'currency' => 'usd',
             'source' => request('stripeToken'),
         ]);
 
-        return OrderService::create('Stripe', $courier, $charge);
+        return !$returnOrder 
+                ?  OrderService::create('Stripe', $courier) 
+                : ReturnOrderService::create('Stripe', $courier);
     }
 
 }

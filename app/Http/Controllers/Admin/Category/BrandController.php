@@ -8,68 +8,60 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Controllers\Admin\ParentController;
-use App\Http\Controllers\MethodsTrait;
 
-class BrandController extends ParentController
+class BrandController extends Controller
 {
-    
+    public function index() {
+        return view('admin.categories.brands', ['brands' => Brand::all()]);
+    }
 
-    use MethodsTrait;
-
-    public static function method($method, $id=null) {
+    public function store(Request $request) {
      
-        switch ($method) {
-            case 'index':
-                return array_values([
-                    'models' => [Brand::all()],
-                    'names' => ["brands"],
-                    'path' => 'admin.categories.brands',
-                    'data' => [],
-                ]);
-                break;
+        $validatedData = $request->validate([
+            'brand_name' => 'required|unique:brands|max:50',
+            'brand_logo' => 'image|max:4096',
+        ]);
 
-            case 'store':
-                return array_values([
-                    'models' => [Brand::class],
-                    'names' => ["Brand"],
-                    'path' => '',
-                    'data' => [[
-                        'brand_name' => 'required|unique:brands|max:255',
-                        'brand_logo' => 'image|max:4096',
-                    ]],
-                ]);
-                break;
-            
-            case 'edit':
-                return array_values([
-                    'models' => [Brand::findOrFail($id)],
-                    'names' => ["brand"],
-                    'path' => 'admin.categories.brands_edit',
-                    'data' => [],
-                ]);
-                break;
-            
-            case 'update':
-                return array_values([
-                    'models' => [Brand::findOrFail($id)],
-                    'names' => ["Brand"],
-                    'path' => 'admin.brands.index',
-                    'data' => [[
-                        'brand_name' => ['required', 'max:255', Rule::unique('brands')->ignore($id)],
-                        'brand_logo' => ['image', 'max:4096'],
-                    ]],
-                ]);
-                break;
-            
-            case 'destroy':
-                return array_values([
-                    'models' => [Brand::findOrFail($id)],
-                    'names' => ["Brand"],
-                    'path' => '',
-                    'data' => [],
-                ]);               
-                break;
+        if($request->brand_logo) {        
+            $validatedData['brand_logo'] = $request->file('brand_logo')->store('media/brands', 'public');
         }
+
+        Brand::create($validatedData);
+
+        return redirect()->back()->with(toastNotification('Brand', 'added'));
+    }
+
+    public function edit(Brand $brand) {
+        return view('admin.categories.brands_edit', compact('brand'));
+    }
+
+    public function update(Brand $brand, Request $request) {
+
+        $validatedData = $request->validate([
+            'brand_name' => ['required', 'max:50', Rule::unique('brands')->ignore($brand->id)],
+            'brand_logo' => ['image', 'max:4096'],   
+        ]);
+
+        if($request->brand_logo) {
+
+            $old_logo = $brand->getOriginal('brand_logo');
+
+            if ($old_logo) {
+                Storage::disk('public')->delete($old_logo);
+            }
+
+            $validatedData['brand_logo'] = $request->file('brand_logo')->store('media/brands', 'public');
+        }
+
+        $brand->update($validatedData);
+
+        return redirect()->route('admin.brands.index')->with(toastNotification('Brand', 'updated'));
+    }
+
+    public function destroy(Brand $brand) {
+
+        Storage::disk('public')->delete($brand->getOriginal('brand_logo'));
+        $brand->delete();
+        return redirect()->back()->with(toastNotification('Brand', 'deleted'));
     }
 }

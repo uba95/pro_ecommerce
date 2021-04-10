@@ -40,4 +40,9 @@ Route::group(['middleware' => 'auth:admin', 'as' => 'admin.'], function () {
 
     Route::resource('blog_posts', 'Blog\BlogPostController')->except('show');
 
+    Route::resource('orders', 'Order\OrderController')->only('index', 'show', 'update');
+
+    Route::resource('cancel_orders', 'Order\CancelOrderRequestController')->only('index', 'update');
+
+    Route::resource('return_orders', 'Order\ReturnOrderRequestController')->only('index', 'show', 'update');
 });

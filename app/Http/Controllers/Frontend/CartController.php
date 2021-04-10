@@ -35,10 +35,9 @@ class CartController extends Controller
         $product = Product::findOrFail($id);
 
         Cart::add($product, request()->product_quantity, [
-            'image' => $product->image_one,
             'color' => request()->product_color,
             'size' => request()->product_size,
-            ]);
+        ]);
 
         return $this->cart(['success' => 'Product Added To Your Cart']);
     }

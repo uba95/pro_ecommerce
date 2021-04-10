@@ -28,7 +28,7 @@
               <tbody>
                 @foreach ($posts as $key => $post)
                     <tr>
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $post->id }}</td>
                         <td>{{ $post->post_title }}</td>
                         <td>{{ $post->category->category_name }}</td>
                         <td>

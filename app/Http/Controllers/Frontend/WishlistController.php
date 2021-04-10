@@ -13,42 +13,26 @@ class WishlistController extends Controller
 {
     public function index() {
      
-        return view('pages.wishlist', ['wishlist_products' => Product::wishlistProducts()]);
+        return view('pages.wishlist', [
+            'wishlist_items' => Auth::user()->wishlistItems()->with('product:id,product_name,selling_price,discount_price,hot_new,image_one')->get()
+        ]);
     }
     
-    public function store($id) {
+    public function store(Product $product) {
 
-
-        $product = Product::find($id);
-
-        if (!$product) {
-
-            return Response::json(['error' => 'Product Not Found']);	 
-        }
-
-        $userid = Auth::id();
-        $wishlist = Wishlist::where('user_id', $userid)->where('product_id', $id)->first();
+        $wishlistItem = Auth::user()->wishlistItems->where('product_id', $product->id)->first();
         
-        if (Auth::Check()) {
-        
-            if ($wishlist) {
+        if ($wishlistItem) {
 
-                $wishlist->delete();
-                $countWishlist =  Auth::user()->wishlist()->count();
-                return Response::json(['success' => 'Product Deleted From Your Wishlist', 'countWishlist' => $countWishlist]);	 
-            } else {
-
-                Wishlist::create(['user_id' => $userid, 'product_id' => $id]);
-                $countWishlist =  Auth::user()->wishlist()->count();
-
-                return Response::json(['success' => 'Product Added To Your Wishlist', 'countWishlist' => $countWishlist]);
-            }
-        
+            $wishlistItem->delete();
+            $countWishlist =  Auth::user()->wishlistItems()->count();
+            return Response::json(['success' => 'Product Deleted From Your Wishlist', 'countWishlist' => $countWishlist]);	 
         } else {
 
-            return Response::json(['error' => 'You Need To Log in First']);      
-        } 
-    
-    
+            $wishlist = Auth::user()->wishlist()->first() ?? Auth::user()->wishlist()->create();
+            $wishlist->wishlistItems()->create(['product_id' => $product->id]);
+            $countWishlist =  Auth::user()->wishlistItems()->count();
+            return Response::json(['success' => 'Product Added To Your Wishlist', 'countWishlist' => $countWishlist]);
+        }
     }
 }

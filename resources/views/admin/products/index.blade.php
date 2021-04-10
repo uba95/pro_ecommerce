@@ -46,13 +46,13 @@
                             </span>
                         </td>
                         <td class="d-flex">
-                            <a href ='{{ route('admin.products.edit', $product->id) }}' ><i class=" btn btn-sm btn-info fa fa-edit fa-fw" title="edit"></i></a>
-                            <a href ='{{ route('admin.products.status', $product->id) }}' ><i class=" btn btn-sm btn-warning fa fa-lightbulb-o fa-fw" title="change status"></i></a>
-                            <form method="POST" action='{{ route('admin.products.destroy', $product->id) }}' class="delete">
-                              @csrf @method('DELETE')
-                              <i class=" btn btn-sm btn-danger fa fa-trash fa-fw" title="delete" ></i>
-                            </form>
-                          </td>
+                          <a href ='{{ route('admin.products.edit', $product->id) }}' ><i class=" btn btn-sm btn-info fa fa-edit fa-fw" title="edit"></i></a>
+                          <a href ='{{ route('admin.products.status', $product->id) }}' ><i class=" btn btn-sm btn-warning fa fa-lightbulb-o fa-fw" title="change status"></i></a>
+                          <form method="POST" action='{{ route('admin.products.destroy', $product->id) }}' class="delete">
+                            @csrf @method('DELETE')
+                            <i class=" btn btn-sm btn-danger fa fa-trash fa-fw" title="delete" ></i>
+                          </form>
+                        </td>
                     </tr>
                 @endforeach
               </tbody>

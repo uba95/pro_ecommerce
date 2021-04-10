@@ -30,7 +30,7 @@
                     <tr>
                         <td>
                             <input type="checkbox" name="delete[]" value="{{ $newslater->id }}">
-                            {{ $key + 1 }}
+                            {{ $newslater->id }}
                         </td>
                         <td>{{ $newslater->email }}</td>
                         <td>{{ $newslater->created_at->diffForHumans() }}</td>

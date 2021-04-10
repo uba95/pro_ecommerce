@@ -2,14 +2,14 @@
 
 namespace App\Model;
 
-use App\Model\Admin\Product;
+use App\Model\WishlistItem;
 use Illuminate\Database\Eloquent\Model;
 
 class Wishlist extends Model
 {
-        protected $guarded = [];
+    protected $guarded = [];
 
-        public function product() {
-         return $this->belongsTo(Product::class);
-        }
+    public function wishlistItems() {
+        return $this->hasMany(WishlistItem::class);
+    }
 }

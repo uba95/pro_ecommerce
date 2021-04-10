@@ -7,10 +7,20 @@
 
         <div class="container py-5">
           <h2 class="text-center mb-3">Checkout</h2>
-          @if (count($addresses) > 0)
-            @if (count($cart_products) > 0)
+          @if (count($addresses))
+            @if (count($cart_products))
             <div class="row mt-5 py-2">
-
+              <div class="col-md-8 order-md-1">
+                @if ($errors->any())
+                  <div class="alert alert-danger mt-5">
+                      <ul>
+                          @foreach ($errors->all() as $error)
+                              <li class="mg-t-10"><strong>{{ $error }}</strong></li>
+                          @endforeach
+                      </ul>
+                  </div>
+                @endif
+              </div>
               @include('pages.checkout.cart')
 
               @include('pages.checkout.addresses')
@@ -40,7 +50,6 @@
                   
                   @include('pages.payment.payment_options')
 
-                  {{-- <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button> --}}
                 </form>
               </div>
             </div>
@@ -170,7 +179,7 @@
                 $('.display_coupon').attr('style', 'display: none !important');
                 $('input[name="coupon_name"]').val('');
                 if (data.error) {
-                  $('.total_pay').text((data.total).toFixed(2));
+                  data.total ? $('.total_pay').text((data.total).toFixed(2)) : '';
                   return $('#coupon_form .error').append(`<div class="alert alert-danger mt-3">${data.error}</div>`);
                 }
                 $('.display_coupon').attr('style', 'display: block !important');

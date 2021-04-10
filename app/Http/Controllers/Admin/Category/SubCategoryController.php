@@ -2,78 +2,55 @@
 
 namespace App\Http\Controllers\Admin\Category;
 
-use App\Http\Controllers\Admin\ParentController;
 use Illuminate\Http\Request;
 use App\Model\Admin\Category;
 use Illuminate\Validation\Rule;
 use App\Model\Admin\Subcategory;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\MethodsTrait;
 
-class SubCategoryController extends ParentController
+class SubCategoryController extends Controller
 {
-    
-    use MethodsTrait;
+    public function index() {   
+        return view('admin.categories.subcategories', [
+            'categories' => Category::all(),
+            'subcategories' => Subcategory::with('category')->get()
+        ]);
+    }
 
-    public static function method($method, $id=null) {
+    public function store(Request $request) {
      
-        switch ($method) {
-            case 'index':
-                return array_values([
-                    'models' => [Subcategory::with('category')->get(), Category::all()],
-                    'names' => ["subcategories", "categories"],
-                    'path' => 'admin.categories.subcategories',
-                    'data' => [],
-                ]);
-                break;
+        $validatedData = $request->validate([
+            'subcategory_name' => 'required|unique:subcategories|max:50',
+            'category_id' => 'required|numeric',
+        ], 
+        [
+            'category_id.required' => 'The category name field is required.'
+        ]);
+    
+        Subcategory::create($validatedData);
+        return redirect()->back()->with(toastNotification('Subcategory', 'added'));
+    }
 
-            case 'store':
-                return array_values([
-                    'models' => [Subcategory::class],
-                    'names' => ["Subcategory"],
-                    'path' => '',
-                    'data' => [[
-                        'subcategory_name' => 'required|unique:subcategories|max:255',
-                        'category_id' => 'required|numeric',
-                    ], 
-                    [
-                        'category_id.required' => 'The category name field is required.'
-                    ]],
-                ]);
-                break;
-            
-            case 'edit':
-                return array_values([
-                    'models' => [Subcategory::with('category')->findOrFail($id), Category::all()],
-                    'names' => ["subcategory", "categories"],
-                    'path' => 'admin.categories.subcategories_edit',
-                    'data' => [],
-                ]);
-                break;
-            
-            case 'update':
-                return array_values([
-                    'models' => [Subcategory::findOrFail($id)],
-                    'names' => ["Subcategory"],
-                    'path' => 'admin.subcategories.index',
-                    'data' => [[
-                        'subcategory_name' => ['required', 'max:255', Rule::unique('subcategories')->ignore($id)],
-                        'category_id' => ['required', 'numeric'],
-                    ], 
-                    [
-                        'category_id.required' => 'The category name field is required.'
-                    ]],
-                ]);
-                break;
-            
-            case 'destroy':
-                return array_values([
-                    'models' => [Subcategory::findOrFail($id)],
-                    'names' => ["Subcategory"],
-                    'path' => '',
-                    'data' => [],
-                ]);               
-                break;
-        }
+    public function edit(Subcategory $subcategory) {
+        return view('admin.categories.subcategories_edit', compact('subcategory') + ['categories' => Category::all()]);
+    }
+
+    public function update(Subcategory $subcategory, Request $request) {
+
+        $validatedData = $request->validate([
+            'subcategory_name' => ['required', 'max:50', Rule::unique('subcategories')->ignore($subcategory->id)],
+            'category_id' => ['required', 'numeric'],
+        ], 
+        [
+            'category_id.required' => 'The category name field is required.'
+        ]);
+
+        $subcategory->update($validatedData);
+        return redirect()->route('admin.subcategories.index')->with(toastNotification('Category', 'updated'));
+    }
+
+    public function destroy(Subcategory $subcategory) {
+        $subcategory->delete();
+        return redirect()->back()->with(toastNotification('Subcategory', 'deleted'));
     }
 }

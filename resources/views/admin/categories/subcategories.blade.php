@@ -27,7 +27,7 @@
               <tbody>
                 @foreach ($subcategories as $key => $subcategory)
                     <tr>
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $subcategory->id }}</td>
                         <td>{{ $subcategory->subcategory_name }}</td>
                         <td>{{ $subcategory->category->category_name }}</td>
                         <td>

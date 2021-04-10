@@ -9,13 +9,15 @@ use PayPalHttp\HttpException;
 
 class PaypalService 
 {
-    public static function charge($amount) {
+    public static function charge($amount, $return=false) {
 
         $environment = new SandboxEnvironment(env('PP_CLIENT_ID'), env('PP_CLIENT_SECRET'));
         $client = new PayPalHttpClient($environment);
 
         $request = new OrdersCreateRequest();
         $request->prefer('return=representation');
+        $return_requset = $return ? request()->only(['order_id','reason','details']) : [];
+        
         $request->body = [
             "intent" => "CAPTURE",
             "purchase_units" => [[
@@ -30,8 +32,8 @@ class PaypalService
                 "return_url" => route('payment.paypal.order', request()->only([
                     'billing_address',
                     'shipping_address',
-                    'rate_object_id'
-                ])) // PaypalController
+                    'rate_object_id',
+                ]) + $return_requset + compact('return')) // PaypalController
             ] 
         ];
         

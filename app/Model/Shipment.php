@@ -16,19 +16,20 @@ use Illuminate\Support\Facades\Session;
 class Shipment extends Model
 {
     protected $guarded = [];
-    protected $customer;
-    protected $warehouseAddress;
+    protected $casts = ['started_at' => 'datetime', 'delivered_at' => 'datetime'];
+    protected $pickedupAddress;
     protected $deliveryAddress;
     protected $parcel;
     protected $shipment;
-    // public static $session;
 
     public function __construct()
     {
         Shippo::setApiKey(config('shop.shipping_token'));
-
-        $this->customer = Auth::user();
-        // $this->session = app(SessionManager::class);
+    }
+    
+    public function address() {
+     
+        return $this->belongsTo(Address::class);
     }
 
     public function addShip($ship)
@@ -36,7 +37,6 @@ class Shipment extends Model
         $content = new Collection();
         $content->put($ship->object_id, $ship);
         Session::put('ship', $content);
-        // $this->session->put('ship.default', $content);
 
         return $ship;
     }
@@ -57,7 +57,7 @@ class Shipment extends Model
     /**
      * Address where the shipment will be picked up
      */
-    public static function setPickupAddress() : object
+    public static function setAddress(Address $address, $returnOrder = false) :object
     {
         $warehouse = [
             'name' => config('app.name'),
@@ -70,37 +70,26 @@ class Shipment extends Model
             'email' => config('shop.email')
         ];
 
-        $o = new self;
-        $o->warehouseAddress = $warehouse;
-        return $o;
-    }
-
-    /**
-     * @param Address $address
-     */
-    public function setDeliveryAddress(Address $address)
-    {
-        $delivery =  [
+        $setAddress =  [
             'name' => $address->alias,
             'street1' => $address->address_1,
             'city' => $address->city,
             'zip' => $address->zip,
             'country' => $address->country->iso,
             'phone' => $address->phone,
-            'email' => $this->customer->email
+            'email' => Auth::user()->email
         ];
-
-        $this->deliveryAddress = $delivery;
-        return $this;
+    
+        $o = new self;
+        $o->pickedupAddress = $returnOrder ?  $setAddress  :  $warehouse;
+        $o->deliveryAddress = !$returnOrder ?  $setAddress  :  $warehouse;
+        return  $o;
     }
 
-    /**
-     * @return \Shippo_Shipment
-     */
     public function readyShipment()
     {
         $shipment = Shippo_Shipment::create([
-                'address_from'=> $this->warehouseAddress,
+                'address_from'=> $this->pickedupAddress,
                 'address_to'=> $this->deliveryAddress,
                 'parcels'=> $this->parcel,
                 'async'=> false
@@ -130,10 +119,9 @@ class Shipment extends Model
      *
      * @return void
      */
-    public function readyParcel(Collection $collection)
+    public function readyParcel(Collection $collection, $cart = true)
     {
-        // $weight = $collection->map(fn($v) => $v->weight * $v->qty)->sum();
-        $weight = Cart::weight();
+        $weight =  $cart ?  Cart::weight() : $collection->map(fn($v) => $v->product_weight * $v->product_quantity)->sum();
 
         $parcel = array(
             'length'=> '50',

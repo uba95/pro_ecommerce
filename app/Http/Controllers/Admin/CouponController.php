@@ -2,70 +2,36 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\CouponStatus;
 use App\Model\Admin\Coupon;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Http\Controllers\MethodsTrait;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Route;
+use App\Http\Requests\CouponRequest;
 
-class CouponController extends ParentController
+class CouponController extends Controller
 {
-    use MethodsTrait;
+    
+    public function index() {
+        return view('admin.coupons.index', ['coupons' =>  Coupon::all()]);
+    }
 
-    public static function method($method, $id=null) {
-     
-        switch ($method) {
-            case 'index':
-                return array_values([
-                    'models' => [Coupon::all()],
-                    'names' => ["coupons"],
-                    'path' => 'admin.coupons.index',
-                    'data' => [],
-                ]);
-                break;
+    public function store(CouponRequest $request) {
+        Coupon::create($request->validated());
+        return redirect()->route('admin.coupons.index')->with(toastNotification('Coupon', 'added'));
+    }
 
-            case 'store':
-                return array_values([
-                    'models' => [Coupon::class],
-                    'names' => ["Coupon"],
-                    'path' => '',
-                    'data' => [[
-                        'coupon_name' => 'required|unique:coupons|max:255',
-                        'discount' => 'required|numeric|between:0,100',
-                    ]],
-                ]);
-                break;
-            
-            case 'edit':
-                return array_values([
-                    'models' => [Coupon::findOrFail($id)],
-                    'names' => ["coupon"],
-                    'path' => 'admin.coupons.edit',
-                    'data' => [],
-                ]);
-                break;
-            
-            case 'update':
-                return array_values([
-                    'models' => [Coupon::findOrFail($id)],
-                    'names' => ["Coupon"],
-                    'path' => 'admin.coupons.index',
-                    'data' => [[
-                        'coupon_name' => ['required', 'max:255', Rule::unique('coupons')->ignore($id)],
-                        'discount' => 'required|numeric|between:0,100',
-                    ]],
-                ]);
-                break;
-            
-            case 'destroy':
-                return array_values([
-                    'models' => [Coupon::findOrFail($id)],
-                    'names' => ["Coupon"],
-                    'path' => '',
-                    'data' => [],
-                ]);               
-                break;
-        }
+    public function edit(Coupon $coupon) {
+        return view('admin.coupons.edit', compact('coupon'));
+    }
+
+    public function update(Coupon $coupon, CouponRequest $request) {
+        $validated = $request->validated();
+        $validated['status'] = $coupon->expired_at->lessThan(now()) ?  'expired' : $validated['status'];
+        $coupon->update($validated);
+        return redirect()->route('admin.coupons.index')->with(toastNotification('Coupon', 'updated'));
+    }
+    
+    public function destroy(Coupon $coupon) {
+        $coupon->delete();
+        return redirect()->back()->with(toastNotification('Coupon', 'deleted'));
     }
 }

@@ -19,11 +19,13 @@ class CreateShipmentsTable extends Migration
             $table->unsignedBigInteger('address_id');
 
             $table->string('courier');
-            $table->string('status')->nullable();
+            $table->unsignedTinyInteger('status')->default(0)->index();
 
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->foreign('address_id')->references('id')->on('addresses')->onDelete('cascade');
 
+            $table->dateTime('started_at')->nullable();
+            $table->dateTime('delivered_at')->nullable();
             $table->timestamps();
         });
     }

@@ -7,6 +7,7 @@ use App\Services\OrderService;
 use App\Services\PaypalService;
 use App\Services\StripeService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PaymentRequest;
 use Illuminate\Support\Facades\Session;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Shippo_Object;
@@ -15,15 +16,15 @@ class PaymentController extends Controller
 {
     use CourierTrait;
 
-    public function store() {
+    public function store(PaymentRequest $request) {
 
         if (Session::get('checkout_cart')->first() != Cart::content()->values()) {
             return redirect()->route('cart.show');
-         }
+        }
 
         try {
             $courier = $this->courier();
-            switch (request('payment_method')) {
+            switch ($request->payment_method) {
                
                 case 'stripe':
                     return StripeService::charge(Cart::subtotal() + $courier['amount'], $courier);
@@ -37,7 +38,7 @@ class PaymentController extends Controller
                     return OrderService::create('Cash On Delivery', $courier);
                     break;
                 default:
-                    return redirect()->route('home')->with(toastNotification('Error, Please Try Later.', 'error'));
+                    return redirect()->route('home')->with(toastNotification('Payment Method Not Exist', 'error'));
             }
     
         } catch (\Exception $ex) {
