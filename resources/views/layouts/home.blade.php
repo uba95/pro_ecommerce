@@ -9,6 +9,9 @@
             @if (Route::currentRouteName() == 'return_orders.index')
                 <a href ='{{ route('return_orders.create') }}' class="btn btn-success mb-3" style="margin-left: -13px;">Add Return Order Request</a>
             @endif
+            @if (Route::currentRouteName() == 'cancel_orders.index')
+                <a href ='{{ route('cancel_orders.create') }}' class="btn btn-success mb-3" style="margin-left: -13px;">Add Cancel Order Request</a>
+            @endif
             <div class="row">
 
                 @yield('section')

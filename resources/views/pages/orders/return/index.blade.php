@@ -2,7 +2,7 @@
 @section('section')
 
 <div class="col-8 card">
-    @if (count($return_order_requests) > 0)
+    @if (count($return_order_requests))
         
     <table class="table table-response">
         <thead>

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use Shippo_Object;
-use App\Model\Shipment;
+use App\Models\Shipment;
 use App\Traits\CourierTrait;
 use PayPalHttp\HttpException;
 use App\Services\OrderService;

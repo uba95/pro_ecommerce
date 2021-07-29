@@ -156,6 +156,7 @@
                             var id =  $(this).data('id');
                             var input =  $('#quantity_input'+id).length > 0 ? $('#quantity_input'+id) : $('.quantity_input'); 
                             originalVal = input.val();
+                            if (input.val() == input.attr('max')) {return}
                             endVal = parseFloat(originalVal) + 1;
                             input.val(endVal).trigger( "change" )
                             // input.attr('value', endVal);

@@ -11,97 +11,157 @@
 
       <div class="sl-pagebody">
 
-        <div class="row row-sm">
-          <div class="col-sm-6 col-xl-3">
-            <div class="card pd-20 bg-primary">
-              <div class="d-flex justify-content-between align-items-center mg-b-10">
-                <h6 class="tx-11 tx-uppercase mg-b-0 tx-spacing-1 tx-white">Today's Sales</h6>
-                <a href="" class="tx-white-8 hover-white"><i class="icon ion-android-more-horizontal"></i></a>
+       
+
+        <br><br><br>
+
+
+        <div class="row row-sm mg-t-20">
+          <div class="col-lg-6">
+            <div class="card p-1">
+              <div class="card-header bg-transparent pd-20 bd-b bd-gray-200">
+                <h6 class="card-title tx-uppercase tx-12 mg-b-0">Latest Orders</h6>
               </div><!-- card-header -->
-              <div class="d-flex align-items-center justify-content-between">
-                <span class="sparkline2">5,3,9,6,5,9,7,3,5,2</span>
-                <h3 class="mg-b-0 tx-white tx-lato tx-bold">$850</h3>
-              </div><!-- card-body -->
-              <div class="d-flex align-items-center justify-content-between mg-t-15 bd-t bd-white-2 pd-t-10">
-                <div>
-                  <span class="tx-11 tx-white-6">Gross Sales</span>
-                  <h6 class="tx-white mg-b-0">$2,210</h6>
-                </div>
-                <div>
-                  <span class="tx-11 tx-white-6">Tax Return</span>
-                  <h6 class="tx-white mg-b-0">$320</h6>
-                </div>
-              </div><!-- -->
+              <table class="table table-white  mg-b-0 tx-12">
+                <thead>
+                  <tr class="tx-10">
+                    <th class="pd-y-5">Order #</th>
+                    <th class="pd-y-5">Price</th>
+                    <th class="pd-y-5">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($latest_orders as $order)
+                  <tr>
+                    <td>
+                      <a href ='{{ route('admin.orders.show', $order->id) }}' class="tx-inverse tx-14 tx-medium d-block">{{ $order->id }}</a>
+                      <span class="tx-11 d-block">{{ $order->created_at->diffForHumans() }}</span>
+                    </td>
+                    <td>
+                      <div class="tx-inverse tx-14 tx-medium d-block">${{ $order->total_price }}</div>
+                    </td>
+                    <td>
+                      <div class="tx-inverse tx-medium d-block">
+                        @include('layouts.orders.order_status')
+                      </div>
+                    </td>
+                  </tr>
+                  @endforeach
+                </tbody>
+              </table>
+              <div class="card-footer tx-12 pd-y-15 bg-transparent bd-t bd-gray-200">
+                <a href ='{{ route('admin.orders.index') }}'><i class="fa fa-angle-down mg-r-5"></i>View All Orders</a>
+              </div><!-- card-footer -->
             </div><!-- card -->
-          </div><!-- col-3 -->
-          <div class="col-sm-6 col-xl-3 mg-t-20 mg-sm-t-0">
-            <div class="card pd-20 bg-info">
-              <div class="d-flex justify-content-between align-items-center mg-b-10">
-                <h6 class="tx-11 tx-uppercase mg-b-0 tx-spacing-1 tx-white">This Week's Sales</h6>
-                <a href="" class="tx-white-8 hover-white"><i class="icon ion-android-more-horizontal"></i></a>
+          </div><!-- col-6 -->
+
+
+
+          <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+            <div class="card">
+              <div class="card-header pd-20 bg-transparent bd-b bd-gray-200">
+                <h6 class="card-title tx-uppercase tx-12 mg-b-0">Latest Product Purchases</h6>
               </div><!-- card-header -->
-              <div class="d-flex align-items-center justify-content-between">
-                <span class="sparkline2">5,3,9,6,5,9,7,3,5,2</span>
-                <h3 class="mg-b-0 tx-white tx-lato tx-bold">$4,625</h3>
-              </div><!-- card-body -->
-              <div class="d-flex align-items-center justify-content-between mg-t-15 bd-t bd-white-2 pd-t-10">
-                <div>
-                  <span class="tx-11 tx-white-6">Gross Sales</span>
-                  <h6 class="tx-white mg-b-0">$2,210</h6>
-                </div>
-                <div>
-                  <span class="tx-11 tx-white-6">Tax Return</span>
-                  <h6 class="tx-white mg-b-0">$320</h6>
-                </div>
-              </div><!-- -->
+              <table class="table table-white table-responsive mg-b-0 tx-12">
+                <thead>
+                  <tr class="tx-10">
+                    <th class="wd-10p pd-y-5">&nbsp;</th>
+                    <th class="pd-y-5">Item Details</th>
+                    <th class="pd-y-5 tx-right">Sold</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach ($mostSoldProductsThisMonth as $orderItem)
+                  <tr>
+                    <td class="pd-l-20">
+                      <img src="{{ $orderItem->product->image_one  }}" class="wd-55" alt="Image">
+                    </td>
+                    <td>
+                      <a href ='{{ route('admin.products.show', $orderItem->product_id) }}' class="tx-inverse tx-14 tx-medium d-block">
+                        {{ $orderItem->product_name }}
+                      </a>
+                      <span class="tx-11 d-block">
+                        <span class="square-8 mg-r-5 rounded-circle 
+                        {{ $orderItem->product->stockStatus ==  "in" 
+                        ? "bg-success" 
+                        : ($orderItem->product->stockStatus == "out" ? "bg-danger" : "bg-warning")}}">
+                        </span> 
+                        {{ $orderItem->product->product_quantity }} remaining
+                      </span>
+                    </td>
+                    <td class="valign-middle tx-right"> {{ $orderItem->sold_quantity }}</td>
+                  </tr>
+                  @endforeach
+                </tbody>
+              </table>
+              <div class="card-footer tx-12 pd-y-15 bg-transparent bd-t bd-b-200">
+                <a href ='{{ route('admin.stocks.index') }}'><i class="fa fa-angle-down mg-r-5"></i>View All Stocks</a>
+              </div><!-- card-footer -->
             </div><!-- card -->
-          </div><!-- col-3 -->
-          <div class="col-sm-6 col-xl-3 mg-t-20 mg-xl-t-0">
-            <div class="card pd-20 bg-purple">
-              <div class="d-flex justify-content-between align-items-center mg-b-10">
-                <h6 class="tx-11 tx-uppercase mg-b-0 tx-spacing-1 tx-white">This Month's Sales</h6>
-                <a href="" class="tx-white-8 hover-white"><i class="icon ion-android-more-horizontal"></i></a>
-              </div><!-- card-header -->
-              <div class="d-flex align-items-center justify-content-between">
-                <span class="sparkline2">5,3,9,6,5,9,7,3,5,2</span>
-                <h3 class="mg-b-0 tx-white tx-lato tx-bold">$11,908</h3>
-              </div><!-- card-body -->
-              <div class="d-flex align-items-center justify-content-between mg-t-15 bd-t bd-white-2 pd-t-10">
-                <div>
-                  <span class="tx-11 tx-white-6">Gross Sales</span>
-                  <h6 class="tx-white mg-b-0">$2,210</h6>
-                </div>
-                <div>
-                  <span class="tx-11 tx-white-6">Tax Return</span>
-                  <h6 class="tx-white mg-b-0">$320</h6>
-                </div>
-              </div><!-- -->
-            </div><!-- card -->
-          </div><!-- col-3 -->
-          <div class="col-sm-6 col-xl-3 mg-t-20 mg-xl-t-0">
-            <div class="card pd-20 bg-sl-primary">
-              <div class="d-flex justify-content-between align-items-center mg-b-10">
-                <h6 class="tx-11 tx-uppercase mg-b-0 tx-spacing-1 tx-white">This Year's Sales</h6>
-                <a href="" class="tx-white-8 hover-white"><i class="icon ion-android-more-horizontal"></i></a>
-              </div><!-- card-header -->
-              <div class="d-flex align-items-center justify-content-between">
-                <span class="sparkline2">5,3,9,6,5,9,7,3,5,2</span>
-                <h3 class="mg-b-0 tx-white tx-lato tx-bold">$91,239</h3>
-              </div><!-- card-body -->
-              <div class="d-flex align-items-center justify-content-between mg-t-15 bd-t bd-white-2 pd-t-10">
-                <div>
-                  <span class="tx-11 tx-white-6">Gross Sales</span>
-                  <h6 class="tx-white mg-b-0">$2,210</h6>
-                </div>
-                <div>
-                  <span class="tx-11 tx-white-6">Tax Return</span>
-                  <h6 class="tx-white mg-b-0">$320</h6>
-                </div>
-              </div><!-- -->
-            </div><!-- card -->
-          </div><!-- col-3 -->
+          </div><!-- col-6 -->
         </div><!-- row -->
+       <br> <br> <br>
+        <div class="row">
+          @foreach ($lists as $key => $list)
+          <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+            <div class="card bd-0">
+              <div class="card-header  card-header-default bg-light card-title tx-uppercase tx-12 mg-b-0 bd-b bd-gray-200">
+                {{ $listsNames[$key] }}
+              </div><!-- card-header -->
+              <div class="card-body bd bd-t-0 rounded-bottom">
+                @foreach ($list as $key => $item)
+                <div class="d-flex justify-content-between tx-inverse  tx-12">
+                  <strong class="tx-uppercase">{{ $key }}</strong>
+                  <span>{{ $item }}</span>
+                </div>
+                <hr>
+                @endforeach
+              </div><!-- card-body -->
+            </div><!-- card -->
+          </div>
+          @endforeach
+
+          <div class="card pd-20 pd-sm-25 col-lg-4">
+            <h6 class="card-body-title">Payment Methods Totals</h6>
+            <p class="mg-b-20 mg-sm-b-30"></p>
+            <div id="flotPie2" class="ht-200 ht-sm-250"></div>
+          </div><!-- card -->
+        </div><!-- row -->
+
       </div><!-- sl-pagebody -->
     </div><!-- sl-mainpanel -->
     <!-- ########## END: MAIN PANEL ########## -->
+
+    @push('charts')
+      <script>
+        var paymentMethods = @json($paymentMethods);
+        var piedata = [];
+        paymentMethods.forEach( (v) => piedata.push({ label: v.label, data: [[1, v.data]], color: v.color}) )
+
+        $.plot('#flotPie2', piedata, {
+          series: {
+            pie: {
+              show: true,
+              radius: 1,
+              innerRadius: 0.5,
+              label: {
+                show: true,
+                radius: 2/3,
+                formatter: labelFormatter,
+                threshold: 0.1
+              }
+            }
+          },
+          grid: {
+            hoverable: true,
+            clickable: true
+          },
+          legend: { show: true }
+        });
+
+        function labelFormatter(label, series) {
+          return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + Math.round(series.percent) + "%</div>";
+        }
+      </script>
+    @endpush
 @endsection

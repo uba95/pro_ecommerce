@@ -2,6 +2,16 @@
 
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Str;
+
+function calculateTotalPrice(float $price, int $quantity) : float {
+    return  round($price *  $quantity, 2);
+}
+
+function  snakeToTitle($value){
+
+    return str_replace('_', ' ', Str::title($value));
+}
 
 function  productSelectScope( $q){
 

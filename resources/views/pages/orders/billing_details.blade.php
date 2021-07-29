@@ -69,7 +69,7 @@
         </tr>
       </table>
       @if ($order->address_id == $order->shipment->address_id)
-        <strong class="alert alert-secondary">Billing Address Is Same As Shipping Address</strong>
+      <strong class="alert alert-secondary" style="display: inline-block">Billing Address Is Same As Shipping Address</strong>
       @endif
     </div>
   </div>

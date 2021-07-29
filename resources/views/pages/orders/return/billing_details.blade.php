@@ -41,6 +41,10 @@
         </tr>
 
         <tr>
+          <th> Returend Items Total Price </th>
+          <th> {{ $returnOrderRequest->returnOrderItems->sum->totalPrice }} $ </th>
+        </tr>
+        <tr>
           <th> Shipping Cost : </th>
           <th> {{ $returnOrderRequest->shipping_cost }} $ </th>
         </tr>
@@ -54,7 +58,7 @@
         </tr>
       </table>
       @if ($returnOrderRequest->billing_address_id == $returnOrderRequest->shipping_address_id)
-        <strong class="alert alert-secondary">Billing Address Is Same As Shipping Address</strong>
+        <strong class="alert alert-secondary" style="display: inline-block">Billing Address Is Same As Shipping Address</strong>
       @endif
     </div>
   </div>

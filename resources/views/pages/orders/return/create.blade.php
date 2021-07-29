@@ -379,7 +379,7 @@
                                         </fieldset>
 
                                         @else
-                                            <div class="alert alert-danger">No Order Can Be Return.</div>
+                                            <div class="alert alert-danger">There're No Any Orders Can Be Returned.</div>
                                         @endif
 
                                 </div>
@@ -492,7 +492,7 @@
                     if (order_id) {
                     
                     $.ajax({
-                        url: `/orders/${order_id}`,
+                        url: `/orders/${order_id}?return=1`,
                         type:"GET",
                         dataType:"json",
                         success:function(data) { 

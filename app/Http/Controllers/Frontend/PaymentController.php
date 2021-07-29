@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Model\Shipment;
+use App\Models\Shipment;
 use App\Services\OrderService;
 use App\Services\PaypalService;
 use App\Services\StripeService;
@@ -19,7 +19,7 @@ class PaymentController extends Controller
     public function store(PaymentRequest $request) {
 
         if (Session::get('checkout_cart')->first() != Cart::content()->values()) {
-            return redirect()->route('cart.show');
+            return redirect()->route('cart.show')->with(toastNotification('Please Refresh Your Cart', 'error'));
         }
 
         try {

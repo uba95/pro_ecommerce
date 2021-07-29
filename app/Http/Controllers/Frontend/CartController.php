@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Model\Shipment;
-use App\Model\Admin\Product;
+use App\Models\Shipment;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -45,7 +45,7 @@ class CartController extends Controller
     public function update($rowId) {
      
         $item = Cart::update($rowId, request('val'));
-        return $this->cart(['cartItem_price' => $item->qty * $item->price]);
+        return $this->cart(['cartItem_price' => round($item->qty * $item->price, 2)]);
     }
 
     public function destroy($rowId) {

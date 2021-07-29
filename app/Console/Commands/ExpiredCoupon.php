@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Enums\CouponStatus;
-use App\Model\Admin\Coupon;
+use App\Models\Coupon;
 use Illuminate\Console\Command;
 
 class ExpiredCoupon extends Command

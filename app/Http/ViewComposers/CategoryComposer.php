@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\ViewComposers;
 
-use App\Model\Admin\Category;
+use App\Models\Category;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 

@@ -45,6 +45,9 @@
                     @include('layouts.orders.order_status', ['order' => $request->order])
                   </td>
                   <td class="d-flex">
+                    <a class="btn btn-sm btn-warning mr-1" href ='{{ route('admin.cancel_orders.show', $request->id) }}' title="Show Cancel Order Request" >
+                      <i class="fa fa-eye fa-fw"></i>
+                     </a>
                     <a class="btn btn-sm btn-info mr-1" href ='{{ route('admin.orders.show', $request->order->id) }}' title="Show Order" >
                         <i class="fa fa-eye fa-fw"></i>
                     </a>

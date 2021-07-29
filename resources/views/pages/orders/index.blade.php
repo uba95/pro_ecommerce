@@ -26,7 +26,7 @@
                         <a class="btn btn-sm btn-info mr-1" href ='{{ route('orders.show', $order->id) }}' title="Show Order" >
                             <i class="fa fa-eye fa-fw"></i>
                         </a>
-                        @if (in_array($order->status, ['pending','paid']) && !$order->cancelOrderRequest)
+                        {{-- @if (in_array($order->status, ['pending','paid']) && !$order->cancelOrderRequests)
                             <form method="POST" action='{{ route('cancel_orders.store') }}' class="cancelWithoutAjax">
                                 @csrf
                                 <input type="hidden" name="order_id" value="{{ $order->id }}">
@@ -34,7 +34,7 @@
                                 <span class="fa fa-times fa-fw"></span>
                                 </button>
                             </form>
-                        @endif
+                        @endif --}}
                     </td>
                 </tr>
             @endforeach

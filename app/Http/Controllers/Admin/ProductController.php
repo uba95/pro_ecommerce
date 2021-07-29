@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Model\Admin\Brand;
-use App\Model\Admin\Product;
+use App\Models\Brand;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Model\Admin\Category;
+use App\Models\Category;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use Intervention\Image\Facades\Image;

@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Model\Admin\Category;
+use App\Models\Category;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Queue\SerializesModels;

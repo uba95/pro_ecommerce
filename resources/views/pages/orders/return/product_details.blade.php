@@ -4,8 +4,9 @@
       <table class="table display responsive nowrap">
         <thead>
           <tr>
-            <th class="wd-15p">Return Order Item ID</th>
-            <th class="wd-15p">Order Item ID</th>
+            <th class="wd-15p">Return Order Item #</th>
+            <th class="wd-15p">Order Item #</th>
+            <th class="wd-15p">Product Name</th>
             <th class="wd-15p">Quantity</th>
             <th class="wd-15p">Unit Price</th>
             <th class="wd-20p">Total</th>
@@ -16,9 +17,10 @@
           <tr>
             <td>{{ $returnOrderItem->id }}</td>
             <td>{{ $returnOrderItem->orderItem->id }}</td>
+            <td>{{ $returnOrderItem->orderItem->product_name }}</td>
             <td>{{ $returnOrderItem->product_quantity }}</td>
             <td>{{ $returnOrderItem->orderItem->product_price }}$</td>
-            <td>{{ round($returnOrderItem->product_quantity *  $returnOrderItem->orderItem->product_price, 2) }}$</td>
+            <td>{{ $returnOrderItem->totalPrice }}$</td>
           </tr>
           @endforeach
         </tbody>

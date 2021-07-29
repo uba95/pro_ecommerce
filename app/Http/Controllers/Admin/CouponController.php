@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\CouponStatus;
-use App\Model\Admin\Coupon;
+use App\Models\Coupon;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CouponRequest;
 

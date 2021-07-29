@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Model\Shipment;
+use App\Models\Shipment;
 
 trait CourierTrait {
 

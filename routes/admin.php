@@ -42,7 +42,14 @@ Route::group(['middleware' => 'auth:admin', 'as' => 'admin.'], function () {
 
     Route::resource('orders', 'Order\OrderController')->only('index', 'show', 'update');
 
-    Route::resource('cancel_orders', 'Order\CancelOrderRequestController')->only('index', 'update');
+    Route::resource('cancel_orders', 'Order\CancelOrderRequestController')->only('index', 'show', 'update');
 
     Route::resource('return_orders', 'Order\ReturnOrderRequestController')->only('index', 'show', 'update');
+
+    Route::get('stocks', 'StockController')->name('stocks.index');
+
+    Route::get('reports', 'ReportController@index')->name('reports.index');
+
+    Route::get('reports/salesBy', 'SalesByController@index')->name('reports.salesBy');
+    Route::post('reports/salesBy', 'SalesByController@index')->name('reports.salesBy');
 });

@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Model\ReturnOrderRequest;
-use App\Model\Shipment;
+use App\Models\ReturnOrderRequest;
+use App\Models\Shipment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -15,7 +15,7 @@ class ReturnOrderService
 {
 
     public static function create(string $payment_method, Shippo_Object $courier) {
-        try {
+        // try {
         
             DB::beginTransaction();
         
@@ -35,10 +35,10 @@ class ReturnOrderService
                 "details" => request('details'),
                 ] + $times);
     
-                Session::get('return_order_items')->map(fn($order_item) => DB::table('return_order_items')->insert([
+                Session::get('return_order_items')->map(fn($item) => DB::table('return_order_items')->insert([
                 'request_id' => $return_order_request_id,
-                'order_item_id' => $order_item->id,
-                'product_quantity' => $order_item->product_quantity,
+                'order_item_id' => $item->id,
+                'product_quantity' => $item->product_quantity,
                 ] + $times)
             );
         
@@ -49,8 +49,8 @@ class ReturnOrderService
 
             return redirect()->route('return_orders.index')->with(toastNotification('Your Request Is Submited Successfully'));
     
-        } catch (\Exception $ex) {
-            DB::rollBack();
-        }
+        // } catch (\Exception $ex) {
+        //     DB::rollBack();
+        // }
     }
 }

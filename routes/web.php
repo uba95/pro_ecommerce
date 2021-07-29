@@ -1,7 +1,9 @@
 <?php
 
-use App\Model\Admin\Coupon;
-use App\Model\Admin\Product;
+use App\Enums\ReturnOrderStatus;
+use App\Models\Coupon;
+use App\Models\Product;
+use App\Models\ReturnOrderRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -46,24 +48,10 @@ Route::group(['middleware' => 'auth:web'], function () {
 
     Route::resource('orders', 'Frontend\OrderController')->only('index', 'show');
     
-    Route::resource('cancel_orders', 'Frontend\CancelOrderRequestController')->only('index', 'store');
-
+    Route::resource('cancel_orders', 'Frontend\CancelOrderRequestController')->only('index', 'show','create','store');
+    
     Route::resource('return_orders', 'Frontend\ReturnOrderRequestController')->only('index', 'show','create','store');
     Route::get('ss', function () {
-        $time = ['created_at'=> now(), 'updated_at'=> now()];
-        Product::insert([[
-            'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
-            'product_name' => 'Product3', 'product_code' => '11', 'product_quantity' => '22', 'product_weight' => '0.1',
-            'product_details' => 'Product1', 'product_color' => '["black", "red"]', 'product_size' => '["xl"]',
-            'discount_price' => '14.99', 'selling_price' => '19.99', 'status' => '1', 'main_slider' => 1
-            ] + $time,
-            [
-            'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
-            'product_name' => 'Product4', 'product_code' => '22', 'product_quantity' => '22', 'product_weight' => '0.1',
-            'product_details' => 'Product2', 'product_color' => '["black"]', 'product_size' => '["xl", "xxl"]',
-            'discount_price' => null, 'selling_price' => '19.99', 'status' => '1', 'main_slider' => 1
-            ] + $time,
-        ]);
     //    dd(Session::all());
     });
 });

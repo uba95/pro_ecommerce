@@ -33,6 +33,20 @@
                             {{$product->category->category_name .'->'. $product->subcategory->subcategory_name .'->'. $product->brand->brand_name}}
                         </div>
 						<div class="product_name">{{ $product->product_name }}</div>
+						<div>
+							@switch($product->stockStatus)
+								@case('in')
+									<strong class="text-success">In Stock</strong>
+									@break
+								@case('only')
+									<strong class="text-warning">Only {{$product->product_quantity}} Left In Stock, Hurry Up!</strong>
+									@break
+								@case('out')
+									<strong class="text-danger">Out Of Stock</strong>
+									@break
+									
+							@endswitch
+						</div>
 						<div class="rating_r rating_r_4 product_rating"><i></i><i></i><i></i><i></i><i></i></div>
 						<div class="product_text"><p>{!! Str::limit($product->product_details, 3000)   !!}</p></div>
 						<div class="order_info d-flex flex-row">

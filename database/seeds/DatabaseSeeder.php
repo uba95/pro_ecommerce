@@ -1,12 +1,12 @@
 <?php
 
-use App\Admin;
-use App\Model\Address;
-use App\Model\Admin\Brand;
-use App\Model\Admin\Category;
-use App\Model\Admin\Product;
-use App\Model\Admin\Subcategory;
-use App\User;
+use App\Models\Admin;
+use App\Models\Address;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Subcategory;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -99,14 +99,26 @@ class DatabaseSeeder extends Seeder
             'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
             'product_name' => 'Product1', 'product_code' => '111', 'product_quantity' => '222', 'product_weight' => '0.5',
             'product_details' => 'Product1', 'product_color' => '["black"]', 'product_size' => '["xl"]',
-            'discount_price' => '99', 'selling_price' => '199', 'status' => '1', 'main_slider' => 1
+            'discount_price' => '100', 'selling_price' => '200', 'status' => '1', 'main_slider' => 1
             ] + $time,
             [
             'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
             'product_name' => 'Product2', 'product_code' => '222', 'product_quantity' => '222', 'product_weight' => '0.5',
             'product_details' => 'Product2', 'product_color' => '["black"]', 'product_size' => '["xl"]',
-            'discount_price' => null, 'selling_price' => '99', 'status' => '1', 'main_slider' => 1
+            'discount_price' => null, 'selling_price' => '150', 'status' => '1', 'main_slider' => 1
             ] + $time,
+            [
+            'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
+            'product_name' => 'Product3', 'product_code' => '11', 'product_quantity' => '22', 'product_weight' => '0.1',
+            'product_details' => 'Product1', 'product_color' => '["black", "red"]', 'product_size' => '["xl"]',
+            'discount_price' => '15', 'selling_price' => '20', 'status' => '1', 'main_slider' => 1
+            ] + $time,
+            [
+            'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
+            'product_name' => 'Product4', 'product_code' => '22', 'product_quantity' => '22', 'product_weight' => '0.1',
+            'product_details' => 'Product2', 'product_color' => '["black"]', 'product_size' => '["xl", "xxl"]',
+            'discount_price' => null, 'selling_price' => '50', 'status' => '1', 'main_slider' => 1
+            ] + $time,    
         ]);
 
         User::insert([

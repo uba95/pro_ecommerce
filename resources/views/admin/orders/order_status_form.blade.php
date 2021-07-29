@@ -29,7 +29,7 @@
         <strong class="alert alert-danger">Some Order Items Are In Returning Process.</strong>
         @break
       @case('returned')
-        <strong class="alert alert-danger">Some Order Items Are Reurned.</strong>
+        <strong class="alert alert-danger">The Order Is Reurned.</strong>
         @break
       @endswitch
 
@@ -41,13 +41,44 @@
 
     @endif
 
+    @if ($order->areSomeItemsCanceled()  && $order->status != 'canceled')
+      <strong class="alert alert-danger my-3">Some Order Items Are Canceled.</strong>
+    @endif
+
+    @if ($order->areSomeItemsReturned() && $order->status != 'returned')
+      <strong class="alert alert-danger my-3">Some Order Items Are Reurned.</strong>
+    @endif
+
     @if ($order->isCancelPending())
-      <div class="alert alert-danger my-3">There Is Cancel Order Requset You Must Resolve It First.</div>
+      <div class="alert alert-danger my-3"><strong>There Is A Pending Cancel Order Request You Must Resolve It First.</strong></div>
     @endif
 
     @if ($order->isReturnPending())      
-    <div class="alert alert-danger my-3">There Is Return Order Requset You Must Resolve It First.</div>
+      <div class="alert alert-danger my-3"><strong>There Is A Pending Return Order Request.</strong></div>
     @endif
+
+    @if ($order->cancelOrderRequests->isNotEmpty())      
+      <ul class="my-4 p-1 bg-light">
+        @foreach ($order->cancelOrderRequests as $key => $request)
+            <li class="mg-t-10">
+              <a href ='{{ route('admin.cancel_orders.show', $request->id) }}'>Cancel Request {{ $key + 1 }}</a>
+              @include('layouts.orders.cancel_order_requst_status')  
+            </li>
+        @endforeach
+     </ul>
+    @endif
+
+    @if ($order->returnOrderRequests->isNotEmpty())      
+      <ul class="my-4 p-1 bg-light">
+        @foreach ($order->returnOrderRequests as $key => $request)
+            <li class="mg-t-10">
+              <a href ='{{ route('admin.return_orders.show', $request->id) }}'>Return Request {{ $key + 1 }}</a>
+              @include('layouts.orders.return_order_request_status')
+            </li>
+        @endforeach
+     </ul>
+    @endif
+
 
     @if ($errors->any())
     <div class="alert alert-danger mg-t-10">

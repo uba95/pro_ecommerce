@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Model\CancelOrderRequest;
-use App\Model\Order;
-use App\User;
+use App\Models\CancelOrderRequest;
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CancelOrderPolicy

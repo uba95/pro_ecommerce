@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin\Blog;
 
 use Illuminate\Http\Request;
-use App\Model\Admin\Blog\BlogPost;
+use App\Models\BlogPost;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BlogPostRequest;
-use App\Model\Admin\Blog\BlogCategory;
+use App\Models\BlogCategory;
 use Illuminate\Support\Facades\Storage;
 
 class BlogPostController extends Controller

@@ -28,7 +28,7 @@
             <td>{{ $orderItem->product_quantity }}</td>
             <td>{{ $orderItem->product_weight }}</td>
             <td>{{ $orderItem->product_price }}$</td>
-            <td>{{ round($orderItem->product_quantity *  $orderItem->product_price, 2) }}$</td>
+            <td>{{ $orderItem->totalPrice }}$</td>
           </tr>
           @endforeach
         </tbody>

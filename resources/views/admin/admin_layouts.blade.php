@@ -211,6 +211,39 @@
           </li>
         </ul>
 
+
+        <a href="#" class="sl-menu-link">
+          <div class="sl-menu-item">
+            <i class="menu-item-icon icon ion-ios-filing-outline tx-24"></i>
+            <span class="menu-item-label">Stocks</span>
+            <i class="menu-item-arrow fa fa-angle-down"></i>
+          </div><!-- menu-item -->
+        </a><!-- sl-menu-link -->
+        <ul class="sl-menu-sub nav flex-column">
+          <li class="nav-item">
+            <a href ='{{ route('admin.stocks.index') }}' class="nav-link">
+              All Stocks
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.stocks.index', ['status' => 'in']) }}' class="nav-link">
+             In Stock
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.stocks.index', ['status' => 'only']) }}' class="nav-link">
+              Few Left
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href ='{{ route('admin.stocks.index', ['status' => 'out']) }}' class="nav-link">
+              Out Of Stock
+            </a>
+          </li>
+        </ul>
+
+
+
         <a href="#" class="sl-menu-link">
           <div class="sl-menu-item">
             <i class="menu-item-icon icon ion-ios-filing-outline tx-24"></i>
@@ -223,6 +256,27 @@
           <li class="nav-item"><a href ='{{ route('admin.blog_posts.index') }}' class="nav-link">Blog Posts</a></li>
           <li class="nav-item"><a href ='{{ route('admin.blog_posts.create') }}' class="nav-link">Add New Post</a></li>
         </ul>
+
+
+        <a href="#" class="sl-menu-link">
+          <div class="sl-menu-item">
+            <i class="menu-item-icon icon ion-ios-filing-outline tx-24"></i>
+            <span class="menu-item-label">Reports</span>
+            <i class="menu-item-arrow fa fa-angle-down"></i>
+          </div><!-- menu-item -->
+        </a><!-- sl-menu-link -->
+        <ul class="sl-menu-sub nav flex-column">
+          <li class="nav-item">
+            <a href ='{{ route('admin.reports.salesBy') }}' class="nav-link">Sales By Products</a>
+            <a href ='{{ route('admin.reports.index', ['report' => 'sales']) }}' class="nav-link">Sales</a>
+            <a href ='{{ route('admin.reports.index', ['report' => 'returns']) }}' class="nav-link">Returns</a>
+            <a href ='{{ route('admin.reports.index', ['report' => 'net_sales']) }}' class="nav-link">Net Sales</a>
+            <a href ='{{ route('admin.reports.index', ['report' => 'orders']) }}' class="nav-link">Orders</a>
+            <a href ='{{ route('admin.reports.index', ['report' => 'sold_products']) }}' class="nav-link">Sold Products</a>
+            <a href ='{{ route('admin.reports.index', ['report' => 'others']) }}' class="nav-link">Others</a>
+          </li>
+        </ul>
+
 
         <a href="#" class="sl-menu-link">
           <div class="sl-menu-item">
@@ -509,9 +563,8 @@
 
     // Datepicker
     $('.fc-datepicker').datepicker({
-      showOtherMonths: true,
-      selectOtherMonths: true
-    });
+      dateFormat: "dd/mm/yy"   
+     });
 
     // Color picker
     $('#colorpicker').spectrum({
@@ -566,8 +619,8 @@
 
     <script src="{{asset('backend/js/starlight.js')}}"></script>
     <script src="{{asset('backend/js/ResizeSensor.js')}}"></script>
-    <script src="{{asset('backend/js/dashboard.js')}}"></script>
-
+    {{-- <script src="{{asset('backend/js/dashboard.js')}}"></script> --}}
+    @stack('charts')
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="{{ asset('https://unpkg.com/sweetalert/dist/sweetalert.min.js')}}"></script>
 

@@ -20,8 +20,8 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('address_id');
 
             $table->string('payment_method');
-            $table->string('payment_card')->nullable();
-            $table->unsignedSmallInteger('card_last4')->nullable();
+            // $table->string('payment_card')->nullable();
+            // $table->unsignedSmallInteger('card_last4')->nullable();
             
             $table->float('subtotal_price')->unsigned();
             $table->float('discount_price')->unsigned();

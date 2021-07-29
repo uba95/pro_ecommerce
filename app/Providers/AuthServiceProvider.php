@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use App\Model\Address;
-use App\Model\Order;
+use App\Models\Address;
+use App\Models\Order;
 use App\Policies\OrderPolicy;
 use Laravel\Passport\Passport;
-use App\Model\CancelOrderRequest;
-use App\Model\ReturnOrderRequest;
+use App\Models\CancelOrderRequest;
+use App\Models\ReturnOrderRequest;
 use App\Policies\AddressPolicy;
 use App\Policies\CancelOrderPolicy;
 use App\Policies\ReturnOrderPolicy;
@@ -36,6 +36,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        // Passport::routes();
     }
 }

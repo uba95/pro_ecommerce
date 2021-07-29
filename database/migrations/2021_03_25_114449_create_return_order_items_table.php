@@ -16,7 +16,7 @@ class CreateReturnOrderItemsTable extends Migration
         Schema::create('return_order_items', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('request_id');
-            $table->unsignedBigInteger('order_item_id')->unique();
+            $table->unsignedBigInteger('order_item_id');
             $table->unsignedInteger('product_quantity');
             
             $table->foreign('request_id')->references('id')->on('return_order_requests')->onDelete('cascade');

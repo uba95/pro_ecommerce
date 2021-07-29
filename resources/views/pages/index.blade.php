@@ -166,7 +166,7 @@
                                                     @if ($product->discount_price)
                                                     <div class="product_price discount">
                                                         ${{$product->discount_price}}
-                                                        <span>
+                                                        <span style="text-decoration: line-through #00000060;">
                                                             {{   '$' . $product->selling_price }}
                                                         </span>
                                                     </div>
@@ -224,7 +224,7 @@
                                                     @if ($product->discount_price)
                                                     <div class="product_price discount">
                                                         ${{$product->discount_price}}
-                                                        <span>
+                                                        <span style="text-decoration: line-through #00000060;">
                                                             {{   '$' . $product->selling_price }}
                                                         </span>
                                                     </div>
@@ -274,7 +274,7 @@
                                                     @if ($product->discount_price)
                                                     <div class="product_price discount">
                                                         ${{$product->discount_price}}
-                                                        <span>
+                                                        <span style="text-decoration: line-through #00000060;">
                                                             {{   '$' . $product->selling_price }}
                                                         </span>
                                                     </div>

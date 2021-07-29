@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\User;
-use App\Model\Address;
+use App\Models\User;
+use App\Models\Address;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Model\Admin\Coupon;
-use App\Model\Shipment;
+use App\Models\Coupon;
+use App\Models\Shipment;
 use Illuminate\Support\Facades\Auth;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Collection;
@@ -17,6 +17,10 @@ class CheckoutController extends Controller
 {
     public function index() {
         // try {
+
+            if (!Cart::content()->every(fn($v) => $v->model->product_quantity > $v->qty)) {
+                return redirect()->route('home')->with(toastNotification('Stock Quantities Is Not Enough For This Order', 'error'));
+            }
             
             $cart_products = Cart::content();
             $cart_coll = new Collection();

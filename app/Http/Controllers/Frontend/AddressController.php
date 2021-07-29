@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Model\Address;
+use App\Models\Address;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AddressRequest;
-use App\Model\Country;
+use App\Models\Country;
 use Illuminate\Support\Facades\Auth;
 
 class AddressController extends Controller

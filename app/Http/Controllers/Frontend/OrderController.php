@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Model\Order;
-use App\Model\OrderItem;
+use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -22,8 +22,14 @@ class OrderController extends Controller
         $orderItems = OrderItem::with('product')->where('order_id', $order->id)->get();
         $this->authorize('view', $order);
 
-        return $request->expectsJson() 
-        ? response()->json(OrderItem::withReturnableQuantities($orderItems))
-        : view('pages.orders.show', compact('order', 'orderItems')); 
+        if ($request->expectsJson()) {
+            if ($request->cancel) {
+                return response()->json(OrderItem::withCancelableQuantities($orderItems));
+            }
+            if ($request->return) {
+                return response()->json(OrderItem::withReturnableQuantities($orderItems));
+            }
+        }
+        return view('pages.orders.show', compact('order', 'orderItems')); 
     }
 }

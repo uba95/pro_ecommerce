@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Model\Order;
-use App\Model\Address;
-use App\Model\Shipment;
-use App\Model\OrderItem;
+use App\Models\Order;
+use App\Models\Address;
+use App\Models\Shipment;
+use App\Models\OrderItem;
 use App\Traits\CourierTrait;
 use Illuminate\Http\Request;
-use App\Model\ReturnOrderItem;
+use App\Models\ReturnOrderItem;
 use App\Services\PaypalService;
 use App\Services\StripeService;
-use App\Model\ReturnOrderRequest;
+use App\Models\ReturnOrderRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ReturnOrderFormRequest;
 use App\Services\ReturnOrderService;
@@ -26,9 +26,9 @@ class ReturnOrderRequestController extends Controller
         return view('pages.orders.return.index', ['return_order_requests' => ReturnOrderRequest::with('order')->get()]);
     }
 
-    public function show(ReturnOrderRequest $returnOrderRequest) {
-        $returnOrderItems = ReturnOrderItem::with('orderItem')->where('request_id', $returnOrderRequest->id)->get();
-        return view('pages.orders.return.show', compact('returnOrderRequest', 'returnOrderItems'));
+    public function show(ReturnOrderRequest $returnOrder) {
+        $returnOrderItems = $returnOrder->returnOrderItems->load('orderItem');
+        return view('pages.orders.return.show', compact('returnOrder', 'returnOrderItems'));
     }
 
     public function create(Request $request) {
@@ -39,7 +39,7 @@ class ReturnOrderRequestController extends Controller
 
         return view('pages.orders.return.create', [
             'orders' => Order::where('user_id', Auth::id())
-            ->whereEnum('status', ['shipped', 'delivered', 'returning', 'returned'])
+            ->whereEnum('status', ['delivered', 'returning', 'partiallyReturned'])
             ->with('orderItems','user:id','user.addresses.country:id,name')
             ->latest('id')
             ->get(['id','user_id']),
@@ -47,7 +47,7 @@ class ReturnOrderRequestController extends Controller
     }
 
     public function store(ReturnOrderFormRequest $request) {
-        
+        // dd($request->all());
         try {
             $courier = $this->courier();
             switch (request('payment_method')) {
@@ -75,7 +75,7 @@ class ReturnOrderRequestController extends Controller
     private function shipment($request) {
      
         $orderItems = OrderItem::with('order:id,user_id')->find($request->order_items);
-        if (!$orderItems) {
+        if ($orderItems->isEmpty()) {
             return response()->json(['html' => 'Error, Check Your Order Items']);
         }
 

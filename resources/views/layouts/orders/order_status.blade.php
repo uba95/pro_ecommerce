@@ -14,8 +14,14 @@
 @case('canceled')
     <span class="badge badge-danger">Canceled</span>
     @break
+@case('partiallyCanceled')
+    <span class="badge badge-dark">Partially Canceled</span>
+    @break
 @case('returning')
     <span class="badge badge-danger">Returning</span>
+    @break
+@case('partiallyReturned')
+    <span class="badge badge-dark">Partially Returned</span>
     @break
 @case('returned')
     <span class="badge badge-danger">Returned</span>

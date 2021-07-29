@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Frontend;
 
 use Illuminate\Http\Request;
-use App\Model\Admin\Category;
+use App\Models\Category;
 use App\Http\Controllers\Controller;
-use App\Model\Admin\Product;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 
 class LandingPageController extends Controller

@@ -2,9 +2,9 @@
 
 namespace App\Policies;
 
-use App\Model\Order;
-use App\Model\OrderItem;
-use App\User;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ReturnOrderPolicy
