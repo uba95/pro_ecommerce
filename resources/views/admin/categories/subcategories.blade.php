@@ -25,7 +25,7 @@
                 </tr>
               </thead>
               <tbody>
-                @foreach ($subcategories as $key => $subcategory)
+                @foreach ($subcategories as $subcategory)
                     <tr>
                         <td>{{ $subcategory->id }}</td>
                         <td>{{ $subcategory->subcategory_name }}</td>
@@ -78,9 +78,9 @@
                                     <label class="d-block" for="exampleInputEmail1">Category Name</label>
                                     <select class="form-control select2" id="select2insidemodal" name="category_id" data-placeholder="Choose Category">
                                       <option label="Category Category"></option>
-                                      @foreach ($categories as $category)
-                                            <option value="{{ $category->id }}">{{ $category->category_name }}</option>
-                                        @endforeach
+                                      @foreach ($categories as $id => $category_name)
+                                            <option value="{{ $id }}">{{ $category_name }}</option>
+                                      @endforeach
                                     </select>
                                 </div>
                             </div><!-- modal-body -->

@@ -16,6 +16,12 @@
     @unless (in_array(Route::currentRouteName(), ['products.show', 'cart.show']))
         <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/main_styles.css') }}">
     @endunless
+    @unless (Route::currentRouteName() == 'pages.index')
+        <style>
+            .cat_menu {visibility: hidden;opacity: 0;}
+            .cat_menu_container:hover .cat_menu {visibility: visible;opacity: 1;}
+        </style>
+    @endunless
 
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/responsive.css') }}">
 
@@ -116,19 +122,23 @@
                         <div class="header_search">
                             <div class="header_search_content">
                                 <div class="header_search_form_container">
-                                    <form action="#" class="header_search_form clearfix">
-                                        <input type="search" required="required" class="header_search_input" placeholder="Search for products...">
+                                    <form action ='{{ route('shop.index') }}' method="GET" class="header_search_form clearfix">
+                                        <input name="search" type="search" required="required" class="header_search_input" placeholder="Search for products...">
                                         <div class="custom_dropdown">
                                             <div class="custom_dropdown_list">
                                                 <span class="custom_dropdown_placeholder clc">All Categories</span>
+                                                <input type="hidden" name="model" value="product">
+                                                <input type="hidden" name="category">
                                                 <i class="fas fa-chevron-down"></i>
                                                 <ul class="custom_list clc">
                                                     <li><a class="clc" href="#">All Categories</a></li>
-                                                        @foreach ($categories ?? DB::table('categories')->get('category_name') as $category)
-                                                        <li class="hassubs">
-                                                            <a href="#">{{ $category->category_name }}</a>
-                                                        </li>  
-                                                        @endforeach            
+                                                    @foreach ($categories as $category)
+                                                    <li class="hassubs">
+                                                        <a data-slug="{{ $category->category_slug }}" href="">
+                                                            {{ $category->category_name }}
+                                                        </a>
+                                                    </li>  
+                                                    @endforeach            
                                                 </ul>
                                             </div>
                                         </div>
@@ -171,10 +181,8 @@
             </div>
         </div>
     </header>
-    {{-- @unless (in_array(Route::currentRouteName(), ['login', 'home']))
-        @include('layouts.menubar')
-    @endunless --}}
 
+    @include('layouts.menubar')
     @yield('content')
 
     <!-- Footer -->
@@ -508,6 +516,15 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     }
     dangerAlert(".deleteWithoutAjax");
     dangerAlert(".cancelWithoutAjax", true);
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+          $(document).on('click', '.header_search a',function(){
+            var slug = $(this).data('slug');
+            $('input[name="category"]').val(slug ?? '');
+          });
+        });
     </script>
 
 @stack('scripts')

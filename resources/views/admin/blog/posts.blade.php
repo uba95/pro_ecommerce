@@ -30,7 +30,7 @@
                     <tr>
                         <td>{{ $post->id }}</td>
                         <td>{{ $post->post_title }}</td>
-                        <td>{{ $post->category->category_name }}</td>
+                        <td>{{ $post->category->blog_category_name }}</td>
                         <td>
                             <img src="{{ $post->post_image }}" alt="" width="100" height="40">
                         </td>

@@ -175,7 +175,7 @@
                                                         ${{$product->selling_price}}
                                                     </div>
                                                 @endif
-                                                <div class="product_name"><div><a href='{{ route('products.show', $product->product_name) }}'>{{ $product->product_name}}</a></div></div>
+                                                <div class="product_name"><div><a href='{{ route('products.show', $product->product_slug) }}'>{{ $product->product_name}}</a></div></div>
                                                 <div class="product_extras">
                                                     <div class="product_color">
                                                         <input type="radio" checked name="product_color" style="background:#b19c83">

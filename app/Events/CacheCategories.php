@@ -12,7 +12,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class forgetCacheCategories
+class CacheCategories
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -25,7 +25,7 @@ class forgetCacheCategories
     {
         Cache::forget('categories');
         Cache::rememberForever('categories', function () {
-            return Category::with('subcategories:category_id,subcategory_name')->get();
+            return Category::with('subcategories:category_id,subcategory_name,subcategory_slug')->get();
         });
     }
 }

@@ -94,9 +94,9 @@
                     <label class="form-control-label">Category </label>
                     <select name="category_id" class="form-control select2 select2_empty" data-placeholder="Choose Category">
                       <option label="Category country"></option>
-                      @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" {{ $product->category_id === $category->id ? 'selected' : '' }}>
-                          {{ $category->category_name }}
+                      @foreach ($categories as $id => $category_name))
+                        <option value="{{ $id }}" {{ $product->category_id === $id ? 'selected' : '' }}>
+                          {{ $category_name }}
                         </option>
                       @endforeach
                     </select>
@@ -112,6 +112,7 @@
                           {{ $subcategory->subcategory_name }}
                         </option>
                       @endforeach
+                      
                     </select>
                   </div>
                 </div><!-- col-4 -->
@@ -120,9 +121,9 @@
                     <label class="form-control-label">Brand </label>
                     <select name="brand_id" class="form-control select2 select2_empty" data-placeholder="Choose Brand">
                       <option label="Choose Brand"></option>
-                      @foreach ($brands as $brand)
-                        <option value="{{ $brand->id }}" {{ $product->brand_id === $brand->id ? 'selected' : '' }}>
-                          {{ $brand->brand_name }}
+                      @foreach ($brands as $id => $brand_name)
+                        <option value="{{ $id }}" {{ $product->brand_id === $id ? 'selected' : '' }}>
+                          {{ $brand_name }}
                         </option>
                      @endforeach
                     </select>

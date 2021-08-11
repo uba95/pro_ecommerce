@@ -83,8 +83,8 @@
                     <label class="form-control-label">Category <span class="tx-danger">*</span></label>
                     <select name="category_id" class="form-control select2 select2_empty" data-placeholder="Choose Category">
                       <option></option>
-                      @foreach ($categories as $category)
-                       <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                      @foreach ($categories as $id => $category_name)
+                        <option value="{{ $id }}">{{ $category_name }}</option>
                       @endforeach
                     </select>
                   </div>
@@ -102,9 +102,9 @@
                     <label class="form-control-label">Brand </label>
                     <select name="brand_id" class="form-control select2 select2_empty" data-placeholder="Choose Brand">
                       <option label="Choose Brand"></option>
-                      @foreach ($brands as $brand)
-                        <option value="{{ $brand->id }}">{{ $brand->brand_name }}</option>
-                     @endforeach
+                      @foreach ($brands as $id => $brand_name)
+                        <option value="{{ $id }}">{{ $brand_name }}</option>
+                      @endforeach
                     </select>
                   </div>
                 </div><!-- col-4 -->

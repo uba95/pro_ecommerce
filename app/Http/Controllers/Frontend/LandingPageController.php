@@ -19,9 +19,8 @@ class LandingPageController extends Controller
         // $featured_products = Product::selection()->where('status', 1)->with('brand:id,brand_name')->latest()->get();
         // productSelectScope(DB::table('products')->where('status', 1)->join('brands', 'products.brand_id', 'brands.id')->addSelect('brands.brand_name'))->latest('products.created_at')->get();
         $featured_products = Product::where('status', 1)->join('brands', 'products.brand_id', 'brands.id')
-        ->selection()->addSelect('brands.brand_name')->latest('products.created_at')->get();
-
-        $main_slider_product = $featured_products->filter(fn($v) => $v->main_slider == 1)[0];
+        ->selection()->addSelect('brands.brand_name')->latest('id')->get();
+        $main_slider_product = $featured_products->filter(fn($v) => $v->main_slider == 1)->first();
         $trend_products = $featured_products->filter(fn($v) => $v->trend == 1);
         $best_rated_products = $featured_products->filter(fn($v) => $v->best_rated == 1);
         $hot_deal_products = $featured_products->filter(fn($v) => $v->hot_deal == 1);

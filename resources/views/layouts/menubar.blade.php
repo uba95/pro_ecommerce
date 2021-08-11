@@ -9,20 +9,25 @@
 
                             <!-- Categories Menu -->
 
-                            <div class="cat_menu_container">
+                            <div class="cat_menu_container" style="z-index: 999">
                                 <div class="cat_menu_title d-flex flex-row align-items-center justify-content-start">
                                     <div class="cat_burger"><span></span><span></span><span></span></div>
                                     <div class="cat_menu_text">categories</div>
                                 </div>
 
-                                <ul class="cat_menu">
+                                <ul class="cat_menu" >
                                     @foreach ($categories as $category)
                                         <li class="hassubs">
-                                            <a href="#">{{ $category->category_name }}<i class="fas fa-chevron-right"></i></a>
+                                            <a href ='{{ route('shop.index', ['model' => 'category', 'slug' => $category->category_slug]) }}'>
+                                                {{ $category->category_name }}
+                                                <i class="fas fa-chevron-right"></i>
+                                            </a>
                                             <ul>
                                                 @foreach ($category->subcategories as $subcategory)
                                                     <li class="hassubs">
-                                                        <a href="#">{{ $subcategory->subcategory_name }}</a>
+                                                        <a href ='{{ route('shop.index', ['model' => 'subcategory', 'slug' => $subcategory->subcategory_slug]) }}'>
+                                                            {{ $subcategory->subcategory_name }}
+                                                        </a>
                                                     </li> 
                                                 @endforeach
                                             </ul>          
@@ -54,33 +59,24 @@
                                     </li>
                                     <li class="hassubs">
                                         <a href="#">Featured Brands<i class="fas fa-chevron-down"></i></a>
-                                        <ul>
+                                        <ul style="z-index: 999">
+                                            @foreach ($brands as $slug => $name)
                                             <li>
-                                                <a href="#">Menu Item<i class="fas fa-chevron-down"></i></a>
-                                                <ul>
-                                                    <li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-                                                    <li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-                                                    <li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-                                                </ul>
+                                                <a href ='{{ route('shop.index', ['model' => 'brand', 'slug' => $slug]) }}'>
+                                                    {{ $name }}
+                                                </a>
                                             </li>
-                                            <li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-                                            <li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
-                                            <li><a href="#">Menu Item<i class="fas fa-chevron-down"></i></a></li>
+                                            @endforeach
                                         </ul>
                                     </li>
                                     <li class="hassubs">
-                                        <a href="#">Pages<i class="fas fa-chevron-down"></i></a>
+                                        <a href="{{ route('blog.index') }}">Blog<i class="fas fa-chevron-down"></i></a>
                                         <ul>
-                                            <li><a href="shop.html">Shop<i class="fas fa-chevron-down"></i></a></li>
-                                            <li><a href="product.html">Product<i class="fas fa-chevron-down"></i></a></li>
-                                            <li><a href="blog.html">Blog<i class="fas fa-chevron-down"></i></a></li>
-                                            <li><a href="blog_single.html">Blog Post<i class="fas fa-chevron-down"></i></a></li>
-                                            <li><a href="regular.html">Regular Post<i class="fas fa-chevron-down"></i></a></li>
-                                            <li><a href="cart.html">Cart<i class="fas fa-chevron-down"></i></a></li>
-                                            <li><a href="contact.html">Contact<i class="fas fa-chevron-down"></i></a></li>
+                                            @foreach ($blogCategories as $blog_category_slug => $blog_category_name)
+                                                <li><a href="{{ route('blog.category', $blog_category_slug) }}">{{ $blog_category_name }}<i class="fas fa-chevron-down"></i></a></li>
+                                            @endforeach
                                         </ul>
                                     </li>
-                                    <li><a href="blog.html">Blog<i class="fas fa-chevron-down"></i></a></li>
                                     <li><a href="contact.html">Contact<i class="fas fa-chevron-down"></i></a></li>
                                 </ul>
                             </div>

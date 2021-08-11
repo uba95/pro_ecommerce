@@ -25,10 +25,10 @@ class BlogPostRequest extends FormRequest
     public function rules()
     {
         return [
-            'category_id' => 'numeric|nullable',
+            'category_id' => 'numeric|required',
             'post_title' => 'required',
             'details' => 'required|min:30',
-            'post_image' => 'image|max:4096',
+            'post_image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:4096',
         ];
     }
 }

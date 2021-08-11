@@ -14,24 +14,19 @@ use Illuminate\Support\Facades\Storage;
 class ProductController extends Controller
 {
     public function index() {
-     
         $products = Product::with('category:id,category_name', 'subcategory:id,subcategory_name','brand:id,brand_name')->get();
         return view('admin.products.index', compact('products'));
     }
 
-    public function show($id) {
-
-        $product = Product::find($id);
-
-        return $product ? view('admin.products.show', compact('product')) 
-        : redirect()->back()->with(toastNotification('Product', 'not_found'));
+    public function show(Product $product) {
+        return view('admin.products.show', compact('product')); 
     }
 
     public function create() {
-
-        $categories = Category::all();
-        $brands = Brand::all();
-        return view('admin.products.create', compact('categories', 'brands'));
+        return view('admin.products.create', [
+            'categories' => Category::orderBy('id')->pluck('category_name', 'id'),
+            'brands' => Brand::orderBy('id')->pluck('brand_name', 'id')
+        ]);
     }
 
     public function store(ProductRequest $request) {
@@ -59,36 +54,18 @@ class ProductController extends Controller
 
     }
 
-    public function edit($id) {
-
-        $product = Product::find($id);
-        $categories = Category::all();
-        $brands = Brand::all();
-
-        return $product ? view('admin.products.edit', compact('product', 'categories', 'brands')) 
-        : redirect()->back()->with(toastNotification('Product', 'not_found'));
+    public function edit(Product $product) {
+        $categories = Category::orderBy('id')->pluck('category_name', 'id');
+        $brands = Brand::orderBy('id')->pluck('brand_name', 'id');
+        return view('admin.products.edit', compact('product', 'categories', 'brands')); 
     }
 
-    public function changeStatus($id) {
-     
-        $product = Product::find($id);
-
-        if (!$product) {
-            return redirect()->back()->with(toastNotification('Product', 'not_found'));
-        }
-
+    public function changeStatus(Product $product) {
         $product->update(['status' => !$product->status]);
-
         return redirect()->back()->with(toastNotification('Product Status Changed Successfully'));     
     }
 
-    public function update($id, ProductRequest $request) {
-
-        $product = Product::find($id);
-
-        if (!$product) {
-            return redirect()->route('admin.products.index')->with(toastNotification('Product', 'not_found'));
-        }
+    public function update(Product $product, ProductRequest $request) {
 
         $attributes = $request->validated();
         $attributes['product_size'] = json_encode($request->product_size);
@@ -99,7 +76,7 @@ class ProductController extends Controller
         $attributes['trend'] = $request->trend;
         $attributes['mid_slider'] = $request->mid_slider;
         $attributes['hot_new'] = $request->hot_new;
-    
+
         $image_one = $request->image_one;
         $image_two = $request->image_two;
         $image_three = $request->image_three;
@@ -125,19 +102,11 @@ class ProductController extends Controller
 
     }
 
-    public function destroy($id) {
-
-        $product = Product::find($id);
-
-        if (!$product) {
-            return redirect()->back()->with(toastNotification('Product', 'not_found'));
-        }
+    public function destroy(Product $product) {
 
         Storage::disk('public')->delete([$product->getOriginal('image_one'),$product->getOriginal('image_two'),$product->getOriginal('image_three')]);
         $product->delete();
 
         return redirect()->back()->with(toastNotification('Product', 'deleted'));
-
     }
-
 }

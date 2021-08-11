@@ -35,9 +35,9 @@
                 <label for="exampleInputEmail1">Category Name</label>
                 <select class="form-control select2" name="category_id" data-placeholder="Choose Category">
                   <option label="Category Category"></option>
-                  @foreach ($categories as $category)
-                    <option value="{{ $category->id }}" {{ $subcategory->category->id === $category->id ? 'selected' : '' }}>
-                      {{ $category->category_name }}
+                  @foreach ($categories as $id => $category_name))
+                    <option value="{{ $id }}" {{ $subcategory->category_id === $id ? 'selected' : '' }}>
+                      {{ $category_name }}
                     </option>
                   @endforeach
                 </select>

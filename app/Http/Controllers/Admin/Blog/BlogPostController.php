@@ -12,16 +12,11 @@ use Illuminate\Support\Facades\Storage;
 class BlogPostController extends Controller
 {
     public function index() {
-     
-        $posts = BlogPost::with('category')->get();
-        return view('admin.blog.posts', compact('posts'));
+        return view('admin.blog.posts', ['posts' => BlogPost::with('category')->get()]);
     }
 
     public function create() {
-
-        $categories = BlogCategory::all();
-        
-        return view('admin.blog.post_create', compact('categories'));
+        return view('admin.blog.post_create', ['categories' => BlogCategory::orderBy('id')->pluck('blog_category_name', 'id')]);
     }
 
     public function store(BlogPostRequest $request) {
@@ -36,34 +31,20 @@ class BlogPostController extends Controller
         BlogPost::create($validatedData);
 
         return redirect()->back()->with(toastNotification('Blog Post', 'added'));
-
     }
 
-    public function edit($id) {
-
-        $post = BlogPost::find($id);
-        $categories = BlogCategory::all();
-
-        if (!$post) {
-            return redirect()->back()->with(toastNotification('Blog Post', 'not_found'));
-        }
-
-        return view('admin.blog.posts_edit', compact('post', 'categories'));
+    public function edit(BlogPost $blogPost) {
+        $categories = BlogCategory::orderBy('id')->pluck('blog_category_name', 'id');
+        return view('admin.blog.posts_edit', compact('blogPost', 'categories'));
     }
 
-    public function update($id, BlogPostRequest $request) {
-
-        $post = BlogPost::find($id);
-
-        if (!$post) {
-            return redirect()->route('admin.blog_posts.index')->with(toastNotification('Blog Post', 'not_found'));
-        }
+    public function update(BlogPost $blogPost, BlogPostRequest $request) {
 
         $validatedData = $request->validated();
 
         if($request->post_image) {
 
-            $old_logo = $post->getAttributes()['post_image'];
+            $old_logo = $blogPost->getAttributes()['post_image'];
 
             if ($old_logo) {
                 Storage::disk('public')->delete($old_logo);
@@ -72,25 +53,16 @@ class BlogPostController extends Controller
             $validatedData['post_image'] = $request->file('post_image')->store('media/blog', 'public');
         }
 
-        $post->update($validatedData);
+        $blogPost->update($validatedData);
 
         return redirect()->route('admin.blog_posts.index')->with(toastNotification('Blog Post', 'updated'));
-
     }
 
-    public function destroy($id) {
+    public function destroy(BlogPost $blogPost) {
 
-        $post = BlogPost::find($id);
-
-        if (!$post) {
-            return redirect()->back()->with(toastNotification('Blog Post', 'not_found'));
-        }
-
-        Storage::disk('public')->delete($post->getAttributes()['post_image']);
-        $post->delete();
+        Storage::disk('public')->delete($blogPost->getAttributes()['post_image']);
+        $blogPost->delete();
         
         return redirect()->back()->with(toastNotification('Blog Post', 'deleted'));
-
     }
-
 }

@@ -27,13 +27,13 @@
                 @foreach ($categories as $key => $category)
                     <tr>
                         <td>{{ $category->id }}</td>
-                        <td>{{ $category->category_name }}</td>
+                        <td>{{ $category->blog_category_name }}</td>
                         <td>
                             <a href ='{{ route('admin.blog_categories.edit', $category->id) }}' class="btn btn-sm btn-info">Edit</a>
                             <form method="POST" action='{{ route('admin.blog_categories.destroy', $category->id) }}' class="btn btn-sm btn-danger delete">
                               @csrf @method('DELETE') Delete
                             </form>
-                          </td>
+                        </td>
                     </tr>
                 @endforeach
               </tbody>
@@ -70,7 +70,7 @@
                             <div class="modal-body pd-20">
                                 <div class="form-group">
                                   <label for="exampleInputEmail1">Category Name</label>
-                                  <input type="text" class="form-control" name="category_name">
+                                  <input type="text" class="form-control" name="blog_category_name">
                                 </div>
                             </div><!-- modal-body -->
                             <div class="modal-footer">

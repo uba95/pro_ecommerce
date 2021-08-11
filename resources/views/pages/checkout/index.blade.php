@@ -1,9 +1,5 @@
 @extends('layouts.app')
 @section('content')
-    @push('styles')
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/cart_styles.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/cart_responsive.css') }}">
-    @endpush
 
         <div class="container py-5">
           <h2 class="text-center mb-3">Checkout</h2>
@@ -35,7 +31,7 @@
 
                         </ul>
                         <div class="spinner1 spinner-border text-primary position-absolute"
-                        style="left: 50%;top:50%;width: 3rem;height: 3rem;display:none" role="status">
+                        style="left:calc(50% - 1.5rem);top:calc(50% - 1.5rem);width: 3rem;height: 3rem;display:none" role="status">
                           <span class="sr-only">Loading...</span>
                         </div>
                         

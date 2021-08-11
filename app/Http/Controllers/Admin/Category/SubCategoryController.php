@@ -12,8 +12,8 @@ class SubCategoryController extends Controller
 {
     public function index() {   
         return view('admin.categories.subcategories', [
-            'categories' => Category::all(),
-            'subcategories' => Subcategory::with('category')->get()
+            'categories' => Category::orderBy('id')->pluck('category_name', 'id'),
+            'subcategories' => Subcategory::with('category:id,category_name')->get()
         ]);
     }
 
@@ -32,7 +32,8 @@ class SubCategoryController extends Controller
     }
 
     public function edit(Subcategory $subcategory) {
-        return view('admin.categories.subcategories_edit', compact('subcategory') + ['categories' => Category::all()]);
+        $categories =  Category::orderBy('id')->pluck('category_name', 'id');
+        return view('admin.categories.subcategories_edit', compact('subcategory', 'categories'));
     }
 
     public function update(Subcategory $subcategory, Request $request) {

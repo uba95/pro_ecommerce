@@ -23,7 +23,7 @@
           <h6 class="card-body-title">Edit Post</h6>
           <p class="mg-b-20 mg-sm-b-30">Edit Post Form</p>
 
-          <form action='{{ route('admin.blog_posts.update', $post->id) }}' method="POST" enctype="multipart/form-data">
+          <form action='{{ route('admin.blog_posts.update', $blogPost->id) }}' method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="form-layout">
@@ -31,7 +31,7 @@
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label">Title <span class="tx-danger">*</span></label>
-                    <input class="form-control" type="text" name="post_title" value="{{ $post->post_title }}">
+                    <input class="form-control" type="text" name="post_title" value="{{ $blogPost->post_title }}">
                   </div>
                 </div><!-- col-4 -->
 
@@ -40,10 +40,10 @@
                     <label class="form-control-label">Category</label>
                     <select name="category_id" class="form-control select2 select2_empty" data-placeholder="Choose Category">
                       <option></option>
-                      @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" {{ $post->category_id === $category->id ? 'selected' : '' }}>
-                            {{ $category->category_name }}
-                      </option>
+                      @foreach ($categories as $id => $blog_category_name))
+                        <option value="{{ $id }}" {{ $blogPost->category_id === $id ? 'selected' : '' }}>
+                          {{ $blog_category_name }}
+                        </option>
                       @endforeach
                     </select>
                   </div>
@@ -52,7 +52,7 @@
                 <div class="col-lg-12">
                   <div class="form-group">
                     <label class="form-control-label">Details <span class="tx-danger">*</span></label>
-                    <textarea name="details" class="form-control" id="summernote">{{ $post->details }}</textarea>
+                    <textarea name="details" class="form-control" id="summernote">{{ $blogPost->details }}</textarea>
                   </div>
                 </div><!-- col-4 -->
               </div><!-- row -->
@@ -66,7 +66,7 @@
                     <label class="custom-file">
                       <input type="file" class="custom-file-input" name="post_image" onchange="readURL(this)">
                       <span class="custom-file-control"></span>
-                      <img  class="mg-t-25" src="{{ $post->post_image }}" alt="" id="post_image" height="80" width="100">
+                      <img  class="mg-t-25" src="{{ $blogPost->post_image }}" alt="" id="post_image" height="80" width="100">
                     </label>
                   </div>
                 </div><!-- col-4 -->

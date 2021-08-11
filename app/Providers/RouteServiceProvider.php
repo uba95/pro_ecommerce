@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\BlogCategory;
+use App\Models\BlogPost;
 use App\Models\Product;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
@@ -36,9 +38,9 @@ class RouteServiceProvider extends ServiceProvider
 
         parent::boot();
 
-        Route::bind('product_name', function ($value) {
-            return Product::where('product_name', $value)->firstOrFail();
-        });
+        Route::bind('product_slug', fn($v) => Product::findBySlugOrFail($v));
+        Route::bind('blog_category', fn($v) => BlogCategory::findBySlugOrFail($v));
+        Route::bind('blog_post', fn($v) => BlogPost::findBySlugOrFail($v));
     }
 
     /**

@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\ViewComposers;
 
-use App\Models\Category;
+use App\Models\BlogCategory;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
-class CategoryComposer {
+class BlogCategoryComposer {
     
     public function __construct()
     {
@@ -13,8 +13,8 @@ class CategoryComposer {
     }
 
     public function composer(View $view) {
-        return $view->with('categories', Cache::rememberForever('categories', function () {
-            return Category::with('subcategories:category_id,subcategory_name,subcategory_slug')->get();
+        return $view->with('blogCategories', Cache::rememberForever('blogCategories', function () {
+            return BlogCategory::orderBy('id')->pluck('blog_category_name', 'id');
         }));
     }
 }

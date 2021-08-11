@@ -39,8 +39,8 @@
                     <label class="form-control-label">Category</label>
                     <select name="category_id" class="form-control select2 select2_empty" data-placeholder="Choose Category">
                       <option></option>
-                      @foreach ($categories as $category)
-                       <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                      @foreach ($categories as $id => $blog_category_name)
+                        <option value="{{ $id }}">{{ $blog_category_name }}</option>
                       @endforeach
                     </select>
                   </div>
@@ -63,7 +63,7 @@
                     <label class="custom-file">
                       <input type="file" class="custom-file-input" name="post_image" onchange="readURL(this)">
                       <span class="custom-file-control"></span>
-                      <img  class="mg-t-25" src="" alt="" id="post_image" height="80" width="100">
+                      <img  class="mg-t-25" src="" alt="" id="post_image" height="80" width="100" style="display: none">
                     </label>
                   </div>
                 </div><!-- col-4 -->
@@ -85,7 +85,7 @@
         function readURL(input){
           if (input.files && input.files[0]) {
             var reader = new FileReader();
-            reader.onload = (e) => $('#' + input.name).attr('src', e.target.result).width(80).height(80);
+            reader.onload = (e) => $('#' + input.name).attr('src', e.target.result).width(80).height(80).fadeIn();
             reader.readAsDataURL(input.files[0]);
           }
         }

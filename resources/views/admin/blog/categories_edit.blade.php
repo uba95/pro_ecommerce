@@ -21,13 +21,13 @@
             </div>
         @endif
 
-        <form action ='{{ route('admin.blog_categories.update', $category->id) }}' method="POST">
+        <form action ='{{ route('admin.blog_categories.update', $blogCategory->id) }}' method="POST">
             @csrf
             @method('PATCH')
             <div class="modal-body pd-20">
               <div class="form-group">
                 <label for="exampleInputEmail1">Category Name</label>
-                <input type="text" class="form-control" name="category_name" value="{{ $category->category_name }}">
+                <input type="text" class="form-control" name="blog_category_name" value="{{ $blogCategory->blog_category_name }}">
               </div>
             </div><!-- modal-body -->
             <div class="modal-footer">

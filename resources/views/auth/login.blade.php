@@ -2,11 +2,6 @@
 
 @section('content')
 
-@push('styles')
-<link rel="stylesheet" type="text/css" href="{{ asset('public/frontend/styles/contact_styles.css') }} ">
-<link rel="stylesheet" type="text/css" href="{{ asset('public/frontend/styles/contact_responsive.css') }}">
-@endpush
-
 <div class="contact_form">
     <div class="container">
         <div class="row">

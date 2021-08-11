@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Gloudemans\Shoppingcart\Facades\Cart;
 
-Route::get('/', 'Frontend\LandingPageController')->name('pages.index');
 
 // Route::get('/', function () {return view('pages.index');});
 //auth & user
@@ -22,36 +21,47 @@ Route::get('/user/logout', 'HomeController@Logout')->name('user.logout');
 
 Route::post('newslaters', 'Admin\NewslaterController@store')->name('newslaters.store');
 
+Route::group(['namespace' => 'Frontend'], function () {
 
-Route::get('cart', 'Frontend\CartController@show')->name('cart.show');
-Route::post('cart/{product}', 'Frontend\CartController@store')->name('cart.store');
-Route::delete('cart/{cartItem}', 'Frontend\CartController@destroy')->name('cart.destroy');
-Route::patch('cart/{cartItem}', 'Frontend\CartController@update')->name('cart.update');
-Route::delete('cart', 'Frontend\CartController@destroyAll')->name('cart.destroyAll');
+    Route::get('/', 'LandingPageController')->name('pages.index');
 
-Route::get('products/{product_name}', 'Frontend\ShowProductController')->name('products.show');
+    Route::get('cart', 'CartController@show')->name('cart.show');
+    Route::post('cart/{product}', 'CartController@store')->name('cart.store');
+    Route::delete('cart/{cartItem}', 'CartController@destroy')->name('cart.destroy');
+    Route::patch('cart/{cartItem}', 'CartController@update')->name('cart.update');
+    Route::delete('cart', 'CartController@destroyAll')->name('cart.destroyAll');
+    
+    Route::get('products/{product_slug}', 'ShowProductController')->name('products.show');
+    
+    Route::get('blog/posts', 'BlogController@index')->name('blog.index');
+    Route::get('blog/posts/{blog_post}', 'BlogController@show')->name('blog.show');
+    Route::get('blog/categories/{blog_category}', 'BlogController@showCategory')->name('blog.category');
 
-Route::group(['middleware' => 'auth:web'], function () {
+    Route::get('shop', 'ShopController@index')->name('shop.index');
+    Route::get('shop/search', 'ShopController@search')->name('shop.search');
 
-    Route::get('wishlist', 'Frontend\WishlistController@index')->name('wishlist.index');
-    Route::post('wishlist/{product}', 'Frontend\WishlistController@store')->name('wishlist.store');
+    Route::group(['middleware' => 'auth:web'], function () {
     
-    Route::get('checkout', 'Frontend\CheckoutController@index')->name('checkout.index');
-    Route::post('checkout/coupon', 'Frontend\CheckoutController@coupon')->name('checkout.coupon');
-    Route::delete('checkout/coupon/delete', 'Frontend\CheckoutController@couponDelete')->name('checkout.coupon.destroy');
+        Route::get('wishlist', 'WishlistController@index')->name('wishlist.index');
+        Route::post('wishlist/{product}', 'WishlistController@store')->name('wishlist.store');
+        
+        Route::get('checkout', 'CheckoutController@index')->name('checkout.index');
+        Route::post('checkout/coupon', 'CheckoutController@coupon')->name('checkout.coupon');
+        Route::delete('checkout/coupon/delete', 'CheckoutController@couponDelete')->name('checkout.coupon.destroy');
+        
+        Route::post('payment/store', 'PaymentController@store')->name('payment.store');
+        Route::get('payment/paypal', 'PaymentController@paypal')->name('payment.paypal');
+        Route::get('payment/paypal/order', 'PaypalController')->name('payment.paypal.order');
+        
+        Route::resource('addresses', 'AddressController')->except('show');
     
-    Route::post('payment/store', 'Frontend\PaymentController@store')->name('payment.store');
-    Route::get('payment/paypal', 'Frontend\PaymentController@paypal')->name('payment.paypal');
-    Route::get('payment/paypal/order', 'Frontend\PaypalController')->name('payment.paypal.order');
-    
-    Route::resource('addresses', 'Frontend\AddressController')->except('show');
-
-    Route::resource('orders', 'Frontend\OrderController')->only('index', 'show');
-    
-    Route::resource('cancel_orders', 'Frontend\CancelOrderRequestController')->only('index', 'show','create','store');
-    
-    Route::resource('return_orders', 'Frontend\ReturnOrderRequestController')->only('index', 'show','create','store');
-    Route::get('ss', function () {
-    //    dd(Session::all());
+        Route::resource('orders', 'OrderController')->only('index', 'show');
+        
+        Route::resource('cancel_orders', 'CancelOrderRequestController')->only('index', 'show','create','store');
+        
+        Route::resource('return_orders', 'ReturnOrderRequestController')->only('index', 'show','create','store');
+        Route::get('ss', function () {
+        //    dd(Session::all());
+        });
     });
 });

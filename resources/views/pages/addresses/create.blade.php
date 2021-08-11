@@ -1,9 +1,5 @@
 @extends('layouts.app')
 @section('content')
-    @push('styles')
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/cart_styles.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/cart_responsive.css') }}">
-    @endpush
 
         <div class="container py-5">
           <h3>Add New Address</h3>
