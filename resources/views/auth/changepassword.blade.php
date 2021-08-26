@@ -64,7 +64,7 @@
         <div class="card">
           <img src="{{ asset('public/frontend/images/kaziariyan.png') }}" class="card-img-top" style="height: 90px; width: 90px; margin-left: 34%;">
           <div class="card-body">
-            <h5 class="card-title text-center">{{ Auth::user()->name }}</h5>
+            <h5 class="card-title text-center">{{ current_user()->name }}</h5>
             
           </div>
           <ul class="list-group list-group-flush">

@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Storage;
 
 class BlogPostController extends Controller
 {
+    public function __construct() {
+        $this->middleware('can:view blog',    ['only' => ['index']]);
+        $this->middleware('can:create blog',  ['only' => ['create', 'store']]);
+        $this->middleware('can:edit blog',    ['only' => ['edit', 'update']]);
+        $this->middleware('can:delete blog',  ['only' => ['destroy']]);
+    }
+
     public function index() {
         return view('admin.blog.posts', ['posts' => BlogPost::with('category')->get()]);
     }
@@ -30,7 +37,7 @@ class BlogPostController extends Controller
 
         BlogPost::create($validatedData);
 
-        return redirect()->back()->with(toastNotification('Blog Post', 'added'));
+        return redirect()->back()->with(toastNotification('Blog Post', 'created'));
     }
 
     public function edit(BlogPost $blogPost) {
@@ -44,12 +51,7 @@ class BlogPostController extends Controller
 
         if($request->post_image) {
 
-            $old_logo = $blogPost->getAttributes()['post_image'];
-
-            if ($old_logo) {
-                Storage::disk('public')->delete($old_logo);
-            }
-
+            Storage::disk('public')->delete($blogPost->getOriginal('post_image'));
             $validatedData['post_image'] = $request->file('post_image')->store('media/blog', 'public');
         }
 
@@ -60,7 +62,7 @@ class BlogPostController extends Controller
 
     public function destroy(BlogPost $blogPost) {
 
-        Storage::disk('public')->delete($blogPost->getAttributes()['post_image']);
+        Storage::disk('public')->delete($blogPost->getOriginal('post_image'));
         $blogPost->delete();
         
         return redirect()->back()->with(toastNotification('Blog Post', 'deleted'));

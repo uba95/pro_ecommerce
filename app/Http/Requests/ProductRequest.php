@@ -45,9 +45,16 @@ class ProductRequest extends FormRequest
             'mid_slider' => 'boolean',
             'hot_new' => 'boolean',
             'status' => 'boolean',
-            'image_one' => 'image|max:4096',
-            'image_two' => 'image|max:4096',
-            'image_three' => 'image|max:4096',
+            'cover' => 'required_without:id|file|mimes:jpeg,png,jpg,gif,svg|max:4096',
+            'image' => 'required_without:id',
+            'image.*' => 'file|mimes:jpeg,png,jpg,gif,svg|max:4096',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'cover.required_without' => 'The cover field is required'
         ];
     }
 }

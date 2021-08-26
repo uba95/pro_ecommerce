@@ -81,7 +81,7 @@
                                 <!-- Deals Item -->
                                 @foreach ($hot_deal_products as $product)
                                 <div class="owl-item deals_item">
-                                    <div class="deals_image"><img src="{{ $product->image_one}}" alt=""></div>
+                                    <div class="deals_image"><img src="{{ $product->cover}}" alt=""></div>
                                     <div class="deals_content">
                                         <div class="deals_info_line d-flex flex-row justify-content-start">
                                             <div class="deals_item_category"><a href="#">{{ $product->brand->brand_name}}</a></div>
@@ -161,7 +161,7 @@
                                     <div class="featured_slider_item">
                                         <div class="border_active"></div>
                                         <div class="product_item  d-flex flex-column align-items-center justify-content-center text-center {{ $product->discount_price ? 'discount' :  ($product->hot_new ? 'is_new' : '') }}">
-                                            <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{ $product->image_one}}" alt="" height="120" width="100"></div>
+                                            <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{ $product->cover}}" alt="" height="120" width="100"></div>
                                             <div class="product_content">
                                                     @if ($product->discount_price)
                                                     <div class="product_price discount">
@@ -188,9 +188,9 @@
                                                 </div>
                                             </div>
                                             
-                                            @auth
+                                            @auth('web')
                                             <form class="addwishlist" data-id="{{ $product->id }}"> @csrf
-                                                <div class="product_fav {{ Auth::user()->hasProductOnWishlist($product->id) ? 'active' : ''}}">
+                                                <div class="product_fav {{ current_user()->hasProductOnWishlist($product->id) ? 'active' : ''}}">
                                                     <i class="fas fa-heart"></i>
                                                 </div>    
                                             </form>  
@@ -219,7 +219,7 @@
                                     <div class="featured_slider_item">
                                         <div class="border_active"></div>
                                         <div class="product_item  d-flex flex-column align-items-center justify-content-center text-center {{ $product->discount_price ? 'discount' :  ($product->hot_new ? 'is_new' : '') }}">
-                                            <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{ $product->image_one}}" alt="" height="120" width="100"></div>
+                                            <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{ $product->cover}}" alt="" height="120" width="100"></div>
                                             <div class="product_content">
                                                     @if ($product->discount_price)
                                                     <div class="product_price discount">
@@ -269,7 +269,7 @@
                                     <div class="featured_slider_item">
                                         <div class="border_active"></div>
                                         <div class="product_item  d-flex flex-column align-items-center justify-content-center text-center {{ $product->discount_price ? 'discount' :  ($product->hot_new ? 'is_new' : '') }}">
-                                            <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{ $product->image_one}}" alt="" height="120" width="100"></div>
+                                            <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{ $product->cover}}" alt="" height="120" width="100"></div>
                                             <div class="product_content">
                                                     @if ($product->discount_price)
                                                     <div class="product_price discount">
@@ -385,7 +385,7 @@
                                 </div>
                                 <div class="col-lg-8 col-md-6 fill_height">
                                     <div class="banner_2_image_container">
-                                        <div class="banner_2_image"><img src="{{ $product->image_one}}" alt=""></div>
+                                        <div class="banner_2_image"><img src="{{ $product->cover}}" alt=""></div>
                                     </div>
                                 </div>
                             </div>
@@ -2848,9 +2848,11 @@
                             <form action='{{ route('newslaters.store') }}' method="POST" class="newsletter_form">
                                 @csrf
                                 <input name="email" type="email" class="newsletter_input" required="required" placeholder="Enter your email address">
-                                <button class="newsletter_button">Subscribe</button>
+                                <button onclick="storeNewslater(event)" class="newsletter_button">Subscribe</button>
                             </form>
-                            <div class="newsletter_unsubscribe_link"><a href="#">unsubscribe</a></div>
+                            <form action="{{ route('newslaters.destroy') }}"> @csrf @method('DELETE')
+                                <div class="newsletter_unsubscribe_link" ><a href="#" onclick="destroyNewslater(event)">unsubscribe</a></div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -2860,99 +2862,47 @@
 
 
     @push('scripts')
-    
-    {{-- <script type="text/javascript">
-        $(document).ready(function(){
-          $(document).on('click', '.addcart',function(e){
-            e.preventDefault();
-            var product_id = $(this).data('id');
-            if (product_id) {
-                 $.ajax({
-                     url: `/cart/${product_id}`,
-                     type:"POST",
-                     datType:"json",
-                     data: {"_token": "{{  csrf_token() }}"},
-                     success:function(data){
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'bottom-end',
-                            showConfirmButton: false,
-                            timer: 1500,
-                            onOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal.stopTimer)
-                                toast.addEventListener('mouseleave', Swal.resumeTimer)
-                            }
-                            })
-     
-                            if ($.isEmptyObject(data.error)) {
-                
-                                Toast.fire({
-                                icon: 'success',
-                                title: data.success
-                                })
-
-                            }else{
-
-                                Toast.fire({
-                                icon: 'error',
-                                title: data.error
-                                })
-                            }
-                },
-            });
-     
-            }else{
-                alert('danger');
-            }
-        });
-     
-        });
-    </script>
-
-    <script type="text/javascript">
-        $(document).ready(function(){
-          $(document).on('click', '.addwishlist',function(){
-            var product_id = $(this).data('id');
-
-            if (product_id) {
+        <script>
+            function newslaterAjax(form, method, emailInput, email) {
                 $.ajax({
-                     url: `/wishlist/${product_id}`,
-                     type:"POST",
-                     datType:"json",
-                     data: {"_token": "{{  csrf_token() }}"},
-                     success:function(data){
-                        const Toast = Swal.mixin({
-                            toast: true,
-                            position: 'bottom-end',
-                            showConfirmButton: false,
-                            timer: 1500,
-                            onOpen: (toast) => {
-                                toast.addEventListener('mouseenter', Swal.stopTimer)
-                                toast.addEventListener('mouseleave', Swal.resumeTimer)
-                            }
-                            })
-     
-                            if ($.isEmptyObject(data.error)) {
-                
-                                Toast.fire({
-                                icon: 'success',
-                                title: data.success
-                                })
-                            }else{
-                                Toast.fire({
-                                icon: 'error',
-                                title: data.error
-                                })
-                            }
-
-                            $('.wishlist_count').text(data.countWishlist)
-                     },
+                    url: form.attr('action'),
+                    type:method,
+                    dataType:"json",
+                    data: {"_token": "{{  csrf_token() }}", 'email' : email},
+                    success:function(data) { 
+                        if (data.error) {
+                            toastr.error(data.error)
+                        }
+                        if (data.success) {
+                            emailInput.val('')
+                            toastr.success(data.success)
+                        }
+                    },
+                    error:function(data) { 
+                        if (email = data.responseJSON.errors.email[0]) {
+                            toastr.error(email)
+                        }
+                    },
                 });
-            }else{
-                 alert('danger');
-             }
-          });
-        });
-    </script> --}}
+            }
+            function storeNewslater(e) {
+                e.preventDefault();
+                var form = $(e.target).parent();
+                var emailInput = form.children('input[name="email"]');
+                var email = emailInput.val();
+                if (email) {   
+                    newslaterAjax(form, "POST", emailInput, email);
+                }
+            }
+            function destroyNewslater(e) {
+                e.preventDefault();
+                var form = $(e.target).closest('form');
+                var emailInput = form.siblings('form').children('input[name="email"]');
+                var email = emailInput.val();
+                if (email) {   
+                    newslaterAjax(form, "DELETE", emailInput, email);
+                }
+            }
+        </script>
     @endpush
 @endsection

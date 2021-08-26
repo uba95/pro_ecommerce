@@ -11,14 +11,14 @@ class WishlistController extends Controller
 {
     public function index() {
      
-        return view('pages.wishlist', ['wishlist_items' => Auth::user()->wishlistItems]);
+        return view('pages.wishlist', ['wishlist_items' => current_user()->wishlistItems]);
     }
     
     public function store(Product $product) {
 
-        $countWishlist =  Auth::user()->wishlistItems()->count();
+        $countWishlist =  current_user()->wishlistItems()->count();
 
-        return Auth::user()->wishlistItems()->toggle($product)['attached'] 
+        return current_user()->wishlistItems()->toggle($product)['attached'] 
         ? Response::json(['success' => 'Product Added To Your Wishlist', 'countWishlist' => ++$countWishlist])
         : Response::json(['success' => 'Product Deleted From Your Wishlist', 'countWishlist' => --$countWishlist]);
     }

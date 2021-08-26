@@ -10,7 +10,9 @@
         <div class="card pd-20 pd-sm-40">
           <h6 class="card-body-title">
             Coupons List
-            <a href="" class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#modaldemo3">Add New Coupon</a>
+            @can('create coupons')
+              <a href="" class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#modaldemo3">Add New Coupon</a>
+            @endcan
           </h6>
 
           <div class="table-wrapper">
@@ -25,7 +27,9 @@
                   <th class="wd-15p">Status</th>
                   <th class="wd-15p">Start At</th>
                   <th class="wd-15p">Expire At</th>
-                  <th class="wd-20p">Action</th>
+                  @canany(['edit coupons', 'delete coupons'])
+                    <th class="wd-20p">Action</th>
+                  @endcanany
                 </tr>
               </thead>
               <tbody>
@@ -37,7 +41,6 @@
                         <td>{{ $coupon->use_count }}</td>
                         <td>{{ $coupon->max_use_count }}</td>
                         <td>
-
                         @switch($coupon->status)
                         @case('inactive')
                             <span class="badge badge-dark">INACTIVE</span>
@@ -52,12 +55,19 @@
                         </td>
                         <td>{{ $coupon->started_at->isoFormat('Y-MM-DD') }}</td>
                         <td>{{ $coupon->expired_at->isoFormat('Y-MM-DD') }}</td>
-                        <td>
-                            <a href ='{{ route('admin.coupons.edit', $coupon->id) }}' class="btn btn-sm btn-info">Edit</a>
-                            <form method="POST" action='{{ route('admin.coupons.destroy', $coupon->id) }}' class="btn btn-sm btn-danger delete">
-                              @csrf @method('DELETE') Delete
-                            </form>
+                        @canany(['edit coupons', 'delete coupons'])
+                          <td>
+                            @can('edit coupons')
+                              <a href ='{{ route('admin.coupons.edit', $coupon->id) }}' class="btn btn-sm btn-info">Edit</a>
+                            @endcan
+                            @can('delete coupons')
+                              <form method="POST" action='{{ route('admin.coupons.destroy', $coupon->id) }}' class="btn btn-sm btn-danger delete">
+                                @csrf @method('DELETE') Delete
+                              </form>
+                            @endcan
                           </td>
+                        @endcanany
+
                     </tr>
                 @endforeach
               </tbody>
@@ -67,66 +77,66 @@
       </div><!-- sl-pagebody -->
     </div><!-- sl-mainpanel -->
     <!-- ########## END: MAIN PANEL ########## -->
+    @can('create coupons')
+      <!-- LARGE MODAL -->
+      <div id="modaldemo3" class="modal fade">
+          <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                  <div class="modal-header pd-x-20">
+                  <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Add New Coupon</h6>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
 
-            <!-- LARGE MODAL -->
-            <div id="modaldemo3" class="modal fade">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header pd-x-20">
-                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Add New Coupon</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        </div>
+                  @if ($errors->any())
+                      <div class="alert alert-danger">
+                          <ul>
+                              @foreach ($errors->all() as $error)
+                                  <li>{{ $error }}</li>
+                              @endforeach
+                          </ul>
+                      </div>
+                  @endif
 
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
-                        <form action ='{{ route('admin.coupons.store') }}' method="POST">
-                            @csrf
-                            <div class="modal-body pd-20">
-                                <div class="form-group">
-                                  <label for="exampleInputEmail1">Coupon Code</label>
-                                  <input type="text" class="form-control" name="coupon_name">
-                                </div>
-                                <div class="form-group">
-                                  <label for="exampleInputEmail1">Discount Percentage %</label>
-                                  <input type="number" class="form-control" name="discount" min="0" max="100" value="0">
-                                </div>
-                                <div class="form-group">
-                                  <label for="exampleInputEmail1">Max Use Count</label>
-                                  <input type="number" class="form-control" name="max_use_count" min="0" value="0">
-                                </div>
-                                <div class="form-group">
-                                  <label class="ckbox">
-                                    <input name="status" type="checkbox" value="active" checked>
-                                    <span>Active</span>
-                                  </label>
-                                </div>
-                                <div class="form-group">
-                                  <div>Start At</div>
-                                  <input type="date" class="form-control" name="started_at">
-                                </div>
-                                <div class="form-group">
-                                  <div>Expire At</div>
-                                  <input type="date" class="form-control" name="expired_at">
-                                </div>
-                            </div><!-- modal-body -->
-                            <div class="modal-footer">
-                                    <button type="submit" class="btn btn-info pd-x-20">Add</button>
-                                    <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
-                            </div>
-                            
-                        </form>
-                    </div>
-                </div><!-- modal-dialog -->
-            </div><!-- modal -->
-      
+                  <form action ='{{ route('admin.coupons.store') }}' method="POST">
+                      @csrf
+                      <div class="modal-body pd-20">
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Coupon Code</label>
+                            <input type="text" class="form-control" name="coupon_name">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Discount Percentage %</label>
+                            <input type="number" class="form-control" name="discount" min="0" max="100" value="0">
+                          </div>
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Max Use Count</label>
+                            <input type="number" class="form-control" name="max_use_count" min="0" value="0">
+                          </div>
+                          <div class="form-group">
+                            <label class="ckbox">
+                              <input name="status" type="checkbox" value="active" checked>
+                              <span>Active</span>
+                            </label>
+                          </div>
+                          <div class="form-group">
+                            <div>Start At</div>
+                            <input type="date" class="form-control" name="started_at">
+                          </div>
+                          <div class="form-group">
+                            <div>Expire At</div>
+                            <input type="date" class="form-control" name="expired_at">
+                          </div>
+                      </div><!-- modal-body -->
+                      <div class="modal-footer">
+                              <button type="submit" class="btn btn-info pd-x-20">Add</button>
+                              <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+                      </div>
+                      
+                  </form>
+              </div>
+          </div><!-- modal-dialog -->
+      </div><!-- modal -->
+    @endcan
 @endsection

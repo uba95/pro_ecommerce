@@ -11,6 +11,11 @@ use Spatie\Enum\Laravel\Rules\EnumRule;
 
 class OrderController extends Controller
 {
+    public function __construct() {
+        $this->middleware('can:view orders',    ['only' => ['index', 'show']]);
+        $this->middleware('can:edit orders',    ['only' => ['update']]);
+    }
+
     public function index(Request $request) {
         $orders = $request->status && in_array($request->status, OrderStatus::getValues())
         ? Order::with('user:id,name', 'shipment:order_id,courier')->whereEnum('status', $request->status)->get()

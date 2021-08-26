@@ -9,6 +9,13 @@ use App\Models\BlogCategory;
 
 class BlogCategoryController extends Controller
 {
+    public function __construct() {
+        $this->middleware('can:view blog',    ['only' => ['index']]);
+        $this->middleware('can:create blog',  ['only' => ['store']]);
+        $this->middleware('can:edit blog',    ['only' => ['edit', 'update']]);
+        $this->middleware('can:delete blog',  ['only' => ['destroy']]);
+    }
+
     public function index() {
         return view('admin.blog.categories', ['categories' => BlogCategory::all()]);
     }
@@ -16,7 +23,7 @@ class BlogCategoryController extends Controller
     public function store(Request $request) {
         $validatedData = $request->validate(['blog_category_name' => 'required|unique:blog_categories|max:255']);
         BlogCategory::create($validatedData);
-        return redirect()->back()->with(toastNotification('Blog Category', 'added'));
+        return redirect()->back()->with(toastNotification('Blog Category', 'created'));
     }
 
     public function edit(BlogCategory $blogCategory) {

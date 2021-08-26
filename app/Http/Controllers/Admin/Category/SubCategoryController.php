@@ -10,6 +10,13 @@ use App\Http\Controllers\Controller;
 
 class SubCategoryController extends Controller
 {
+    public function __construct() {
+        $this->middleware('can:view categories',    ['only' => ['index']]);
+        $this->middleware('can:create categories',  ['only' => ['store']]);
+        $this->middleware('can:edit categories',    ['only' => ['edit', 'update']]);
+        $this->middleware('can:delete categories',  ['only' => ['destroy']]);
+    }
+
     public function index() {   
         return view('admin.categories.subcategories', [
             'categories' => Category::orderBy('id')->pluck('category_name', 'id'),
@@ -28,7 +35,7 @@ class SubCategoryController extends Controller
         ]);
     
         Subcategory::create($validatedData);
-        return redirect()->back()->with(toastNotification('Subcategory', 'added'));
+        return redirect()->back()->with(toastNotification('Subcategory', 'created'));
     }
 
     public function edit(Subcategory $subcategory) {

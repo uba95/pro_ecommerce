@@ -122,7 +122,7 @@ class Shipment extends Model
     public function readyParcel(Collection $collection, $cart = true)
     {
         $weight =  $cart ?  Cart::weight() : $collection->map(fn($v) => $v->product_weight * $v->product_quantity)->sum();
-
+        $weight = intval($weight) ?  $weight : 1;
         $parcel = array(
             'length'=> '50',
             'width'=> '50',

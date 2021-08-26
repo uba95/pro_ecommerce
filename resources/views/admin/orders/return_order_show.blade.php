@@ -3,7 +3,7 @@
 
   <div class="sl-mainpanel">
       <div class="sl-pagebody">
-          <div class="card pd-20 pd-sm-40">
+          <div class="card pd-20 pd-sm-40 overflow-hidden">
                 <h6 class="card-body-title">Return Order Details </h6>
                 <div class="row">
 
@@ -21,7 +21,9 @@
                     @include('layouts.orders.return_reason', ['returnOrderRequest' => $returnOrder])
                 </div>
 
-                @include('admin.orders.return_order_status_form', ['request' => $returnOrder])
+                @can('edit orders')
+                    @include('admin.orders.return_order_status_form', ['request' => $returnOrder])
+                @endcan
           </div>
       </div>
   </div>

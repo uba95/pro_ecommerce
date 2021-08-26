@@ -7,10 +7,12 @@ use App\Models\Brand;
 use App\Models\Address;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\SiteSettings;
 use App\Models\Subcategory;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,18 +23,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(MyCountryTableSeeder::class);
-        $time = ['created_at'=> now(), 'updated_at'=> now()];
+        // Truncate all tables, except migrations
+        $database = 'Tables_in_' . DB::getDatabaseName();
+        DB::statement("SET foreign_key_checks=0");
+        foreach (DB::select('SHOW TABLES') as $table) {
+            if ($table->{$database} !== 'migrations')
+                DB::table($table->{$database})->truncate();
+        }
+        DB::statement("SET foreign_key_checks=1");
 
-        Admin::insert(array_map(fn($v) => array_merge($v, $time),
-            [
-                [ 'name' => 'aaa', 'email' => '123@gmail.com', 'password' => bcrypt(111)],
-                [ 'name' => 'bbb', 'email' => 'bb@gmail.com', 'password' => bcrypt(111)],
-            ]
-        ));
+        $this->call(MyCountryTableSeeder::class);
+        $this->call(PermissionSeeder::class);
+
+        $time = ['created_at'=> now(), 'updated_at'=> now()];
         
         Category::insert(array_map(fn($v) => 
-            array_merge(Arr::add($v, 'category_slug', Str::slug($v['category_name'], '-')), $time),
+            Arr::add($v, 'category_slug', Str::slug($v['category_name'], '-')) + $time,
             [
                 [ 'category_name' => 'Mens Fashion'],
                 [ 'category_name' => 'Womens Fashion'],
@@ -47,7 +53,7 @@ class DatabaseSeeder extends Seeder
         ));
 
         Subcategory::insert(array_map(fn($v) => 
-            array_merge(Arr::add($v, 'subcategory_slug', Str::slug($v['subcategory_name'], '-')), $time),
+            Arr::add($v, 'subcategory_slug', Str::slug($v['subcategory_name'], '-')) + $time,
             [
                 [ 'category_id' => '1', 'subcategory_name' => 'Mens Tshirts'],
                 [ 'category_id' => '1', 'subcategory_name' => 'Mens Shirts'],
@@ -90,7 +96,7 @@ class DatabaseSeeder extends Seeder
         ));
 
         Brand::insert(array_map(fn($v) => 
-            array_merge(Arr::add($v, 'brand_slug', Str::slug($v['brand_name'], '-')), $time),
+            Arr::add($v, 'brand_slug', Str::slug($v['brand_name'], '-')) + $time,
             [
                 [ 'brand_name' => 'Sony'],
                 [ 'brand_name' => 'Lenovo'],
@@ -109,7 +115,7 @@ class DatabaseSeeder extends Seeder
         ));
 
         Product::insert(array_map(fn($v) => 
-        array_merge(Arr::add($v, 'product_slug', Str::slug($v['product_name'], '-')), $time),
+        Arr::add($v, 'product_slug', Str::slug($v['product_name'], '-')) + $time,
             [
                 [
                 'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
@@ -138,21 +144,32 @@ class DatabaseSeeder extends Seeder
             ]
         ));
 
-        User::insert(array_map(fn($v) => array_merge($v, $time),
+        User::insert(array_map(fn($v) => $v + $time,
             [
-                [ 'name' => 'Ubaida Awad', 'email' => '123@gmail.com', 'password' => bcrypt(111)] + $time,
-                [ 'name' => 'Jon Doe', 'email' => 'bb@gmail.com', 'password' => bcrypt(111)] + $time,
+                [ 'name' => 'Ubaida Awad', 'email' => '123@gmail.com', 'password' => bcrypt(111)],
+                [ 'name' => 'Jon Doe', 'email' => 'bb@gmail.com', 'password' => bcrypt(111)],
             ]   
         ));
 
-        Address::insert(array_map(fn($v) => array_merge($v, $time),
+        Address::insert(array_map(fn($v) => $v + $time,
             [
                 ['alias' => 'home', 'address_1' => 'add1', 'address_2' => 'add2', 'zip' => '80911',
-                'city' => 'Simla', 'country_id' => '226', 'user_id' => 1, 'phone' => '719-541-4872'] + $time,
+                'city' => 'Simla', 'country_id' => '226', 'user_id' => 1, 'phone' => '719-541-4872'],
 
                 ['alias' => 'office', 'address_1' => 'add11', 'address_2' => 'add22', 'zip' => '44139',
-                'city' => 'Solon', 'country_id' => '226', 'user_id' => 1, 'phone' => '440-349-7867'] + $time,
+                'city' => 'Solon', 'country_id' => '226', 'user_id' => 1, 'phone' => '440-349-7867'],
             ]
         ));
+
+        SiteSettings::insert(
+            [
+                'phone' =>	'719-541-4872',
+                'email' =>	'123@gmail.com',
+                'address' =>	'home1',
+                'facebook' => 'facebook.com',
+                'youtube' => 	'youtube.com',
+                'twitter' => 	'twitter.com',
+            ] +  $time
+        );
     }
 }

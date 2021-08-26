@@ -11,8 +11,10 @@
         <div class="card pd-20 pd-sm-40">
           <h6 class="card-body-title">
             Blog Posts List
-            <a href ='{{ route('admin.blog_posts.create') }}' class="btn btn-sm btn-success float-right">Add New Post</a>
-        </h6>
+            @can('create categories')
+              <a href ='{{ route('admin.blog_posts.create') }}' class="btn btn-sm btn-success float-right">Add New Post</a>
+            @endcan
+          </h6>
 
           <div class="table-wrapper">
             <table id="datatable1" class="table display responsive nowrap">
@@ -22,7 +24,9 @@
                   <th class="wd-15p">Post Title</th>
                   <th class="wd-15p">Post Category</th>
                   <th class="wd-15p">Post Image</th>
-                  <th class="wd-20p">Action</th>
+                  @canany(['edit blog', 'delete blog'])
+                    <th class="wd-20p">Action</th>
+                  @endcanany
                 </tr>
               </thead>
               <tbody>
@@ -34,13 +38,18 @@
                         <td>
                             <img src="{{ $post->post_image }}" alt="" width="100" height="40">
                         </td>
-
-                        <td>
+                        @canany(['edit blog', 'delete blog'])
+                          <td>
+                          @can('edit blog')
                             <a href ='{{ route('admin.blog_posts.edit', $post->id) }}' class="btn btn-sm btn-info">Edit</a>
+                          @endcan
+                          @can('delete blog')
                             <form method="POST" action='{{ route('admin.blog_posts.destroy', $post->id) }}' class="btn btn-sm btn-danger delete">
                               @csrf @method('DELETE') Delete
                             </form>
+                          @endcan
                           </td>
+                        @endcanany
                     </tr>
                 @endforeach
               </tbody>

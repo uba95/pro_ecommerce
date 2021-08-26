@@ -4,15 +4,26 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Brand;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
+use App\Models\ProductImage;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    public function __construct() {
+        $this->middleware('can:view products',    ['only' => ['index', 'show']]);
+        $this->middleware('can:create products',  ['only' => ['create', 'store']]);
+        $this->middleware('can:edit products',    ['only' => ['edit', 'update', 'changeStatus', 'destroyImage']]);
+        $this->middleware('can:delete products',  ['only' => ['destroy']]);
+    }
+
     public function index() {
         $products = Product::with('category:id,category_name', 'subcategory:id,subcategory_name','brand:id,brand_name')->get();
         return view('admin.products.index', compact('products'));
@@ -34,23 +45,25 @@ class ProductController extends Controller
         $attributes = $request->validated();
 
         $attributes['status'] = 1;
-        $attributes['product_size'] = json_encode($request->product_size);
-        $attributes['product_color'] = json_encode($request->product_color);
+        $attributes['product_slug'] = Str::slug($request->product_name);
     
-        $image_one = $request->image_one;
-        $image_two = $request->image_two;
-        $image_three = $request->image_three;
-
-        if ($image_one && $image_two && $image_three) {
-            
-            $attributes['image_one'] = 'media/products/' . img_upload($image_one);
-            $attributes['image_two'] = 'media/products/' . img_upload($image_two);
-            $attributes['image_three'] = 'media/products/' . img_upload($image_three);
+        if ($request->hasFile('cover')) {
+            $attributes['cover'] = img_upload($request->file('cover'), 'media/products/covers/', true);
         }
 
-        Product::create($attributes);
+        $product = Product::create(Arr::except($attributes, 'image'));
 
-        return redirect()->back()->with(toastNotification('Product', 'added'));
+        if ($request->hasFile('image')) {
+
+            $data = ['product_id' => $product->id, 'created_at' => now(), 'updated_at' => now()];
+            $imgs = array_map(fn($v) => img_upload($v), $request->file('image'));
+            
+            DB::table('product_images')->insert(
+                array_map(fn($img) => ['name' => $img] + $data , $imgs)    
+            );
+        }
+
+        return redirect()->back()->with(toastNotification('Product', 'created'));
 
     }
 
@@ -68,8 +81,7 @@ class ProductController extends Controller
     public function update(Product $product, ProductRequest $request) {
 
         $attributes = $request->validated();
-        $attributes['product_size'] = json_encode($request->product_size);
-        $attributes['product_color'] = json_encode($request->product_color);
+        $attributes['product_slug'] = Str::slug($request->product_name);
         $attributes['main_slider'] = $request->main_slider;
         $attributes['hot_deal'] = $request->hot_deal;
         $attributes['best_rated'] = $request->best_rated;
@@ -77,34 +89,40 @@ class ProductController extends Controller
         $attributes['mid_slider'] = $request->mid_slider;
         $attributes['hot_new'] = $request->hot_new;
 
-        $image_one = $request->image_one;
-        $image_two = $request->image_two;
-        $image_three = $request->image_three;
+        if ($request->hasFile('cover')) {
 
-        if ($image_one && $image_two && $image_three) {
-
-            $old_img1 = $product->getAttributes()['image_one'];
-            $old_img2 = $product->getAttributes()['image_two'];
-            $old_img3 = $product->getAttributes()['image_three'];
-
-            if ($old_img1 && $old_img2 && $old_img3) {
-                Storage::disk('public')->delete($old_img1, $old_img2, $old_img3);
-            }
-
-            $attributes['image_one'] = 'media/products/' . img_upload($image_one);
-            $attributes['image_two'] = 'media/products/' . img_upload($image_two);
-            $attributes['image_three'] = 'media/products/' . img_upload($image_three);
+            Storage::disk('public')->delete($product->getOriginal('cover'));
+            $attributes['cover'] = img_upload($request->file('cover'), 'media/products/covers/', true);
         }
 
-        $product->update($attributes);
+        $product->update(Arr::except($attributes, 'image'));
+        
+        if ($request->hasFile('image')) {
+
+            $data = ['product_id' => $product->id, 'created_at' => now(), 'updated_at' => now()];
+            $imgs = array_map(fn($v) => img_upload($v), $request->file('image'));
+
+            DB::table('product_images')->insert(
+                array_map(fn($img) => ['name' => $img] + $data , $imgs)    
+            );
+        }
 
         return redirect()->route('admin.products.index')->with(toastNotification('Product', 'updated'));
+    }
 
+    public function destroyImage(ProductImage $productImage) {
+
+        Storage::disk('public')->delete($productImage->getOriginal('name'));
+        $productImage->delete();
+
+        return redirect()->back()->with(toastNotification('Product Image', 'deleted'));
     }
 
     public function destroy(Product $product) {
 
-        Storage::disk('public')->delete([$product->getOriginal('image_one'),$product->getOriginal('image_two'),$product->getOriginal('image_three')]);
+        Storage::disk('public')->delete($product->getOriginal('cover'));
+        Storage::disk('public')->delete($product->images->map(fn($img) => $img->getOriginal('name'))->toArray());
+        
         $product->delete();
 
         return redirect()->back()->with(toastNotification('Product', 'deleted'));

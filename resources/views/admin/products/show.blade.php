@@ -76,7 +76,7 @@
                 <div class="form-group">
                   <label class="form-control-label">Product Size: </label>
                     <br>
-                  @foreach ($product->product_size as $size)
+                  @foreach ($product->product_size ?? [] as $size)
                     <h5 style="display: inline-block"><span class="badge badge-primary">{{ $size }}</span></h5>
                   @endforeach
                 </div>
@@ -119,44 +119,26 @@
                 </div>
               </div><!-- col-4 -->
 
-
-
- <div class="col-lg-4">
+              <div class="col-lg-4">
                 <div class="form-group">
-                  <label class="form-control-label">Image One ( Main Thumbnali): </label><br>
-                 <label class="custom-file">
-           
-            <img src="{{ URL::to($product->image_one) }}" style="height: 80px; width: 80px;">
-            </label>
-
+                  <label class="form-control-label">Cover: </label><br>
+                  <label class="custom-file">
+                    <img src="{{ URL::to($product->cover) }}" style="height: 80px; width: 80px;">
+                  </label>
                 </div>
               </div><!-- col-4 -->
 
-
-               <div class="col-lg-4">
-                <div class="form-group">
-                  <label class="form-control-label">Image Two: </label><br>
-                 <label class="custom-file">
-           <img src="{{ URL::to($product->image_two) }}" style="height: 80px; width: 80px;">
-            </label>
-
-                </div>
-              </div><!-- col-4 -->
-
-
-
-
- <div class="col-lg-4">
-                <div class="form-group">
-                  <label class="form-control-label">Image Three: </label><br>
-                 <label class="custom-file">
-           <img src="{{ URL::to($product->image_three) }}" style="height: 80px; width: 80px;">
-
-            </label>
-
-                </div>
-              </div><!-- col-4 --> 
-
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">Images: </label><br>
+                    <label class="custom-file">
+                      @foreach ($product->images as $img)
+                      <img src="{{ URL::to($img->name) }}" style="height: 80px; width: 80px;">
+                      @endforeach
+                    </label>
+                  </div>
+                </div><!-- col-4 -->
+              
             </div><!-- row -->
 
   <hr>

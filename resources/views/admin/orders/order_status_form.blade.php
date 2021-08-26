@@ -1,43 +1,50 @@
 <form method="POST" class="pd-20 pd-sm-40">
     @csrf @method('PATCH')
     @if (!$order->isCancelPending() && !$order->isReturnPending())
+      @can('edit orders')
+        @switch($order->status)
+          @case('pending')
+
+            <button type="submit" class="btn btn-info pay" formaction="{{ route('admin.orders.update', [$order->id, 'status' => 'paid']) }}">
+              Accept Payment
+            </button>
+            @break
+            
+          @case('paid')
+            <button type="submit" class="btn btn-info ship" formaction="{{ route('admin.orders.update', [$order->id, 'status' => 'shipped']) }}">
+              Start Shipping
+            </button>
+            @break 
+          @case('shipped')
+            <button type="submit" class="btn btn-info deliver" formaction="{{ route('admin.orders.update', [$order->id, 'status' => 'delivered']) }}">
+              Order Is Delivered
+            </button>
+            @break
+        @endswitch 
+      @endcan
+
       @switch($order->status)
-      @case('pending')
-      
-        <button type="submit" class="btn btn-info pay" formaction="{{ route('admin.orders.update', [$order->id, 'status' => 'paid']) }}">
-          Accept Payment
-        </button>
-        @break
-        
-      @case('paid')
-        <button type="submit" class="btn btn-info ship" formaction="{{ route('admin.orders.update', [$order->id, 'status' => 'shipped']) }}">
-          Start Shipping
-        </button>
-        @break 
-      @case('shipped')
-        <button type="submit" class="btn btn-info deliver" formaction="{{ route('admin.orders.update', [$order->id, 'status' => 'delivered']) }}">
-          Order Is Delivered
-        </button>
-        @break 
-      @case('delivered')
-        <strong class="alert alert-success">The Order Is Delivered Successfuly.</strong>
-        @break
-      @case('canceled')
-        <strong class="alert alert-danger ">The Order Is Canceled.</strong>
-        @break
-      @case('returning')
-        <strong class="alert alert-danger">Some Order Items Are In Returning Process.</strong>
-        @break
-      @case('returned')
-        <strong class="alert alert-danger">The Order Is Reurned.</strong>
-        @break
+        @case('delivered')
+          <strong class="alert alert-success">The Order Is Delivered Successfuly.</strong>
+          @break
+        @case('canceled')
+          <strong class="alert alert-danger ">The Order Is Canceled.</strong>
+          @break
+        @case('returning')
+          <strong class="alert alert-danger">Some Order Items Are In Returning Process.</strong>
+          @break
+        @case('returned')
+          <strong class="alert alert-danger">The Order Is Reurned.</strong>
+          @break
       @endswitch
 
-      @if (in_array($order->status, ['pending','paid']))
-        <button type="submit" class="btn btn-outline-danger cancel" formaction="{{ route('admin.orders.update', [$order->id, 'status' => 'canceled']) }}">
-          Cancel Order
-        </button>
-      @endif
+      @can('edit orders')
+        @if (in_array($order->status, ['pending','paid']))
+          <button type="submit" class="btn btn-outline-danger cancel" formaction="{{ route('admin.orders.update', [$order->id, 'status' => 'canceled']) }}">
+            Cancel Order
+          </button>
+        @endif
+      @endcan
 
     @endif
 
@@ -62,7 +69,7 @@
         @foreach ($order->cancelOrderRequests as $key => $request)
             <li class="mg-t-10">
               <a href ='{{ route('admin.cancel_orders.show', $request->id) }}'>Cancel Request {{ $key + 1 }}</a>
-              @include('layouts.orders.cancel_order_requst_status')  
+              @include('layouts.orders.cancel_order_request_status')  
             </li>
         @endforeach
      </ul>

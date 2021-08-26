@@ -27,7 +27,7 @@
                     <td scope="col">{{ $request->order->total_price }}$ </td>
                     <td scope="col">{{ $request->created_at->diffForHumans() }} </td>
                     <td scope="col">{{ $request->order->created_at->diffForHumans() }} </td>
-                    <td scope="col"> @include('layouts.orders.cancel_order_requst_status') </td>
+                    <td scope="col"> @include('layouts.orders.cancel_order_request_status') </td>
                     <td scope="col"> @include('layouts.orders.order_status', ['order' => $request->order]) </td>
                     <td class="col d-flex">
                         <a class="btn btn-sm btn-success mr-1" href ='{{ route('cancel_orders.show', $request->id) }}' title="Show Request" ><i class="fa fa-eye fa-fw"></i></a>

@@ -13,9 +13,14 @@ function  snakeToTitle($value){
     return str_replace('_', ' ', Str::title($value));
 }
 
+function  camelToTitle($value){
+
+    return ucwords(implode(' ', preg_split('/(?=[A-Z])/', $value)));
+}
+
 function  productSelectScope( $q){
 
-    return $q -> select('products.id','brand_id', 'product_name', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'image_one', 'status');
+    return $q -> select('products.id','brand_id', 'product_name', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'cover', 'status');
 }
 
 function isAdmin() {
@@ -23,44 +28,66 @@ function isAdmin() {
     return Auth::guard('admin')->check();
 }
 
-function img_upload($image) {
+function current_user(){
 
-    $image_name = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
-    Image::make($image)->resize(300,300)->save(storage_path('app/public/media/products/'.$image_name));
+    return Auth::guard('web')->user();
+}
+
+// function img_products_upload($image, $cover = false) {
+
+//     $image_name = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
+//     if ($cover) {
+//         Image::make($image)->resize(300,300)->save(storage_path("app/public/media/products/covers/".$image_name));
+//         return $image_name;
+//     }
+//     Image::make($image)->save(storage_path("app/public/media/products/images/".$image_name));
+//     return $image_name;
+// }
+
+function img_upload($image, $path = 'media/products/images/', $resize = false) {
+
+    $image_name = $path . hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
+
+    if ($resize) {
+        Image::make($image)->resize(300,300)->save(storage_path("app/public/".$image_name));
+        return $image_name;
+    }
+
+    Image::make($image)->save(storage_path("app/public/".$image_name));
     return $image_name;
 }
 
-function toastNotification($entitty, $message = 'empty') {
+function toastNotification($message, $type = 'success') {
 
     $notifications = [
         'not_found' => [
-            'message'=>"$entitty Not Found",
+            'message'=>"$message Not Found",
             'alert-type'=>'error'
         ],
 
-        'added' => [
-            'message'=>"New $entitty Added Successfully",
+        'created' => [
+            'message'=>"New $message Has Been Successfully Created",
             'alert-type'=>'success'
         ],
 
         'updated' => [            
-            'message'=>"$entitty Updated Successfully",
+            'message'=>"$message Has Been Successfully Updated",
             'alert-type'=>'success'
         ],
         
         'deleted' => [            
-            'message'=>"$entitty Deleted Successfully",
+            'message'=>"$message Has Been Successfully Deleted",
             'alert-type'=>'success'
         ],
-        'empty' => [            
-            'message'=>"$entitty",
+        'success' => [            
+            'message'=>"$message",
             'alert-type'=>'success'
         ],
         'error' => [            
-            'message'=>"$entitty",
+            'message'=>"$message",
             'alert-type'=>'error'
         ],
     ];
 
-    return $notifications[$message];
+    return $notifications[$type];
 }

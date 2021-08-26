@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Storage;
 
 class BrandController extends Controller
 {
+    public function __construct() {
+        $this->middleware('can:view categories',    ['only' => ['index']]);
+        $this->middleware('can:create categories',  ['only' => ['store']]);
+        $this->middleware('can:edit categories',    ['only' => ['edit', 'update']]);
+        $this->middleware('can:delete categories',  ['only' => ['destroy']]);
+    }
+
     public function index() {
         return view('admin.categories.brands', ['brands' => Brand::all()]);
     }
@@ -28,7 +35,7 @@ class BrandController extends Controller
 
         Brand::create($validatedData);
 
-        return redirect()->back()->with(toastNotification('Brand', 'added'));
+        return redirect()->back()->with(toastNotification('Brand', 'created'));
     }
 
     public function edit(Brand $brand) {
@@ -44,12 +51,7 @@ class BrandController extends Controller
 
         if($request->brand_logo) {
 
-            $old_logo = $brand->getOriginal('brand_logo');
-
-            if ($old_logo) {
-                Storage::disk('public')->delete($old_logo);
-            }
-
+            Storage::disk('public')->delete($brand->getOriginal('brand_logo'));
             $validatedData['brand_logo'] = $request->file('brand_logo')->store('media/brands', 'public');
         }
 
@@ -62,6 +64,7 @@ class BrandController extends Controller
 
         Storage::disk('public')->delete($brand->getOriginal('brand_logo'));
         $brand->delete();
+        
         return redirect()->back()->with(toastNotification('Brand', 'deleted'));
     }
 }

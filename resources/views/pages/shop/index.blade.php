@@ -80,21 +80,10 @@
                                                 @include('pages.shop.sort')
                                             </span>
                                             <ul>
-                                                <li class="shop_sorting_button">
-                                                    <a href ='{{ route('shop.index',request()->except('page', 'sort', 'order') + ['sort' => 'date']) }}'>
-                                                        Date
-                                                    </a>
-                                                </li>
-                                                <li class="shop_sorting_button">
-                                                    <a href ='{{ route('shop.index',request()->except('page', 'sort', 'order') + ['sort' => 'name']) }}'>
-                                                        Name
-                                                    </a>
-                                                </li>
-                                                <li class="shop_sorting_button">
-                                                    <a href ='{{ route('shop.index',request()->except('page', 'sort', 'order') + ['sort' => 'price']) }}'>
-                                                        Price
-                                                    </a>
-                                                </li>
+                                                @include('pages.shop.sort_button', ['sort' => 'date'])
+                                                @include('pages.shop.sort_button', ['sort' => 'name'])
+                                                @include('pages.shop.sort_button', ['sort' => 'price'])
+                                                @include('pages.shop.sort_button', ['sort' => 'rating'])
                                             </ul>
                                         </li>
                                     </ul>

@@ -16,7 +16,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth:web');
     }
 
     /**
@@ -35,7 +35,7 @@ class HomeController extends Controller
 
     public function updatePassword(Request $request)
     {
-      $password=Auth::user()->password;
+      $password=current_user()->password;
       $oldpass=$request->oldpass;
       $newpass=$request->password;
       $confirm=$request->password_confirmation;

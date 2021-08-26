@@ -20,7 +20,7 @@ class BlogPost extends Model
     
     public function getPostImageAttribute($value) {
 
-        return asset($value ? 'storage/'. $value : 'storage/media/brands/default-logo.png');
+        return asset($value ? 'storage/'. $value : 'storage/media/default.png');
     }
 
     public function sluggable(): array

@@ -54,16 +54,18 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof ModelNotFoundException) {
 
+            $model = camelToTitle(class_basename($exception->getModel()));
+
             if ($request->expectsJson()) {
 
                 return Request::routeIs('admin.*') && isAdmin() ? 
-                    Response::json(toastNotification('Page', 'not_found')) :
-                    Response::json(['error' => 'Page Not Found']);
+                    Response::json(toastNotification($model, 'not_found')) :
+                    Response::json(['error' => "$model Not Found"]);
             } else {
 
                 return Request::routeIs('admin.*') && isAdmin() ? 
-                    redirect()->route('admin.home')->with(toastNotification('Page', 'not_found')) :
-                    redirect()->route('pages.index')->with(toastNotification('Page', 'not_found'));
+                    redirect()->route('admin.home')->with(toastNotification($model, 'not_found')) :
+                    redirect()->route('pages.index')->with(toastNotification($model, 'not_found'));
             }
         }
         

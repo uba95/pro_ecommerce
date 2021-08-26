@@ -8,6 +8,10 @@ use App\Models\Product;
 
 class StockController extends Controller
 {
+    public function __construct() {
+        $this->middleware('can:view reports');
+    }
+
     public function __invoke(Request $request) {
         $products = Product::get(['id', 'product_name', 'product_quantity']);
         $products = $request->status ?  $products->filter(fn($product) => $product->stockStatus == $request->status) : $products;

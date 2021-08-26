@@ -3,7 +3,7 @@
 
 <div class="product_item {{ $product->discount_price ? 'discount' :  ($product->hot_new ? 'is_new' : '') }}">
     <div class="product_border"></div>
-    <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{$product->image_one}}" alt=""></div>
+    <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{$product->cover}}" alt=""></div>
     <div class="product_content">
         <div class="product_price">
 
@@ -18,9 +18,9 @@
             <div><a tabindex="0" href='{{ route('products.show', $product->product_slug) }}'>{{ $product->product_name}}</a></div>
         </div>
     </div>
-    @auth
+    @auth('web')
     <form class="addwishlist" data-id="{{ $product->id }}"> @csrf
-        <div class="product_fav {{ Auth::user()->hasProductOnWishlist($product->id) ? 'active' : ''}}">
+        <div class="product_fav {{ current_user()->hasProductOnWishlist($product->id) ? 'active' : ''}}">
             <i class="fas fa-heart"></i>
         </div>    
     </form>  

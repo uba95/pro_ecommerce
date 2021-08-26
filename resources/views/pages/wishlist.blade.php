@@ -8,7 +8,7 @@
         <div class="featured_slider_item col-md-2">
             <div class="border_active"></div>
             <div class="product_item  d-flex flex-column align-items-center justify-content-center text-center {{ $product->discount_price ? 'discount' :  ($product->hot_new ? 'is_new' : '') }}">
-                <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{ $product->image_one}}" alt="" height="120" width="100"></div>
+                <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{ $product->cover}}" alt="" height="120" width="100"></div>
                 <div class="product_content">
                         @if ($product->discount_price)
                         <div class="product_price discount">
@@ -35,9 +35,9 @@
                     </div>
                 </div>
                 
-                @auth
+                @auth('web')
                 <form class="addwishlist" data-id="{{ $product->id }}"> @csrf
-                    <div class="product_fav {{ Auth::user()->hasProductOnWishlist($product->id) ? 'active' : ''}}">
+                    <div class="product_fav {{ current_user()->hasProductOnWishlist($product->id) ? 'active' : ''}}">
                         <i class="fas fa-heart"></i>
                     </div>    
                 </form>  

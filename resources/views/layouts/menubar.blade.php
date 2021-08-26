@@ -77,7 +77,7 @@
                                             @endforeach
                                         </ul>
                                     </li>
-                                    <li><a href="contact.html">Contact<i class="fas fa-chevron-down"></i></a></li>
+                                    <li><a href ='{{ route('contact.index') }}'>Contact<i class="fas fa-chevron-down"></i></a></li>
                                 </ul>
                             </div>
 

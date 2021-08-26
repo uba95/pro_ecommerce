@@ -22,7 +22,9 @@
                   <th class="wd-15p">ID</th>
                   <th class="wd-15p">Email</th>
                   <th class="wd-15p">Subscription Date</th>
-                  <th class="wd-20p">Action</th>
+                  @can('delete newslaters')
+                    <th class="wd-20p">Action</th>
+                  @endcan
                 </tr>
               </thead>
               <tbody>
@@ -34,11 +36,13 @@
                         </td>
                         <td>{{ $newslater->email }}</td>
                         <td>{{ $newslater->created_at->diffForHumans() }}</td>
-                        <td>
+                        @can('delete newslaters')
+                          <td>
                             <form method="POST" action='{{ route('admin.newslaters.destroy', $newslater->id) }}' class="btn btn-sm btn-danger delete">
                               @csrf @method('DELETE') Delete
                             </form>
                           </td>
+                        @endcan
                     </tr>
                 @endforeach
               </tbody>

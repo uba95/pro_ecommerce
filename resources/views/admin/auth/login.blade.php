@@ -14,15 +14,14 @@
                     <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="Email Address">
                 </div><!-- form-group -->
                 @error('email')
-                    <span class="invalid-feedback" role="alert">
+                    <span class="invalid-feedback d-block mb-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror
-
                 <div class="form-group">
                     <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password">
                     @error('password')
-                        <span class="invalid-feedback" role="alert">
+                        <span class="invalid-feedback d-block  mb-1" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror

@@ -3,11 +3,6 @@
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Artisan;
 
-Artisan::call('dump:q');
+$data = [ 'guard_name' => 'admin', 'created_at' => now(), 'updated_at' => now()];
 
-$Sales = OrderItem::query()
-->selectRaw("order_items.product_id, SUM(order_items.product_price * order_items.product_quantity) AS Sales")
-->groupBy('order_items.product_id')
-->get();
-
-
+array_map(fn($v, $data) => array_merge($v, $data),[ array_merge(array_map(fn ($v) => implode('', $v), Arr::crossJoin(['view_', 'create_', 'edit_', 'delete_'], ['admins', 'products', 'roles', 'blog_posts']) ), array_map(fn ($v) => implode('', $v), Arr::crossJoin(['view_', 'edit_', 'delete_'], ['permissions', 'categories', 'subcategories', 'brands', 'coupons', 'blog_categories']) ), array_map(fn ($v) => implode('', $v), Arr::crossJoin(['view_', 'edit_'], ['orders', 'cancel_orders', 'return_orders']) ), array_map(fn ($v) => implode('', $v), Arr::crossJoin(['view_'], ['stocks', 'reports'])))]);

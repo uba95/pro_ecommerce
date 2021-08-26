@@ -38,9 +38,7 @@ class CreateProductsTable extends Migration
             $table->boolean('mid_slider')->nullable();
             $table->boolean('hot_new')->nullable();
             $table->boolean('trend')->nullable();
-            $table->string('image_one')->nullable();
-            $table->string('image_two')->nullable();
-            $table->string('image_three')->nullable();
+            $table->string('cover')->nullable();
             $table->boolean('status')->nullable();
             $table->timestamps();
 

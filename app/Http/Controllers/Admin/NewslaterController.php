@@ -8,14 +8,14 @@ use App\Models\Newslater;
 
 class NewslaterController extends Controller
 {
-    public function index() {
-        return view('admin.newslater', ['newslaters' => Newslater::all()]);
+    public function __construct() {
+        $this->middleware('can:view newslaters',    ['only' => ['index']]);
+        $this->middleware('can:create newslaters',    ['only' => ['store']]);
+        $this->middleware('can:delete newslaters',    ['only' => ['destroy']]);
     }
 
-    public function store(Request $request) {
-        $validatedData = $request->validate(['email' => 'required|unique:newslaters|max:255']);
-        Newslater::create($validatedData);
-        return redirect()->back()->with(toastNotification('Thanks For Subscribing!'));
+    public function index() {
+        return view('admin.newslater', ['newslaters' => Newslater::all()]);
     }
 
     public function destroy(Newslater $newslater) {

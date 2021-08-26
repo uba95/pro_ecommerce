@@ -100,7 +100,7 @@ class OrderService
             // Session::forget('checkout_cart');
             // Shipment::session_remove();
 
-            return redirect()->route('home')->with(toastNotification('Order', 'added'));
+            return redirect()->route('home')->with(toastNotification('Order', 'created'));
     
         } catch (\Exception $ex) {
             DB::rollBack();

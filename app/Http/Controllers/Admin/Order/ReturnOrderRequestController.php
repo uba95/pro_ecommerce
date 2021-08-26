@@ -11,6 +11,11 @@ use Spatie\Enum\Laravel\Rules\EnumRule;
 
 class ReturnOrderRequestController extends Controller
 {
+    public function __construct() {
+        $this->middleware('can:view orders',    ['only' => ['index', 'show']]);
+        $this->middleware('can:edit orders',    ['only' => ['update']]);
+    }
+
     public function index(Request $request) {
         $returnOrders = ReturnOrderRequest::with(
             'order:id,user_id,payment_method,total_price,status,created_at',

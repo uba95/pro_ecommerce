@@ -10,6 +10,10 @@ use Illuminate\Http\Request;
 
 class SalesByController extends Controller
 {
+    public function __construct() {
+        $this->middleware('can:view reports',    ['only' => ['index']]);
+    }
+
     public function index(Request $request) {
         if ($request->from) {
             return view('admin.reports.salesBy', [

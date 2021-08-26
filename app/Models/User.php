@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable implements MustVerifyEmail 
 {
     use  Notifiable;
+    protected $guard = 'web';
 
     /**
      * The attributes that are mass assignable.
@@ -54,12 +55,27 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function wishlistItems() {
         
-        return $this->belongsToMany(Product::class, 'wishlist_items')->withTimestamps()->select(['id','product_name','selling_price','discount_price','hot_new','image_one']);
+        return $this->belongsToMany(Product::class, 'wishlist_items')->withTimestamps()->select(['id','product_name','selling_price','discount_price','hot_new','cover']);
     }
 
     public function hasProductOnWishlist($product_id) {
 
         return $this->wishlistItems->contains('pivot.product_id', $product_id);
+    }
+
+    // public function ratings() {
+        
+    //     return $this->hasMany(ProductRating::class);
+    // }
+    
+    public function productRatings() {
+
+        return $this->belongsToMany(Product::class, 'product_ratings')->withTimestamps()->select('id')->withPivot('value');
+    }
+
+    public function theirProductRating($product_id) {
+        
+        return optional($this->productRatings()->firstWhere('products.id', $product_id))->value;
     }
 
     public function getAvatarAttribute($value) {

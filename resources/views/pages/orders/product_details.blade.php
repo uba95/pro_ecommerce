@@ -22,7 +22,7 @@
             <td>{{ $orderItem->id }}</td>
             <td>{{ $orderItem->product_id }}</td>
             <td>{{ $orderItem->product_name }}</td>
-            <td> <img src="{{ $orderItem->product->image_one }}" height="50px;" width="50px;"> </td>
+            <td> <img src="{{ $orderItem->product->cover }}" height="50px;" width="50px;"> </td>
             <td>{{ $orderItem->product_color }}</td>
             <td>{{ $orderItem->product_size }}</td>
             <td>{{ $orderItem->product_quantity }}</td>

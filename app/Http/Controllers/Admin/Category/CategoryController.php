@@ -9,6 +9,13 @@ use App\Http\Controllers\Controller;
 
 class CategoryController extends Controller
 {
+    public function __construct() {
+        $this->middleware('can:view categories',    ['only' => ['index', 'show']]);
+        $this->middleware('can:create categories',  ['only' => ['create', 'store']]);
+        $this->middleware('can:edit categories',    ['only' => ['edit', 'update']]);
+        $this->middleware('can:delete categories',  ['only' => ['destroy']]);
+    }
+
     public function index() {
         return view('admin.categories.index', ['categories' => Category::all()]);
     }
@@ -21,7 +28,7 @@ class CategoryController extends Controller
     public function store(Request $request) { 
         $validatedData = $request->validate(['category_name' => 'required|unique:categories|max:50']);
         Category::create($validatedData);
-        return redirect()->back()->with(toastNotification('Category', 'added'));
+        return redirect()->back()->with(toastNotification('Category', 'created'));
     }
 
     public function edit(Category $category) {

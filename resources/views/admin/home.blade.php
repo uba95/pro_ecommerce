@@ -11,11 +11,9 @@
 
       <div class="sl-pagebody">
 
-       
-
+        @can('view orders')
+          
         <br><br><br>
-
-
         <div class="row row-sm mg-t-20">
           <div class="col-lg-6">
             <div class="card p-1">
@@ -74,7 +72,7 @@
                   @foreach ($mostSoldProductsThisMonth as $orderItem)
                   <tr>
                     <td class="pd-l-20">
-                      <img src="{{ $orderItem->product->image_one  }}" class="wd-55" alt="Image">
+                      <img src="{{ $orderItem->product->cover  }}" class="wd-55" alt="Image">
                     </td>
                     <td>
                       <a href ='{{ route('admin.products.show', $orderItem->product_id) }}' class="tx-inverse tx-14 tx-medium d-block">
@@ -127,6 +125,8 @@
             <div id="flotPie2" class="ht-200 ht-sm-250"></div>
           </div><!-- card -->
         </div><!-- row -->
+        
+        @endcan
 
       </div><!-- sl-pagebody -->
     </div><!-- sl-mainpanel -->

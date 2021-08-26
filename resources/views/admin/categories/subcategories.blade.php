@@ -11,7 +11,9 @@
         <div class="card pd-20 pd-sm-40">
           <h6 class="card-body-title">
             Subcategories List
-            <a href="" class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#modaldemo3">Add New subcategory</a>
+            @can('create categories')
+              <a href="" class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#modaldemo3">Add New subcategory</a>
+            @endcan
         </h6>
 
           <div class="table-wrapper">
@@ -21,7 +23,9 @@
                   <th class="wd-15p">Subcategory ID</th>
                   <th class="wd-15p">Subcategory Name</th>
                   <th class="wd-15p">Category Name</th>
-                  <th class="wd-20p">Action</th>
+                  @canany(['edit categories', 'delete categories'])
+                    <th class="wd-20p">Action</th>
+                  @endcanany
                 </tr>
               </thead>
               <tbody>
@@ -30,12 +34,18 @@
                         <td>{{ $subcategory->id }}</td>
                         <td>{{ $subcategory->subcategory_name }}</td>
                         <td>{{ $subcategory->category->category_name }}</td>
+                        @canany(['edit categories', 'delete categories'])
                         <td>
+                          @can('edit categories')
                             <a href ='{{ route('admin.subcategories.edit', $subcategory->id) }}' class="btn btn-sm btn-info">Edit</a>
+                          @endcan
+                          @can('delete categories')
                             <form method="POST" action='{{ route('admin.subcategories.destroy', $subcategory->id) }}' class="btn btn-sm btn-danger delete">
                               @csrf @method('DELETE') Delete
                             </form>
-                          </td>
+                          @endcan
+                        </td>
+                      @endcanany
                     </tr>
                 @endforeach
               </tbody>
@@ -45,56 +55,58 @@
       </div><!-- sl-pagebody -->
     </div><!-- sl-mainpanel -->
     <!-- ########## END: MAIN PANEL ########## -->
+          
+    @can('create categories')
+      <!-- LARGE MODAL -->
+      <div id="modaldemo3" class="modal fade">
+          <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content tx-size-sm">
+                  <div class="modal-header pd-x-20">
+                  <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Add New Subcategory</h6>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  </div>
 
-            <!-- LARGE MODAL -->
-            <div id="modaldemo3" class="modal fade">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content tx-size-sm">
-                        <div class="modal-header pd-x-20">
-                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Add New Subcategory</h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        </div>
+                  @if ($errors->any())
+                      <div class="alert alert-danger">
+                          <ul>
+                              @foreach ($errors->all() as $error)
+                                  <li>{{ $error }}</li>
+                              @endforeach
+                          </ul>
+                      </div>
+                  @endif
 
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+                  <form action ='{{ route('admin.subcategories.store') }}' method="POST">
+                      @csrf
+                      <div class="modal-body pd-20">
+                          <div class="form-group">
+                              <label for="exampleInputEmail1">Subcategory Name</label>
+                              <input type="text" class="form-control" name="subcategory_name">
+                          </div>
+                          <div class="form-group">
+                              <label class="d-block" for="exampleInputEmail1">Category Name</label>
+                              <select class="form-control select2" id="select2insidemodal" name="category_id" data-placeholder="Choose Category">
+                                <option label="Category Category"></option>
+                                @foreach ($categories as $id => $category_name)
+                                      <option value="{{ $id }}">{{ $category_name }}</option>
+                                @endforeach
+                              </select>
+                          </div>
+                      </div><!-- modal-body -->
+                      <div class="modal-footer">
+                              <button type="submit" class="btn btn-info pd-x-20">Add</button>
+                              <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
+                      </div>
+                      
+                  </form>
+              </div>
+          </div><!-- modal-dialog -->
+      </div><!-- modal -->
 
-                        <form action ='{{ route('admin.subcategories.store') }}' method="POST">
-                            @csrf
-                            <div class="modal-body pd-20">
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1">Subcategory Name</label>
-                                    <input type="text" class="form-control" name="subcategory_name">
-                                </div>
-                                <div class="form-group">
-                                    <label class="d-block" for="exampleInputEmail1">Category Name</label>
-                                    <select class="form-control select2" id="select2insidemodal" name="category_id" data-placeholder="Choose Category">
-                                      <option label="Category Category"></option>
-                                      @foreach ($categories as $id => $category_name)
-                                            <option value="{{ $id }}">{{ $category_name }}</option>
-                                      @endforeach
-                                    </select>
-                                </div>
-                            </div><!-- modal-body -->
-                            <div class="modal-footer">
-                                    <button type="submit" class="btn btn-info pd-x-20">Add</button>
-                                    <button type="button" class="btn btn-secondary pd-x-20" data-dismiss="modal">Close</button>
-                            </div>
-                            
-                        </form>
-                    </div>
-                </div><!-- modal-dialog -->
-            </div><!-- modal -->
-
-            @push('styles')
-              <style>.select2-container {width: 100% !important}</style>
-            @endpush
+      @push('styles')
+        <style>.select2-container {width: 100% !important}</style>
+      @endpush
+    @endcan
 @endsection

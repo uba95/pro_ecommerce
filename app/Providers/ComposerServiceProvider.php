@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\BlogCategory;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\SiteSettings;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 
@@ -37,6 +38,11 @@ class ComposerServiceProvider extends ServiceProvider
                 return Brand::orderBy('id')->pluck('brand_name', 'brand_slug');
             }));
         });
+        view()->composer(['layouts.app', 'pages.contact'], function ($view) {
+            $view->with('site_settings', Cache::rememberForever('site_settings', function () {
+                return SiteSettings::first(); 
+            }));
+        });
         view()->composer(['layouts.app', 'layouts.menubar'], function ($view) {
             $view->with('blogCategories',Cache::rememberForever('blogCategories', function () {
                 return BlogCategory::orderBy('id')->pluck('blog_category_name', 'blog_category_slug');
@@ -55,12 +61,12 @@ class ComposerServiceProvider extends ServiceProvider
         // }));
     }
 
-    private function getComposer($name, $set) 
-    {
-        return  view()->composer('*', function ($view) use ($name, $set) {
-            if (strstr($view->getName(), ".", true) != 'admin') {
-                $view->with($name, $set);
-            }
-        });
-    }
+    // private function getComposer($name, $set) 
+    // {
+    //     return  view()->composer('*', function ($view) use ($name, $set) {
+    //         if (strstr($view->getName(), ".", true) != 'admin') {
+    //             $view->with($name, $set);
+    //         }
+    //     });
+    // }
 }

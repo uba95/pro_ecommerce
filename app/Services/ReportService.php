@@ -169,7 +169,7 @@ class ReportService
     public static function mostSoldProductsThisMonth() {
 
       return OrderItem::with([
-        'product:id,image_one,product_quantity', 
+        'product:id,cover,product_quantity', 
         'order' => fn($q) => $q->select('id','status')->sold()
       ])
       ->selectRaw("id, product_id, order_id, product_name, SUM(product_quantity) AS sold_quantity")

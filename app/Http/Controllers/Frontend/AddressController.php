@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class AddressController extends Controller
 {
     public function index() {
-        return view('pages.addresses.index', ['addresses' => Auth::user()->addresses]);
+        return view('pages.addresses.index', ['addresses' => current_user()->addresses]);
     }
 
     public function create() {
@@ -19,8 +19,8 @@ class AddressController extends Controller
     }
 
     public function store(AddressRequest $request) {
-        Auth::user()->addresses()->create($request->validated());
-        return redirect()->route('addresses.index')->with(toastNotification('Address', 'added'));
+        current_user()->addresses()->create($request->validated());
+        return redirect()->route('addresses.index')->with(toastNotification('Address', 'created'));
     }
 
     public function edit(Address $address) {

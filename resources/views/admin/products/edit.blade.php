@@ -184,31 +184,21 @@
               <div class="row  mg-b-25">
                 <div class="col-lg-4">
                   <div class="form-group">
-                    <label class="form-control-label">Image 1 <span class="tx-danger">*</span></label>
+                    <label class="form-control-label">Cover <span class="tx-danger">*</span></label>
                     <label class="custom-file">
-                      <input type="file" class="custom-file-input" name="image_one" onchange="readURL(this)">
+                      <input type="hidden" name="id" value="1">
+                      <input type="file" class="custom-file-input" name="cover" onchange="readURL(this)">
                       <span class="custom-file-control"></span>
-                      <img class="mg-t-25" src="{{ $product->image_one }}" alt="" id="image_one" style="height: 80px; width: 80px;">
+                      <img class="mg-t-25" src="{{ $product->cover }}" alt="" id="cover" style="height: 80px; width: 80px;">
                     </label>
                   </div>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                   <div class="form-group">
-                    <label class="form-control-label">Image 2 <span class="tx-danger">*</span></label>
+                    <label class="form-control-label">Images <span class="tx-danger">*</span></label>
                     <label class="custom-file">
-                      <input type="file" class="custom-file-input" name="image_two" onchange="readURL(this)">
+                      <input type="file" class="custom-file-input" name="image[]" onchange="readURL(this)" multiple>
                       <span class="custom-file-control"></span>
-                      <img class="mg-t-25" src="{{ $product->image_two }}" alt="" id="image_two" style="height: 80px; width: 80px;">
-                    </label>
-                  </div>
-                </div><!-- col-4 -->
-                <div class="col-lg-4">
-                  <div class="form-group">
-                    <label class="form-control-label">Image 3 <span class="tx-danger">*</span></label>
-                    <label class="custom-file">
-                      <input type="file" class="custom-file-input" name="image_three" onchange="readURL(this)">
-                      <span class="custom-file-control"></span>
-                      <img class="mg-t-25" src="{{ $product->image_three }}" alt="" id="image_three" style="height: 80px; width: 80px;">
                     </label>
                   </div>
                 </div><!-- col-4 -->
@@ -219,6 +209,19 @@
               </div><!-- form-layout-footer -->
             </div><!-- form-layout -->  
           </form>
+          <h6 class="my-5">Product Images</h4>
+          <div class="d-flex mt-2 justify-content-between">
+            @foreach ($product->images as $img)
+              <div class="pos-relative"  style="height: 200px; width: 200px;">
+                <img class="w-100 h-100 " src="{{ $img->name }}" alt="">
+                <form method="POST" action='{{ route('admin.products.images.destroy', $img->id) }}' class="delete" style="position: absolute; left: 0; bottom: 0;">
+                  @csrf @method('DELETE')
+                  <i class=" btn btn-sm btn-danger fa fa-trash fa-fw p-0" title="delete"></i>
+                </form>
+              </div>  
+            @endforeach
+          </div>
+
 
         </div><!-- card -->
       </div><!-- sl-pagebody -->
@@ -250,10 +253,15 @@
 
       <script type="text/javascript">
         function readURL(input){
-          if (input.files && input.files[0]) {
+          if (input.files) {
+            $(input).siblings('img').remove();
+            Array.from(input.files).forEach(function (file) {
             var reader = new FileReader();
-            reader.onload = (e) => $('#' + input.name).attr('src', e.target.result).width(80).height(80);
-            reader.readAsDataURL(input.files[0]);
+            reader.onload = function (e) {
+              $(input).parent().append(`<img class="mg-t-25" src="${e.target.result}" width= "80" height= "80">`)
+            };
+            reader.readAsDataURL(file);
+            });
           }
         }
       </script>

@@ -22,7 +22,7 @@ class Brand extends Model
 
     public function getBrandLogoAttribute($value) {
 
-        return asset($value ? 'storage/'. $value : 'storage/media/brands/default-logo.png');
+        return asset($value ? 'storage/'. $value : 'storage/media/default.png');
     }
 
     public function products() {
@@ -30,7 +30,7 @@ class Brand extends Model
         return $this->hasMany(Product::class)->select(
             [
                 'id','category_id','subcategory_id','brand_id','product_name','product_slug','selling_price',
-                'product_quantity','discount_price','status','hot_new','image_one'
+                'product_quantity','discount_price','status','hot_new','cover'
             ]);
     }
 

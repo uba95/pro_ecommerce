@@ -19,7 +19,6 @@ Route::post('/password-update', 'HomeController@updatePassword')->name('password
 Route::get('/user/logout', 'HomeController@Logout')->name('user.logout');
 
 
-Route::post('newslaters', 'Admin\NewslaterController@store')->name('newslaters.store');
 
 Route::group(['namespace' => 'Frontend'], function () {
 
@@ -40,6 +39,11 @@ Route::group(['namespace' => 'Frontend'], function () {
     Route::get('shop', 'ShopController@index')->name('shop.index');
     Route::get('shop/search', 'ShopController@search')->name('shop.search');
 
+    Route::resource('contact', 'ContactController')->only('index','store');
+    
+    Route::post('newslaters', 'NewslaterController@store')->name('newslaters.store');
+    Route::delete('newslaters', 'NewslaterController@destroy')->name('newslaters.destroy');
+    
     Route::group(['middleware' => 'auth:web'], function () {
     
         Route::get('wishlist', 'WishlistController@index')->name('wishlist.index');
@@ -60,8 +64,17 @@ Route::group(['namespace' => 'Frontend'], function () {
         Route::resource('cancel_orders', 'CancelOrderRequestController')->only('index', 'show','create','store');
         
         Route::resource('return_orders', 'ReturnOrderRequestController')->only('index', 'show','create','store');
+
+        Route::post('product/ratings/{product}', 'ProductRatingController@store')->name('rating.store');
+        Route::delete('product/ratings/{product}', 'ProductRatingController@destroy')->name('rating.destroy');
+
         Route::get('ss', function () {
-        //    dd(Session::all());
+        // \Debugbar::startMeasure('render');
+		// foreach (App\Models\User::cursor()as $u) {
+		// 	$u->name;
+		// }
+		// \Debugbar::stopMeasure('render');
+		// return view('welcome');
         });
     });
 });

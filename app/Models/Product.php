@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-use Cviebrock\EloquentSluggable\Sluggable;
-use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Gloudemans\Shoppingcart\CanBeBought;
+use Cviebrock\EloquentSluggable\Sluggable;
 use Gloudemans\Shoppingcart\Contracts\Buyable;
-use Illuminate\Database\Query\Builder;
+use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 
 class Product extends Model implements Buyable
 {
@@ -17,6 +18,7 @@ class Product extends Model implements Buyable
     use SluggableScopeHelpers;
 
     protected $guarded = [];
+    protected $casts = ['product_color' => 'array', 'product_size' => 'array'];
 
     public function category() {    
         return $this->belongsTo(Category::class);
@@ -30,22 +32,27 @@ class Product extends Model implements Buyable
         return $this->belongsTo(Brand::class);
     }
 
-    public function getImageOneAttribute($value) {
-        return asset($value ? 'storage/'. $value : 'storage/media/brands/default-logo.png');
-    }
-    public function getImageTwoAttribute($value) {
-        return asset($value ? 'storage/'. $value : 'storage/media/brands/default-logo.png');
-    }
-    public function getImageThreeAttribute($value) {
-        return asset($value ? 'storage/'. $value : 'storage/media/brands/default-logo.png');
+    public function images() {     
+        return $this->hasMany(ProductImage::class);
     }
 
-    public function getProductColorAttribute($value) {
-        return json_decode($value);
+    public function ratings() {
+        
+        return $this->hasMany(ProductRating::class);
     }
 
-    public function getProductSizeAttribute($value) {
-        return json_decode($value);
+    // public function getUserRateAttribute() {
+        
+    //     return optional($this->ratings->firstWhere('user_id', Auth::id()))->value;
+    // }
+
+    public function getRatingAvgAttribute() {
+        
+        return number_format($this->ratings()->avg('value') / 10, 1);
+    }
+
+    public function getCoverAttribute($value) {
+        return asset($value ? 'storage/'. $value : 'storage/media/default.png');
     }
 
     public function getDiscountPercentAttribute() {
@@ -55,9 +62,15 @@ class Product extends Model implements Buyable
     public function getStockStatusAttribute() {
         return $this->product_quantity > 5 ? "in" : ($this->product_quantity == 0 ? "out" : "only");
     }
+    
+    public function getVideoEmbedAttribute() {
+        return Str::contains($this->video_link, 'youtube.com')
+        ? 'https://www.youtube.com/embed/' . substr(strrchr($this->video_link, "v="), 2) 
+        : '';
+    }
 
     public function  scopeSelection($q){
-        return $q->select('products.id','brand_id', 'product_name', 'product_slug', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'image_one', 'status');
+        return $q->select('products.id','brand_id', 'product_name', 'product_slug', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'cover', 'status');
     }
 
     public function  scopeFilterPrice($q, $min, $max){

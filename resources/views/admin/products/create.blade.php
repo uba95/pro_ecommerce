@@ -163,31 +163,19 @@
               <div class="row  mg-b-25">
                 <div class="col-lg-4">
                   <div class="form-group">
-                    <label class="form-control-label">Image 1 <span class="tx-danger">*</span></label>
+                    <label class="form-control-label">Cover <span class="tx-danger">*</span></label>
                     <label class="custom-file">
-                      <input type="file" class="custom-file-input" name="image_one" onchange="readURL(this)">
+                      <input type="file" class="custom-file-input" name="cover" onchange="readURL(this)">
                       <span class="custom-file-control"></span>
-                      <img  class="mg-t-25" src="" alt="" id="image_one">
                     </label>
                   </div>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                   <div class="form-group">
-                    <label class="form-control-label">Image 2 <span class="tx-danger">*</span></label>
+                    <label class="form-control-label">Images <span class="tx-danger">*</span></label>
                     <label class="custom-file">
-                      <input type="file" class="custom-file-input" name="image_two" onchange="readURL(this)">
+                      <input type="file" class="custom-file-input" name="image[]" onchange="readURL(this)" multiple>
                       <span class="custom-file-control"></span>
-                      <img  class="mg-t-25" src="" alt="" id="image_two">
-                    </label>
-                  </div>
-                </div><!-- col-4 -->
-                <div class="col-lg-4">
-                  <div class="form-group">
-                    <label class="form-control-label">Image 3 <span class="tx-danger">*</span></label>
-                    <label class="custom-file">
-                      <input type="file" class="custom-file-input" name="image_three" onchange="readURL(this)">
-                      <span class="custom-file-control"></span>
-                      <img  class="mg-t-25" src="" alt="" id="image_three">
                     </label>
                   </div>
                 </div><!-- col-4 -->
@@ -229,10 +217,15 @@
 
       <script type="text/javascript">
         function readURL(input){
-          if (input.files && input.files[0]) {
+          if (input.files) {
+            $(input).siblings('img').remove();
+            Array.from(input.files).forEach(function (file) {
             var reader = new FileReader();
-            reader.onload = (e) => $('#' + input.name).attr('src', e.target.result).width(80).height(80);
-            reader.readAsDataURL(input.files[0]);
+            reader.onload = function (e) {
+              $(input).parent().append(`<img class="mg-t-25" src="${e.target.result}" width= "80" height= "80">`)
+            };
+            reader.readAsDataURL(file);
+            });
           }
         }
       </script>

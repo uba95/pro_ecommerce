@@ -37,7 +37,7 @@ class CartController extends Controller
         Cart::add($product, request()->product_quantity, [
             'color' => request()->product_color,
             'size' => request()->product_size,
-            'image' => $product->image_one,
+            'image' => $product->cover,
         ]);
 
         return $this->cart(['success' => 'Product Added To Your Cart']);

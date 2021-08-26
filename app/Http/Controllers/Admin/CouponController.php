@@ -9,14 +9,20 @@ use App\Http\Requests\CouponRequest;
 
 class CouponController extends Controller
 {
-    
+    public function __construct() {
+        $this->middleware('can:view coupons',    ['only' => ['index']]);
+        $this->middleware('can:create coupons',  ['only' => ['store']]);
+        $this->middleware('can:edit coupons',    ['only' => ['edit', 'update']]);
+        $this->middleware('can:delete coupons',  ['only' => ['destroy']]);
+    }
+
     public function index() {
         return view('admin.coupons.index', ['coupons' =>  Coupon::all()]);
     }
 
     public function store(CouponRequest $request) {
         Coupon::create($request->validated());
-        return redirect()->route('admin.coupons.index')->with(toastNotification('Coupon', 'added'));
+        return redirect()->route('admin.coupons.index')->with(toastNotification('Coupon', 'created'));
     }
 
     public function edit(Coupon $coupon) {

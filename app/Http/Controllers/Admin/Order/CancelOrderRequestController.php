@@ -13,6 +13,11 @@ use Spatie\Enum\Laravel\Rules\EnumRule;
 
 class CancelOrderRequestController extends Controller
 {
+    public function __construct() {
+        $this->middleware('can:view orders',    ['only' => ['index', 'show']]);
+        $this->middleware('can:edit orders',    ['only' => ['update']]);
+    }
+
     public function index(Request $request) {
 
         $cancelnOrders = CancelOrderRequest::with(

@@ -46,8 +46,22 @@
             <div class="container">
                 <div class="row">
                     <div class="col d-flex flex-row">
-                        <div class="top_bar_contact_item"><div class="top_bar_icon"><img src="{{ asset('frontend/images/phone.png')}}" alt=""></div>+38 068 005 3570</div>
-                        <div class="top_bar_contact_item"><div class="top_bar_icon"><img src="{{ asset('frontend/images/mail.png')}}" alt=""></div><a href="mailto:fastsales@gmail.com">fastsales@gmail.com</a></div>
+                        <div class="top_bar_contact_item">
+                            @if ($site_settings->phone)
+                                <div class="top_bar_icon">
+                                    <img src="{{ asset('frontend/images/phone.png')}}" alt="">
+                                </div>
+                                {{ $site_settings->phone }}
+                            @endif
+                        </div>
+                        <div class="top_bar_contact_item">
+                            @if ($site_settings->phone)
+                                <div class="top_bar_icon">
+                                    <img src="{{ asset('frontend/images/mail.png')}}" alt="">
+                                </div>
+                                <a href="mailto:{{ $site_settings->email }}">{{ $site_settings->email }}</a>
+                            @endif
+                        </div>
                         <div class="top_bar_content ml-auto">
                             <div class="top_bar_menu">
                                 <ul class="standard_dropdown top_bar_dropdown">
@@ -71,7 +85,7 @@
                             </div>
                             <div class="top_bar_user">
 
-                                @guest
+                                @guest('web')
                                 <div>
                                     <a href="{{ route('login') }}">
                                         <div class="user_icon">
@@ -87,7 +101,7 @@
                                             <div class="user_icon">
                                                 <img src="{{ asset('frontend/images/user.svg')}}" alt="">
                                             </div> 
-                                            {{ Auth::user()->name }}
+                                            {{ current_user()->name }}
                                         </a>
                                         <ul>
                                             <li><a href ='{{ route('home') }}'>Profile</a></li>
@@ -148,16 +162,15 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Wishlist -->
                     <div class="col-lg-4 col-9 order-lg-3 order-2 text-lg-left text-right">
                         <div class="wishlist_cart d-flex flex-row align-items-center justify-content-end">
-                            @auth
+                            @auth('web')
                             <div class="wishlist d-flex flex-row align-items-center justify-content-end">
                                 <div class="wishlist_icon"><img src="{{ asset('frontend/images/heart.png')}}" alt=""></div>
                                 <div class="wishlist_content">
                                     <div class="wishlist_text"><a href ='{{ route('wishlist.index') }}'>Wishlist</a></div>
-                                    <div class="wishlist_count">{{ Auth::user()->wishlistItems()->count() }}</div>
+                                    <div class="wishlist_count">{{ current_user()->wishlistItems()->count() }}</div>
                                 </div>
                             </div>
                             @endauth
@@ -196,19 +209,24 @@
                         <div class="logo_container">
                             <div class="logo"><a href="#">OneTech</a></div>
                         </div>
-                        <div class="footer_title">Got Question? Call Us 24/7</div>
-                        <div class="footer_phone">+38 068 005 3570</div>
+                        @if ($site_settings->phone)
+                            <div class="footer_title">Got Question? Call Us 24/7</div>
+                            <div class="footer_phone">{{ $site_settings->phone }}</div>
+                        @endif
                         <div class="footer_contact_text">
-                            <p>17 Princess Road, London</p>
-                            <p>Grester London NW18JR, UK</p>
+                            <p>{{ $site_settings->address }}</p>
                         </div>
                         <div class="footer_social">
                             <ul>
-                                <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fab fa-youtube"></i></a></li>
-                                <li><a href="#"><i class="fab fa-google"></i></a></li>
-                                <li><a href="#"><i class="fab fa-vimeo-v"></i></a></li>
+                                @if ($site_settings->facebook)
+                                    <li><a target="_blank" href="{{ $site_settings->facebook }}/"><i class="fab fa-facebook-f"></i></a></li>
+                                @endif
+                                @if ($site_settings->twitter)
+                                    <li><a target="_blank" href="{{ $site_settings->twitter }}/"><i class="fab fa-twitter"></i></a></li>
+                                @endif
+                                @if ($site_settings->youtube)
+                                    <li><a target="_blank" href="{{ $site_settings->youtube }}/"><i class="fab fa-youtube"></i></a></li>
+                                @endif
                             </ul>
                         </div>
                     </div>
@@ -524,7 +542,19 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             var slug = $(this).data('slug');
             $('input[name="category"]').val(slug ?? '');
           });
+
         });
+
+        window.onload = function() {
+            var url = '';           
+            $('.footer_social a').map(function () {    
+                url = $(this).attr('href');
+                if (!url.match(/^http?:\/\//i) || !url.match(/^https?:\/\//i)) {
+                    url = 'https://' + url;
+                    $(this).attr('href', url)
+                }
+            })
+        }
     </script>
 
 @stack('scripts')

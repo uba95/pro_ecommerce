@@ -1,4 +1,4 @@
-<form method="POST">
+<form method="POST" style="z-index: 2">
     @csrf @method('PATCH')
     @switch($request->status)
     @case('pending')

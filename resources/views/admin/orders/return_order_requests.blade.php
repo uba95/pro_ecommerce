@@ -15,8 +15,8 @@
             <table id="datatable1" class="table display responsive nowrap">
               <thead>
                 <tr>
-                  <th class="wd-15p">Requset ID</th>
-                  <th class="wd-15p">Order ID</th>
+                  <th class="wd-15p">Requset</th>
+                  <th class="wd-15p">Order</th>
                   <th class="wd-15p">Customer</th>
                   <th class="wd-15p">Payment Method</th>
                   <th class="wd-15p">Order Price</th>
@@ -24,15 +24,22 @@
                   <th class="wd-20p">Order Date</th>
                   <th class="wd-20p">Requset Status</th>
                   <th class="wd-20p">Order Status</th>
-                  <th class="wd-20p">Action</th>
                 </tr>
               </thead>
               <tbody>
     
                 @foreach($return_order_requests as $key => $request)
                 <tr>
-                  <td>{{ $request->id }}</td>
-                  <td>{{ $request->order->id }}</td>
+                  <td>
+                    <a class="" href ='{{ route('admin.return_orders.show', $request->id) }}'>
+                      Request#{{ $request->id }}
+                    </a>
+                  </td>
+                  <td>
+                    <a class="" href ='{{ route('admin.orders.show', $request->order_id) }}'>
+                      Order#{{ $request->order_id }}
+                    </a>
+                  </td>
                   <td>{{ $request->order->user->name }}</td>
                   <td>{{ $request->order->payment_method }}</td>
                   <td><span class="badge badge-success" style="font-size: 85%">{{  $request->order->total_price }} $</span></td>
@@ -44,15 +51,6 @@
                   <td>
                     @include('layouts.orders.order_status', ['order' => $request->order])
                   </td>
-                  <td class="d-flex">
-                    <a class="btn btn-sm btn-warning mr-1" href ='{{ route('admin.return_orders.show', $request->id) }}' title="Show Return Order Request" >
-                        <i class="fa fa-eye fa-fw"></i>
-                    </a>
-                    <a class="btn btn-sm btn-info mr-1" href ='{{ route('admin.orders.show', $request->order->id) }}' title="Show Order" >
-                        <i class="fa fa-eye fa-fw"></i>
-                    </a>
-                    @include('admin.orders.return_order_status_form')
-              </td>
                 </tr>
                 @endforeach
 
