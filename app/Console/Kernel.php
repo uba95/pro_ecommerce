@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\dumpQuery;
 use App\Console\Commands\ExpiredCoupon;
+use App\Console\Commands\ExpiredHotDealProduct;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,6 +17,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         ExpiredCoupon::class,
+        ExpiredHotDealProduct::class,
         dumpQuery::class,
     ];
 
@@ -28,6 +30,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('coupon:expired')->daily();
+        $schedule->command('deal:expired')->daily();
     }
 
     /**

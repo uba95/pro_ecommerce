@@ -1,8 +1,8 @@
 @extends('layouts.home')
 @section('section')
 
-<div class="col-8 card">
-    <table class="table table-response">
+<div class="col-lg-8 card">
+    <table class="table table-responsive d-lg-table">
         <thead>
             <tr>
                 <th scope="col">Order #</th>

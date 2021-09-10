@@ -18,7 +18,7 @@
                             ${{$main_slider_product->selling_price}}
                             @endif
                         </div>
-                        <div class="banner_product_name">{{ $main_slider_product->brand->brand_name}}</div>
+                        <div class="banner_product_name">{{ optional($main_slider_product->brand)->brand_name}}</div>
                         <div class="button banner_button"><a href="#">Shop Now</a></div>
                     </div>
                 </div>

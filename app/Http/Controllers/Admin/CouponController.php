@@ -21,7 +21,9 @@ class CouponController extends Controller
     }
 
     public function store(CouponRequest $request) {
-        Coupon::create($request->validated());
+        $validated = $request->validated();
+        $validated['status'] = $validated['expired_at'] < now() ?  'expired' : $validated['status'];
+        Coupon::create($validated);
         return redirect()->route('admin.coupons.index')->with(toastNotification('Coupon', 'created'));
     }
 
@@ -31,7 +33,7 @@ class CouponController extends Controller
 
     public function update(Coupon $coupon, CouponRequest $request) {
         $validated = $request->validated();
-        $validated['status'] = $coupon->expired_at->lessThan(now()) ?  'expired' : $validated['status'];
+        $validated['status'] = $validated['expired_at'] < now() ?  'expired' : $validated['status'];
         $coupon->update($validated);
         return redirect()->route('admin.coupons.index')->with(toastNotification('Coupon', 'updated'));
     }

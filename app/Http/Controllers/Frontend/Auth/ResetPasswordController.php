@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Frontend\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
@@ -48,7 +48,7 @@ class ResetPasswordController extends Controller
 
     protected function broker()
     {
-        return Password::broker('admins');
+        return Password::broker('users');
     }
 
     protected function guard()

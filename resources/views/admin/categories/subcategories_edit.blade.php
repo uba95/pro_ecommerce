@@ -1,4 +1,4 @@
-@extends('admin.admin_layouts')
+@extends('layouts.admin.index')
 
 
 @section('admin_content')
@@ -30,8 +30,8 @@
                 <label for="exampleInputEmail1">Subcategory Name</label>
                 <input type="text" class="form-control" name="subcategory_name" value="{{ $subcategory->subcategory_name }}">
               </div>
+              
               <div class="form-group">
-
                 <label for="exampleInputEmail1">Category Name</label>
                 <select class="form-control select2" name="category_id" data-placeholder="Choose Category">
                   <option label="Category Category"></option>

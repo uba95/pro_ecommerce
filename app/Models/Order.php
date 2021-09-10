@@ -93,10 +93,6 @@ class Order extends Model
                 ->map(fn($v) => $v->product->decrement('product_quantity', $v->product_quantity));
     }
 
-    public function cancelStatus() {
-        return $this->areAllItemsCanceled() ? OrderStatus::canceled() : OrderStatus::partiallyCanceled();
-    }
-
     public function returnStatus() {
         return $this->areAllItemsReturned() ? OrderStatus::returned() : OrderStatus::partiallyReturned();
     }

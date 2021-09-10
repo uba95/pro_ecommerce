@@ -10,19 +10,18 @@ use Illuminate\Support\Facades\Session;
 use Gloudemans\Shoppingcart\Facades\Cart;
 
 
-// Route::get('/', function () {return view('pages.index');});
+// Route::get('/', function () {return view('pages.landing_page.index');});
 //auth & user
-Auth::routes(['verify' => true]);
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/password-change', 'HomeController@changePassword')->name('password.change');
-Route::post('/password-update', 'HomeController@updatePassword')->name('password_update');
-Route::get('/user/logout', 'HomeController@Logout')->name('user.logout');
 
 
 
 Route::group(['namespace' => 'Frontend'], function () {
-
-    Route::get('/', 'LandingPageController')->name('pages.index');
+    
+    Auth::routes(['verify' => true]);
+    Route::get('/redirect/{service}', 'Auth\LoginController@redirectService')->name('loginWith');
+    Route::get('/callback/{service}', 'Auth\LoginController@callbackService');
+    
+    Route::get('/', 'LandingPageController')->name('pages.landing_page.index');
 
     Route::get('cart', 'CartController@show')->name('cart.show');
     Route::post('cart/{product}', 'CartController@store')->name('cart.store');
@@ -44,8 +43,14 @@ Route::group(['namespace' => 'Frontend'], function () {
     Route::post('newslaters', 'NewslaterController@store')->name('newslaters.store');
     Route::delete('newslaters', 'NewslaterController@destroy')->name('newslaters.destroy');
     
-    Route::group(['middleware' => 'auth:web'], function () {
-    
+
+    Route::group(['middleware' => ['auth:web', 'verified']], function () {
+
+        Route::get('/home', 'HomeController@index')->name('home');
+        Route::put('/home', 'HomeController@update')->name('home.update')->middleware('password.confirm');
+        Route::get('/home/password', 'HomeController@password')->name('home.password');
+        Route::put('/home/password/update', 'HomeController@updatePassword')->name('home.password.update');
+        
         Route::get('wishlist', 'WishlistController@index')->name('wishlist.index');
         Route::post('wishlist/{product}', 'WishlistController@store')->name('wishlist.store');
         

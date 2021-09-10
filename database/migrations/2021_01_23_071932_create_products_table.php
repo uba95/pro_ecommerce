@@ -22,7 +22,7 @@ class CreateProductsTable extends Migration
 
             $table->string('product_name')->unique();
             $table->string('product_slug')->unique();
-            $table->string('product_code');
+            $table->string('sku');
             $table->unsignedInteger('product_quantity');
             $table->text('product_details');
             $table->string('product_color');
@@ -39,7 +39,7 @@ class CreateProductsTable extends Migration
             $table->boolean('hot_new')->nullable();
             $table->boolean('trend')->nullable();
             $table->string('cover')->nullable();
-            $table->boolean('status')->nullable();
+            $table->unsignedTinyInteger('status')->default(0)->index();
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');

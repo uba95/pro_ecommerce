@@ -17,7 +17,7 @@ Route::group(['middleware' => ['auth:admin', 'verified'], 'as' => 'admin.'], fun
 
     Route::resource('permissions', 'PermissionController')->except('show', 'create');
     
-    Route::resource('categories', 'Category\CategoryController')->except('show', 'create');
+    Route::resource('categories', 'Category\CategoryController')->except('create');
 
     Route::resource('subcategories', 'Category\SubCategoryController')->except('show', 'create');
 
@@ -27,9 +27,17 @@ Route::group(['middleware' => ['auth:admin', 'verified'], 'as' => 'admin.'], fun
 
     Route::resource('newslaters', 'NewslaterController')->only('index', 'destroy');
 
+    Route::get('products/hot_deals', 'HotDealProductController@index')->name('products.hot_deals.index');
+    Route::get('products/{product}/hot_deals/create', 'HotDealProductController@create')->name('products.hot_deals.create');
+    Route::post('products/{product}/hot_deals', 'HotDealProductController@store')->name('products.hot_deals.store');
+    Route::get('products/{product}/hot_deals/edit', 'HotDealProductController@edit')->name('products.hot_deals.edit');
+    Route::put('products/{product}/hot_deals', 'HotDealProductController@update')->name('products.hot_deals.update');
+    Route::delete('products/{product}/hot_deals', 'HotDealProductController@destroy')->name('products.hot_deals.destroy');
+    
     Route::resource('products', 'ProductController');
     Route::get('products/{product}/status', 'ProductController@changeStatus')->name('products.status');
     Route::delete('products/images/{productImage}/delete', 'ProductController@destroyImage')->name('products.images.destroy');
+    
 
     Route::resource('blog_categories', 'Blog\BlogCategoryController')->except('show', 'create');
 

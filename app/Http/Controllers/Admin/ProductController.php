@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\ProductImage;
+use App\Models\ProductMeta;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
@@ -43,15 +44,14 @@ class ProductController extends Controller
     public function store(ProductRequest $request) {
 
         $attributes = $request->validated();
-
-        $attributes['status'] = 1;
-        $attributes['product_slug'] = Str::slug($request->product_name);
     
         if ($request->hasFile('cover')) {
             $attributes['cover'] = img_upload($request->file('cover'), 'media/products/covers/', true);
         }
 
-        $product = Product::create(Arr::except($attributes, 'image'));
+        $meta = ['meta_title', 'meta_keywords', 'meta_description'];
+        
+        $product = Product::create(Arr::except($attributes, ['image', ...$meta]));
 
         if ($request->hasFile('image')) {
 
@@ -61,6 +61,11 @@ class ProductController extends Controller
             DB::table('product_images')->insert(
                 array_map(fn($img) => ['name' => $img] + $data , $imgs)    
             );
+        }
+
+        if ($request->hasAny($meta)) {
+
+            $product->meta()->create(Arr::only($attributes, $meta));
         }
 
         return redirect()->back()->with(toastNotification('Product', 'created'));
@@ -74,28 +79,23 @@ class ProductController extends Controller
     }
 
     public function changeStatus(Product $product) {
-        $product->update(['status' => !$product->status]);
+        $product->update(['status' => (int) !$product->status->getIndex()]);
         return redirect()->back()->with(toastNotification('Product Status Changed Successfully'));     
     }
 
     public function update(Product $product, ProductRequest $request) {
 
         $attributes = $request->validated();
-        $attributes['product_slug'] = Str::slug($request->product_name);
-        $attributes['main_slider'] = $request->main_slider;
-        $attributes['hot_deal'] = $request->hot_deal;
-        $attributes['best_rated'] = $request->best_rated;
-        $attributes['trend'] = $request->trend;
-        $attributes['mid_slider'] = $request->mid_slider;
-        $attributes['hot_new'] = $request->hot_new;
 
         if ($request->hasFile('cover')) {
 
             Storage::disk('public')->delete($product->getOriginal('cover'));
             $attributes['cover'] = img_upload($request->file('cover'), 'media/products/covers/', true);
         }
+        
+        $meta = ['meta_title', 'meta_keywords', 'meta_description'];
 
-        $product->update(Arr::except($attributes, 'image'));
+        $product->update(Arr::except($attributes, ['image', ...$meta]));
         
         if ($request->hasFile('image')) {
 
@@ -105,6 +105,11 @@ class ProductController extends Controller
             DB::table('product_images')->insert(
                 array_map(fn($img) => ['name' => $img] + $data , $imgs)    
             );
+        }
+        
+        if ($request->hasAny($meta)) {
+
+            $product->meta()->updateOrCreate(['product_id' => $product->id], Arr::only($attributes, $meta));
         }
 
         return redirect()->route('admin.products.index')->with(toastNotification('Product', 'updated'));

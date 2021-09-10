@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app.index')
 @section('content')
 
         <div class="container py-5">
@@ -51,7 +51,7 @@
             </div>
             @else
               <div class="alert alert-danger"> 
-                Your Cart Is Empty, Start  <a href ='{{ route('pages.index') }}'>Shopping Now!</a>
+                Your Cart Is Empty, Start  <a href ='{{ route('pages.landing_page.index') }}'>Shopping Now!</a>
               </div> 
             @endif
           @else

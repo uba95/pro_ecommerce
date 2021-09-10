@@ -16,7 +16,7 @@ class EnsureEmailIsVerified extends Middleware
      * @param  string|null  $redirectToRoute
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle($request, Closure $next, $redirectToRoute = 'admin.verification.notice') {
-        return parent::handle($request,  $next, $redirectToRoute);
+    public function handle($request, Closure $next, $redirectToRoute = 'verification.notice') {
+        return parent::handle($request, $next, $request->routeIs('admin.*') ? 'admin.'. $redirectToRoute : $redirectToRoute);
     }
 }

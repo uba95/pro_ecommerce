@@ -43,8 +43,12 @@ class CancelOrderRequestController extends Controller
         $cancelOrder->update(['status' => $validated['status']]);
 
         if ($request->status == 'approved') {
+            
             $cancelOrder->decrementOrderItems();
-            $cancelOrder->order->update(['status' =>  $cancelOrder->order->cancelStatus()->getIndex()]);
+
+            if ($cancelOrder->order->areAllItemsCanceled()) {
+                $cancelOrder->order->update(['status' =>   OrderStatus::canceled()->getIndex()]);
+            }
 
             return redirect()->route('admin.cancel_orders.index')->with(toastNotification('Request Is Approved And Order Items Are Canceled'));
         }

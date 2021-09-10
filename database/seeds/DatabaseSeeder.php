@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\Admin;
 use App\Models\Brand;
 use App\Models\Address;
+use App\Models\BrandCategory;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\SiteSettings;
@@ -118,26 +119,26 @@ class DatabaseSeeder extends Seeder
         Arr::add($v, 'product_slug', Str::slug($v['product_name'], '-')) + $time,
             [
                 [
-                'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
-                'product_name' => 'Product1', 'product_code' => '111', 'product_quantity' => '222', 'product_weight' => '0.5',
+                'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '10',
+                'product_name' => 'Product1', 'sku' => '111', 'product_quantity' => '222', 'product_weight' => '0.5',
                 'product_details' => 'Product1', 'product_color' => '["black"]', 'product_size' => '["xl"]',
                 'discount_price' => '100', 'selling_price' => '200', 'status' => '1', 'main_slider' => 1
                 ],
                 [
-                'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
-                'product_name' => 'Product2', 'product_code' => '222', 'product_quantity' => '222', 'product_weight' => '0.5',
+                'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '10',
+                'product_name' => 'Product2', 'sku' => '222', 'product_quantity' => '222', 'product_weight' => '0.5',
                 'product_details' => 'Product2', 'product_color' => '["black"]', 'product_size' => '["xl"]',
                 'discount_price' => null, 'selling_price' => '150', 'status' => '1', 'main_slider' => 1
                 ],
                 [
-                'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
-                'product_name' => 'Product3', 'product_code' => '11', 'product_quantity' => '22', 'product_weight' => '0.1',
+                'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '10',
+                'product_name' => 'Product3', 'sku' => '11', 'product_quantity' => '22', 'product_weight' => '0.1',
                 'product_details' => 'Product1', 'product_color' => '["black", "red"]', 'product_size' => '["xl"]',
                 'discount_price' => '15', 'selling_price' => '20', 'status' => '1', 'main_slider' => 1
                 ],
                 [
                 'category_id' => '1', 'subcategory_id' => '1', 'brand_id' => '7',
-                'product_name' => 'Product4', 'product_code' => '22', 'product_quantity' => '22', 'product_weight' => '0.1',
+                'product_name' => 'Product4', 'sku' => '22', 'product_quantity' => '22', 'product_weight' => '0.1',
                 'product_details' => 'Product2', 'product_color' => '["black"]', 'product_size' => '["xl", "xxl"]',
                 'discount_price' => null, 'selling_price' => '50', 'status' => '1', 'main_slider' => 1
                 ],    

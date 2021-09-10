@@ -1,4 +1,4 @@
-@extends('admin.admin_layouts')
+@extends('layouts.admin.index')
 
 @section('admin_content')
     <!-- ########## START: MAIN PANEL ########## -->
@@ -35,8 +35,8 @@
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                   <div class="form-group">
-                    <label class="form-control-label">Code <span class="tx-danger">*</span></label>
-                    <input class="form-control" type="text" name="product_code" value="{{ $product->product_code }}">
+                    <label class="form-control-label">SKU <span class="tx-danger">*</span></label>
+                    <input class="form-control" type="text" name="sku" value="{{ $product->sku }}">
                   </div>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
@@ -64,6 +64,26 @@
                   </div>
                 </div><!-- col-4 -->
 
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">Meta Title</label><br>
+                    <input class="form-control" type="text" name="meta_title" value="{{ optional($product->meta)->meta_title }}">
+                  </div>
+                </div><!-- col-4 -->
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">Meta Keywords</label>
+                    <input class="form-control" type="text" name="meta_keywords" value="{{ optional($product->meta)->meta_keywords }}">
+                  </div>
+                </div><!-- col-4 -->
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">Meta Descrition</label>
+                    <input class="form-control" type="text" name="meta_description" value="{{ optional($product->meta)->meta_description }}">
+                  </div>
+                </div><!-- col-4 -->
+
+                
                 <div class="col-lg-6">
                   <div class="form-group">
                     <label class="form-control-label">Size <span class="tx-danger">*</span></label>
@@ -143,37 +163,37 @@
               <div class="row mg-b-25">
                 <div class="col-lg-4">
                     <label class="ckbox">
-                      <input type="checkbox" name="main_slider" value="1" {{ $product->main_slider ? 'checked' : '' }}>
+                      <input type="checkbox" name="main_slider"  {{ $product->main_slider ? 'checked' : '' }}>
                       <span>Main Slider</span>
                     </label>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                     <label class="ckbox">
-                      <input type="checkbox" name="hot_deal" value="1" {{ $product->hot_deal ? 'checked' : '' }}>
+                      <input type="checkbox" name="hot_deal"  {{ $product->hot_deal ? 'checked' : '' }}>
                       <span>Hot Deal</span>
                     </label>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                     <label class="ckbox">
-                      <input type="checkbox" name="best_rated" value="1" {{ $product->best_rated ? 'checked' : '' }}>
+                      <input type="checkbox" name="best_rated"  {{ $product->best_rated ? 'checked' : '' }}>
                       <span>Best Rated</span>
                     </label>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                     <label class="ckbox">
-                      <input type="checkbox" name="mid_slider" value="1" {{ $product->mid_slider ? 'checked' : '' }}>
+                      <input type="checkbox" name="mid_slider"  {{ $product->mid_slider ? 'checked' : '' }}>
                       <span>Mid Slider</span>
                     </label>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                     <label class="ckbox">
-                      <input type="checkbox" name="hot_new" value="1" {{ $product->hot_new ? 'checked' : '' }}>
+                      <input type="checkbox" name="hot_new"  {{ $product->hot_new ? 'checked' : '' }}>
                       <span>Hot new</span>
                     </label>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                     <label class="ckbox">
-                      <input type="checkbox" name="trend" value="1" {{ $product->trend ? 'checked' : '' }}>
+                      <input type="checkbox" name="trend"  {{ $product->trend ? 'checked' : '' }}>
                       <span>Trend</span>
                     </label>
                 </div><!-- col-4 -->
@@ -203,6 +223,16 @@
                   </div>
                 </div><!-- col-4 -->
               </div><!-- row -->
+
+              <div class="row mt-5">
+                <div class="col-lg-4">
+                  <label class="ckbox">
+                    <input name="status" type="hidden" value="inactive">
+                    <input name="status" type="checkbox" value="active" {{ $product->status->isActive() ? 'checked' : '' }}>
+                    <span>Active</span>
+                  </label>
+                      </div><!-- col-4 -->
+              </div>
 
               <div class="form-layout-footer">
                 <button class="btn btn-info mg-r-5 mg-t-50">Update Product</button>

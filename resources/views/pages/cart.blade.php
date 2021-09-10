@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.app.index')
 @section('content')
-    {{-- @include('layouts.menubar') --}}
+    {{-- @include('layouts.app.main_nav') --}}
     @push('styles')
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/product_styles.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/product_responsive.css') }}">

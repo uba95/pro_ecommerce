@@ -21,6 +21,6 @@ class ContactController extends Controller
         Contact::create(Arr::except($request->validated(), 'g-recaptcha-response'));
         Mail::to($request->email)->send(new MailContact($request->name));
 
-        return redirect()->route('pages.index')->with(toastNotification('Your Message Has Been Successfully Sent'));
+        return redirect()->route('pages.landing_page.index')->with(toastNotification('Your Message Has Been Successfully Sent'));
     }
 }

@@ -1,12 +1,10 @@
-@extends('admin.admin_layouts')
-
-
+@extends('layouts.admin.index')
 @section('admin_content')
 <div class="container"><br><br><br><br><br><br>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Add New Admin</div>
+                <div class="card-header">Add New Role</div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('admin.roles.store') }}">
                         @csrf

@@ -37,14 +37,14 @@ class CheckoutController extends Controller
 
                 $html = !$shipment || optional($shipment)->rates 
                 ? view('pages.checkout.rates', compact('shipment'))->render()
-                : 'Sorry No Couries To Your Address'; 
+                : 'Sorry No Couriers To Your Address'; 
                    
                 return response()->json(compact('html'));    
             }
             
             return !$shipment || optional($shipment)->rates ? 
             view('pages.checkout.index', compact('cart_products', 'addresses', 'shipment')) :
-            redirect()->route('home')->with(toastNotification('Sorry No Couries To Your Address', 'error'));
+            redirect()->route('home')->with(toastNotification('Sorry No Couriers To Your Address', 'error'));
 
         // } catch (\Exception $ex) {
         //     abort(500);

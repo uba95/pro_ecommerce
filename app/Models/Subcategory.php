@@ -28,7 +28,8 @@ class Subcategory extends Model
      
         return $this->hasMany(Product::class)->select(
             [
-                'id','category_id','subcategory_id','brand_id','product_name','product_slug','selling_price',
+                'products.id','products.category_id','products.subcategory_id','products.brand_id',
+                'product_name','product_slug','selling_price',
                 'product_quantity','discount_price','status','hot_new','cover'
             ]);
     }
@@ -37,7 +38,8 @@ class Subcategory extends Model
     { 
         return [
             'subcategory_slug' => [
-                'source' => 'subcategory_name'
+                'source' => 'subcategory_name',
+                'onUpdate' => true
             ]
         ];
     }

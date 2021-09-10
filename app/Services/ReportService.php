@@ -193,7 +193,6 @@ class ReportService
     $fromDate = Carbon::createFromFormat('d/m/Y', $from)->startOfDay();
     $toDate = Carbon::createFromFormat('d/m/Y', $to)->startOfDay();
        
-    $totalCancel = CancelOrderItem::totalCancel()->dateRange($fromDate, $toDate);
     $totalReturn = ReturnOrderItem::totalReturn()->dateRange($fromDate, $toDate);
     
     $join = OrderItem::query()
@@ -205,14 +204,7 @@ class ReportService
     ->dateRange($fromDate, $toDate)
     ->groupBy('order_items.product_id');
     
-    $returns = DB::table(DB::raw("(
-      {$totalCancel->toSql()}
-        UNION ALL
-      {$totalReturn->toSql()}
-      ) AS r
-    "))
-    ->selectRaw('r.product_id, r.product_name, SUM(tq) AS returns_quantity, SUM(total) AS returns')
-    ->mergeBindings($totalCancel->getQuery())
+    $returns = DB::table(DB::raw("( {$totalReturn->toSql()} ) AS r"))
     ->mergeBindings($totalReturn->getQuery())
     ->groupBy('product_id');
     
@@ -236,11 +228,11 @@ class ReportService
       $name.product_id, 
       $name.product_name, 
       IFNULL(sub1.sold_quantity, 0) AS sold_quantity,
-      IFNULL(sub2.returns_quantity, 0) AS returns_quantity,
-      (IFNULL(sub1.sold_quantity, 0) - IFNULL(sub2.returns_quantity, 0)) AS net_quantity, 
+      IFNULL(sub2.tq, 0) AS returns_quantity,
+      (IFNULL(sub1.sold_quantity, 0) - IFNULL(sub2.tq, 0)) AS net_quantity, 
       IFNULL(sub1.sales, 0) AS sales,
-      IFNULL(sub2.returns, 0) AS returns,
-      (IFNULL(sub1.sales, 0) - IFNULL(sub2.returns, 0)) AS net_sales
+      IFNULL(sub2.total, 0) AS returns,
+      (IFNULL(sub1.sales, 0) - IFNULL(sub2.total, 0)) AS net_sales
     ")
     ->mergeBindings($join->getQuery())
     ->mergeBindings($returns);

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable implements MustVerifyEmail 
 {
@@ -21,9 +22,11 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password','phone'
-    ];
+    protected $guarded = [];
+
+    // protected $fillable = [
+    //     'name', 'email', 'password','phone','avatar'
+    // ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -79,7 +82,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function getAvatarAttribute($value) {
+        
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            return $value;
+        }
 
         return asset($value ? 'storage/'. $value : 'frontend/images/default-user-profile.png');
     }
+
+    public function setPasswordAttribute($value) {
+        return $this->attributes['password'] = Hash::needsRehash($value) ? Hash::make($value) : $value;
+    }
+
 }

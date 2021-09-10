@@ -94,7 +94,7 @@ class ReturnOrderRequestController extends Controller
         
         $html = !$shipment || optional($shipment)->rates 
         ? view('pages.checkout.rates', compact('shipment'))->render()
-        : 'Sorry No Couries To Your Address'; 
+        : 'Sorry No Couriers To Your Address'; 
             
         return response()->json(compact('html'));    
     }

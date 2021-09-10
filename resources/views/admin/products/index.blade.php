@@ -1,4 +1,4 @@
-@extends('admin.admin_layouts')
+@extends('layouts.admin.index')
 
 
 @section('admin_content')
@@ -21,7 +21,7 @@
             <table id="datatable1" class="table display responsive nowrap">
               <thead>
                 <tr>
-                  <th class="wd-15p">Product Code</th>
+                  <th class="wd-15p">SKU</th>
                   <th class="wd-15p">Product Name</th>
                   <th class="wd-15p">Quantity</th>
                   <th class="wd-15p">Category</th>
@@ -36,17 +36,17 @@
               <tbody>
                 @foreach ($products as $product)
                     <tr>
-                        <td>{{ $product->product_code }}</td>
+                        <td>{{ $product->sku }}</td>
                         <td><a href ='{{ route('admin.products.show', $product->id) }}'>{{ $product->product_name }}</a></td>
                         <td>{{ $product->product_quantity }}</td>
                         <td>{{ $product->category->category_name }}</td>
-                        <td>{{ $product->brand->brand_name }}</td>
+                        <td>{{ optional($product->brand)->brand_name }}</td>
                         <td>
                             <img src="{{ $product->cover }}" alt="" width="100" height="40">
                         </td>
                         <td>
-                            <span class="badge {{ $product->status == 1 ? 'badge-success' : 'badge-danger' }}">
-                              {{ $product->status == 1 ? 'Active' : 'Inactive' }}
+                            <span class="badge {{ $product->status->isActive() ? 'badge-success' : 'badge-danger' }}">
+                              {{ $product->status->getName()}}
                             </span>
                         </td>
 

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\OrderItemStatus;
 use App\Models\Product;
 use App\Traits\DateScopesTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -10,12 +9,9 @@ use Spatie\Enum\Laravel\HasEnums;
 
 class OrderItem extends Model
 {
-    use HasEnums;
     use DateScopesTrait;
 
     protected $guarded = [];
-    protected $casts = ['status' => 'int'];
-    protected $enums = ['status' => OrderItemStatus::class];
 
     public function product() {
      

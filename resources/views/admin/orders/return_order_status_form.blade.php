@@ -22,7 +22,7 @@
     @case('shipped')
       <button title="Order Is Returned" type="submit" class="btn btn-sm btn-primary deliver" formaction="{{ route('admin.return_orders.update', [$request->id, 'status' => 'returned']) }}">
         @if (Route::currentRouteName() == 'admin.return_orders.show')
-          Order Is Returned
+        Return Order
         @else
           <span class="fa fa-thermometer-full fa-fw"></span>
         @endif

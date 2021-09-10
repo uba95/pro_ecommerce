@@ -1,10 +1,13 @@
-@extends('layouts.app')
+@extends('layouts.app.index')
 @section('content')
 
     @push('styles')
         <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/shop_styles.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/shop_responsive.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('frontend/plugins/jquery-ui-1.12.1.custom/jquery-ui.css') }}">
+        <style>
+            .sidebar_categories li a:hover {color: #0e8ce4 !important;}
+        </style>
     @endpush
 
     <div class="super_container">
@@ -27,42 +30,8 @@
                     <div class="col-lg-3">
     
                         <!-- Shop Sidebar -->
-                        <div class="shop_sidebar">
-                            <div class="sidebar_section">
-                                <div class="sidebar_title">Categories</div>
-                                <ul class="sidebar_categories">
-                                    @foreach ($categories as $category)
-                                    <li>
-                                        <a href ='{{ route('shop.index', ['model' => 'category', 'slug' => $category->category_slug]) }}'>
-                                            {{ $category->category_name }}
-                                        </a>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            <div class="sidebar_section filter_by_section">
-                                <div class="sidebar_title">Filter By</div>
-                                <div class="sidebar_subtitle">Price</div>
-                                <div class="filter_price">
-                                    <div id="slider-range" class="slider_range"></div>
-                                <p>Range: </p>
-                                    <p><input type="text" id="amount" class="amount" readonly style="border:0; font-weight:bold;"></p>
-                                </div>
-                            </div>
-                            <div class="sidebar_section">
-                                <div class="sidebar_subtitle brands_subtitle">Brands</div>
-                                <ul class="brands_list">
-                                    @foreach ($brands as $slug => $name)
-                                    <li class="brand">
-                                        <a href ='{{ route('shop.index', ['model' => 'brand', 'slug' => $slug]) }}'>
-                                            {{ $name }}
-                                        </a>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-    
+                        @include('pages.shop.shop_sidebar')
+
                     </div>
     
                     <div class="col-lg-9">
@@ -111,6 +80,9 @@
                 </div>
             </div>
         </div> 
+
+        @include('layouts.recently_viewed')
+        
     </div>
     
 

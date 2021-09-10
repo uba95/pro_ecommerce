@@ -65,7 +65,7 @@ class Handler extends ExceptionHandler
 
                 return Request::routeIs('admin.*') && isAdmin() ? 
                     redirect()->route('admin.home')->with(toastNotification($model, 'not_found')) :
-                    redirect()->route('pages.index')->with(toastNotification($model, 'not_found'));
+                    redirect()->route('pages.landing_page.index')->with(toastNotification($model, 'not_found'));
             }
         }
         

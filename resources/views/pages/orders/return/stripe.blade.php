@@ -51,7 +51,7 @@ style="background-color: var(--purple)">
     <script type="text/javascript">
    
     // Create a Stripe client.
-    var stripe = Stripe("{!! env('STRIPE_KEY') !!}");
+    var stripe = Stripe("{!! config('services.stripe.client_id') !!}");
     
     // Create an instance of Elements.
     var elements = stripe.elements();

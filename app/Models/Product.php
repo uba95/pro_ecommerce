@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ProductStatus;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Query\Builder;
@@ -10,15 +11,18 @@ use Gloudemans\Shoppingcart\CanBeBought;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Gloudemans\Shoppingcart\Contracts\Buyable;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
+use Spatie\Enum\Laravel\HasEnums;
 
 class Product extends Model implements Buyable
 {
     use CanBeBought;
     use Sluggable;
     use SluggableScopeHelpers;
+    use HasEnums;
 
     protected $guarded = [];
-    protected $casts = ['product_color' => 'array', 'product_size' => 'array'];
+    protected $casts = ['product_color' => 'array', 'product_size' => 'array', 'status' => 'int'];
+    protected $enums = ['status' => ProductStatus::class];
 
     public function category() {    
         return $this->belongsTo(Category::class);
@@ -39,6 +43,16 @@ class Product extends Model implements Buyable
     public function ratings() {
         
         return $this->hasMany(ProductRating::class);
+    }
+
+    public function hotDeal() {
+        
+        return $this->hasOne(HotDealProduct::class);
+    }
+
+    public function meta() {
+        
+        return $this->hasOne(ProductMeta::class);
     }
 
     // public function getUserRateAttribute() {
@@ -70,9 +84,9 @@ class Product extends Model implements Buyable
     }
 
     public function  scopeSelection($q){
-        return $q->select('products.id','brand_id', 'product_name', 'product_slug', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'cover', 'status');
+        return $q->select('products.id','products.brand_id', 'products.category_id', 'products.subcategory_id', 'product_name', 'product_slug', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'cover', 'status');
     }
-
+    
     public function  scopeFilterPrice($q, $min, $max){
         return $q->whereRaw('
         CASE 
@@ -84,17 +98,30 @@ class Product extends Model implements Buyable
         [$min, $max]);
     }
     
-    public function  scopeSearch($q, $search, $category) {
+    public function  scopeSearch($q, $search, $category, $subcategory, $brand) {
         return $q->where(fn($q) => $q->where('product_name', 'LIKE', "%${search}%")
         ->orWhere('product_details', 'LIKE', "%${search}%"))
-        ->when($category, fn($q, $category) => $q->where('category_slug', $category));
+        ->when($category, fn($q) => $q->where('category_slug', $category))
+        ->when($subcategory, fn($q) => $q->where('subcategory_slug', $subcategory))
+        ->when($brand, fn($q) => $q->where('brand_slug', $brand))
+        ;
+
+    }
+    public function  scopeShop($q) {
+        $q->addSelect('categories.*')
+        ->leftJoin('categories', 'products.category_id', 'categories.id')
+        ->addSelect('subcategories.*')
+        ->leftJoin('subcategories', 'products.subcategory_id', 'subcategories.id')
+        ->addSelect('brands.*')
+        ->leftJoin('brands', 'products.brand_id', 'brands.id');
     }
 
     public function sluggable(): array
     { 
         return [
             'product_slug' => [
-                'source' => 'product_name'
+                'source' => 'product_name',
+                'onUpdate' => true
             ]
         ];
     }

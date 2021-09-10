@@ -1,8 +1,13 @@
 @extends('layouts.home')
+
+@section('button')
+  <a href ='{{ route('addresses.create') }}' class="btn btn-success mb-3" style="">Add New Address</a>
+@endsection
+
 @section('section')
 
-      <div class="col-8 card">
-        <table class="table table-response">
+      <div class="col-lg-8 card">
+        <table class="table table-responsive d-lg-table">
           <thead>
             <tr>
               <th scope="col">Alias</th>

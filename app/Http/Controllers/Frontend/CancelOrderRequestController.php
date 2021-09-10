@@ -27,7 +27,7 @@ class CancelOrderRequestController extends Controller
 
         return view('pages.orders.cancel.create', [
             'orders' => Order::where('user_id', Auth::id())
-            ->whereEnum('status', ['pending', 'paid', 'partiallyCanceled'])
+            ->whereEnum('status', ['pending', 'paid'])
             ->with('orderItems','user:id')
             ->latest('id')
             ->get(['id','user_id']),

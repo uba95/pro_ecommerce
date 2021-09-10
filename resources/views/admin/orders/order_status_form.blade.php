@@ -1,6 +1,6 @@
 <form method="POST" class="pd-20 pd-sm-40">
     @csrf @method('PATCH')
-    @if (!$order->isCancelPending() && !$order->isReturnPending())
+    @if ((!$order->isCancelPending() && !$order->isReturnPending()))
       @can('edit orders')
         @switch($order->status)
           @case('pending')
@@ -17,7 +17,7 @@
             @break 
           @case('shipped')
             <button type="submit" class="btn btn-info deliver" formaction="{{ route('admin.orders.update', [$order->id, 'status' => 'delivered']) }}">
-              Order Is Delivered
+              Deliver Order
             </button>
             @break
         @endswitch 
@@ -49,11 +49,11 @@
     @endif
 
     @if ($order->areSomeItemsCanceled()  && $order->status != 'canceled')
-      <strong class="alert alert-danger my-3">Some Order Items Are Canceled.</strong>
+      <div  class="alert alert-danger my-3"><strong>Some Order Items Are Canceled.</strong></div>
     @endif
 
     @if ($order->areSomeItemsReturned() && $order->status != 'returned')
-      <strong class="alert alert-danger my-3">Some Order Items Are Reurned.</strong>
+      <div class="alert alert-danger my-3"><strong>Some Order Items Are Reurned.</strong></div>
     @endif
 
     @if ($order->isCancelPending())

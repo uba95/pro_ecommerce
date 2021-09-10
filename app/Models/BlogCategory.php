@@ -29,7 +29,8 @@ class BlogCategory extends Model
     {
         return [
             'blog_category_slug' => [
-                'source' => 'blog_category_name'
+                'source' => 'blog_category_name',
+                'onUpdate' => true
             ]
         ];
     }

@@ -27,7 +27,8 @@ class BlogPost extends Model
     {
         return [
             'post_slug' => [
-                'source' => 'post_title'
+                'source' => 'post_title',
+                'onUpdate' => true
             ]
         ];
     }

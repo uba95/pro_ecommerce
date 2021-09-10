@@ -1,4 +1,4 @@
-@extends('admin.admin_layouts')
+@extends('layouts.admin.index')
 
 @section('admin_content')
     <!-- ########## START: MAIN PANEL ########## -->
@@ -30,38 +30,57 @@
                 <div class="col-lg-4">
                   <div class="form-group">
                     <label class="form-control-label">Name <span class="tx-danger">*</span></label>
-                    <input class="form-control" type="text" name="product_name">
+                    <input class="form-control" type="text" name="product_name" value="{{ old('product_name') }}">
                   </div>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                   <div class="form-group">
-                    <label class="form-control-label">Code <span class="tx-danger">*</span></label>
-                    <input class="form-control" type="text" name="product_code"  value="{{ old('product_code') }}">
+                    <label class="form-control-label">SKU <span class="tx-danger">*</span></label>
+                    <input class="form-control" type="text" name="sku"  value="{{ old('sku') }}">
                   </div>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                   <div class="form-group">
                     <label class="form-control-label">Quantity <span class="tx-danger">*</span></label>
-                    <input class="form-control" type="text" name="product_quantity">
+                    <input class="form-control" type="text" name="product_quantity" value="{{ old('product_quantity') }}">
                   </div>
                 </div><!-- col-4 -->    
 
                   <div class="col-lg-4">
                     <div class="form-group">
                       <label class="form-control-label">Discount Price</label><br>
-                      <input class="form-control" type="text" name="discount_price">
+                      <input class="form-control" type="text" name="discount_price" value="{{ old('discount_price') }}">
                     </div>
                   </div><!-- col-4 -->
                 <div class="col-lg-4">
                   <div class="form-group">
                     <label class="form-control-label">Selling Price <span class="tx-danger">*</span></label>
-                    <input class="form-control" type="text" name="selling_price">
+                    <input class="form-control" type="text" name="selling_price" value="{{ old('selling_price') }}">
                   </div>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                   <div class="form-group">
                     <label class="form-control-label">Video Link </label>
-                    <input class="form-control" type="text" name="video_link">
+                    <input class="form-control" type="text" name="video_link" value="{{ old('video_link') }}">
+                  </div>
+                </div><!-- col-4 -->
+
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">Meta Title</label><br>
+                    <input class="form-control" type="text" name="meta_title" value="{{ old('meta_title') }}">
+                  </div>
+                </div><!-- col-4 -->
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">Meta Keywords</label>
+                    <input class="form-control" type="text" name="meta_keywords" value="{{ old('meta_keywords') }}">
+                  </div>
+                </div><!-- col-4 -->
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="form-control-label">Meta Descrition</label>
+                    <input class="form-control" type="text" name="meta_description" value="{{ old('meta_description') }}">
                   </div>
                 </div><!-- col-4 -->
 
@@ -112,7 +131,7 @@
                 <div class="col-lg-12">
                   <div class="form-group">
                     <label class="form-control-label">Details <span class="tx-danger">*</span></label>
-                    <textarea name="product_details" class="form-control" id="summernote"></textarea>
+                    <textarea name="product_details" class="form-control" id="summernote">{{ old('product_details') }}</textarea>
                   </div>
                 </div><!-- col-4 -->
               </div><!-- row -->
@@ -122,37 +141,37 @@
               <div class="row mg-b-25">
                 <div class="col-lg-4">
                     <label class="ckbox">
-                      <input type="checkbox" value="1" name="main_slider">
+                      <input type="checkbox" name="main_slider">
                       <span>Main Slider</span>
                     </label>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                     <label class="ckbox">
-                      <input type="checkbox" value="1" name="hot_deal">
+                      <input type="checkbox" name="hot_deal">
                       <span>Hot Deal</span>
                     </label>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                     <label class="ckbox">
-                      <input type="checkbox" value="1" name="best_rated">
+                      <input type="checkbox" name="best_rated">
                       <span>Best Rated</span>
                     </label>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                     <label class="ckbox">
-                      <input type="checkbox" value="1" name="mid_slider">
+                      <input type="checkbox" name="mid_slider">
                       <span>Mid Slider</span>
                     </label>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                     <label class="ckbox">
-                      <input type="checkbox" value="1" name="hot_new">
+                      <input type="checkbox" name="hot_new">
                       <span>Hot new</span>
                     </label>
                 </div><!-- col-4 -->
                 <div class="col-lg-4">
                     <label class="ckbox">
-                      <input type="checkbox" value="1" name="trend">
+                      <input type="checkbox" name="trend">
                       <span>Trend</span>
                     </label>
                 </div><!-- col-4 -->
@@ -181,8 +200,17 @@
                 </div><!-- col-4 -->
               </div><!-- row -->
 
+              <div class="row mt-5">
+                <div class="col-lg-4">
+                  <label class="ckbox">
+                    <input name="status" type="checkbox" value="active" checked>
+                    <span>Active</span>
+                  </label>
+                  </div><!-- col-4 -->
+              </div>
+
               <div class="form-layout-footer">
-                <button class="btn btn-info mg-r-5 mg-t-50 ">Add Product</button>
+                <button class="btn btn-info mg-r-5 mg-t-25">Add Product</button>
               </div><!-- form-layout-footer -->
             </div><!-- form-layout -->  
           </form>

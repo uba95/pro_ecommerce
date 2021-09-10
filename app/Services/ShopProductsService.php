@@ -12,7 +12,7 @@ class ShopProductsService
     private string $model;
     private string $sortOrder;
     private string $modelClass;
-    private object $modelData;
+    public ?object $modelData = null;
 
     public static function getModel(string $model) : object { 
 
@@ -33,9 +33,9 @@ class ShopProductsService
         $sort ??= 'date';
         $order ??= 'desc';
         $sortBy = [
-            'date' => 'id',
-            'name' => 'product_name',
-            'price' => 'CASE WHEN discount_price IS NULL THEN selling_price ELSE discount_price END',
+            'date' => 'products.id',
+            'name' => 'products.product_name',
+            'price' => 'CASE WHEN products.discount_price IS NULL THEN products.selling_price ELSE products.discount_price END',
             'rating' => '(SELECT AVG(VALUE) FROM product_ratings WHERE products.id = product_ratings.product_id)',
         ][$sort];
         $this->sortOrder =  $sortBy . ' ' . $order;
@@ -51,15 +51,18 @@ class ShopProductsService
     }
 
     public function getModelProducts() : HasMany {
-        return $this->modelData->products()->orderByRaw($this->sortOrder);
+
+        return $this->modelData->products()->shop()->orderByRaw($this->sortOrder);
     }
 
-    public function searchProducts(string $search, ?string $category) : Builder {
+    public function searchProducts(string $search, ?string $category, ?string $subcategory, ?string $brand) : Builder {
 
-        return Product::selection()
-        ->when($category, fn($q) => $q->addSelect('categories.category_slug')
-        ->join('categories', 'products.category_id', 'categories.id'))
-        ->search(strtolower($search), $category)
+        return Product::selection()->shop()
+        ->search(strtolower($search), $category, $subcategory, $brand)
         ->orderByRaw($this->sortOrder);
     }
 }
+
+// ->when($category, fn($q) => $q->with('category')->whereHas('category', fn($q) => $q->where('category_slug', $category)))
+// ->when($subcategory, fn($q) => $q->with('subcategory')->whereHas('subcategory', fn($q) => $q->where('subcategory_slug', $subcategory)))
+// ->when($brand, fn($q) => $q->with('brand')->whereHas('brand', fn($q) => $q->where('brand_slug', $brand)))

@@ -10,7 +10,7 @@ class StripeService
 {
     public static function charge(float $amount, $courier, $returnOrder = false) {
 
-        Stripe::setApiKey(env('STRIPE_SECRET'));
+        Stripe::setApiKey(config('services.stripe.client_secret'));
         
         Charge::create([
             'amount' => $amount * 100,

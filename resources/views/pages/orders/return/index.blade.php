@@ -1,10 +1,15 @@
 @extends('layouts.home')
+
+@section('button')
+    <a href ='{{ route('return_orders.create') }}' class="btn btn-success mb-3" style="margin-left: -13px;">Add Return Order Request</a>
+@endsection
+
 @section('section')
 
-<div class="col-8 card">
+<div class="col-lg-8 card">
     @if (count($return_order_requests))
         
-    <table class="table table-response">
+    <table class="table table-responsive d-lg-table">
         <thead>
             <tr>
                 <th scope="col">Request Id</th>

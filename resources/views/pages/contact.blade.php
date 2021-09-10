@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app.index')
 
 @section('content')
     @push('styles')

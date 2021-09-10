@@ -24,7 +24,7 @@ class PaypalController extends Controller
         $request->prefer('return=representation');
 
         try {
-            $environment = new SandboxEnvironment(env('PP_CLIENT_ID'), env('PP_CLIENT_SECRET'));
+            $environment = new SandboxEnvironment(config('services.paypal.client_id'), config('services.paypal.client_secret'));
             $client = new PayPalHttpClient($environment);
             $response = (object) $client->execute($request);
             

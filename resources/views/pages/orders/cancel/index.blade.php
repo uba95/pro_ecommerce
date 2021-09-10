@@ -1,10 +1,15 @@
 @extends('layouts.home')
+
+@section('button')
+    <a href ='{{ route('cancel_orders.create') }}' class="btn btn-success mb-3" style="margin-left: -13px;">Add Cancel Order Request</a>
+@endsection
+
 @section('section')
 
-<div class="col-8 card">
+<div class="col-lg-8 card">
     @if (count($cancel_order_requests))
         
-    <table class="table table-response">
+    <table class="table table-responsive d-lg-table">
         <thead>
             <tr>
                 <th scope="col">Request Id</th>
