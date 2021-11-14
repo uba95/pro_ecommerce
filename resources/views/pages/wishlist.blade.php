@@ -3,11 +3,10 @@
 
 <div class="container">
     <div class="d-flex flex-wrap">
-        @foreach (range(1,10) as $item)
         @forelse ($wishlist_items as $product)
         <div class="featured_slider_item col-md-2">
             <div class="border_active"></div>
-            <div class="product_item  d-flex flex-column align-items-center justify-content-center text-center {{ $product->discount_price ? 'discount' :  ($product->hot_new ? 'is_new' : '') }}">
+            <div class="product_item  d-flex flex-column align-items-center justify-content-center text-center {{ $product->discount_price ? 'discount' :  ($product->isNew() ? 'is_new' : '') }}">
                 <div class="product_image d-flex flex-column align-items-center justify-content-center"><img src="{{ $product->cover}}" alt="" height="120" width="100"></div>
                 <div class="product_content">
                         @if ($product->discount_price)
@@ -52,10 +51,8 @@
             </div>
         </div>
         @empty
-        <div class="alert alert-danger">Your Wishlist Is Empty.</div>
+        <div class="alert alert-danger my-5 mx-auto">Your Wishlist Is Empty.</div>
         @endforelse
-        
-        @endforeach
         </div>
 </div>
 @endsection

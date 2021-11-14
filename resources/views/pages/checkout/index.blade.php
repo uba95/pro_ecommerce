@@ -180,7 +180,7 @@
                 }
                 $('.display_coupon').attr('style', 'display: block !important');
                 $('.coupon_code').text(`${data.coupon.coupon_name}  ${data.coupon.discount}%`);
-                $('.discount_price').text(data.discount);
+                $('.discount_value').text(data.discount);
                 $('.total_pay').text((data.total).toFixed(2));
                 $('#coupon_delete').attr('action', data.route);
               },

@@ -11,6 +11,13 @@ use Illuminate\Support\Arr;
 
 class HotDealProductController extends Controller
 {
+    public function __construct() {
+        $this->middleware('can:view products',    ['only' => ['index']]);
+        $this->middleware('can:create products',  ['only' => ['create', 'store']]);
+        $this->middleware('can:edit products',    ['only' => ['edit', 'update']]);
+        $this->middleware('can:delete products',  ['only' => ['destroy']]);
+    }
+
     public function index() {
         return view('admin.products.hot-deals.index', ['deals' => HotDealProduct::with('product')->get()]);
     }

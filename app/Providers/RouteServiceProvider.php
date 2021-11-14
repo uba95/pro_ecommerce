@@ -34,13 +34,13 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-
         parent::boot();
-
-        Route::bind('product_slug', fn($v) => Product::findBySlugOrFail($v));
-        Route::bind('blog_category', fn($v) => BlogCategory::findBySlugOrFail($v));
-        Route::bind('blog_post', fn($v) => BlogPost::findBySlugOrFail($v));
+        
+        if (!request()->is('admin/*')) {
+            Route::bind('product_slug', fn($v) => Product::findBySlugOrFail($v));
+            Route::bind('blog_category', fn($v) => BlogCategory::findBySlugOrFail($v));
+            Route::bind('blog_post', fn($v) => BlogPost::findBySlugOrFail($v));    
+        }
     }
 
     /**

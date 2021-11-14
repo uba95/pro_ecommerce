@@ -33,50 +33,41 @@
                 </div>
             </div>
 
-            <div class="col-lg-2 offset-lg-2">
-                <div class="footer_column">
-                    <div class="footer_title">Find it Fast</div>
-                    <ul class="footer_list">
-                        <li><a href="#">Computers & Laptops</a></li>
-                        <li><a href="#">Cameras & Photos</a></li>
-                        <li><a href="#">Hardware</a></li>
-                        <li><a href="#">Smartphones & Tablets</a></li>
-                        <li><a href="#">TV & Audio</a></li>
-                    </ul>
-                    <div class="footer_subtitle">Gadgets</div>
-                    <ul class="footer_list">
-                        <li><a href="#">Car Electronics</a></li>
-                    </ul>
+            @foreach ($categories->chunk(6) as $chunk)
+                <div class="col-lg-2 {{ $loop->first ? 'offset-lg-2' : '' }}">
+                    <div class="footer_column">
+                        @if ($loop->first)
+                            <div class="footer_title">Find it Fast</div>
+                        @endif
+                        <ul class="footer_list {{ !$loop->first ? 'footer_list_2' : '' }}">
+                            @foreach ($chunk as $category)
+                                <li>
+                                    <a href ='{{ route('shop.index', ['model' => 'category', 'slug' => $category->category_slug]) }}'>
+                                        {{ $category->category_name }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            @endforeach
 
-            <div class="col-lg-2">
-                <div class="footer_column">
-                    <ul class="footer_list footer_list_2">
-                        <li><a href="#">Video Games & Consoles</a></li>
-                        <li><a href="#">Accessories</a></li>
-                        <li><a href="#">Cameras & Photos</a></li>
-                        <li><a href="#">Hardware</a></li>
-                        <li><a href="#">Computers & Laptops</a></li>
-                    </ul>
+            @auth('web')
+                <div class="col-lg-2">
+                    <div class="footer_column">
+                        <div class="footer_title">Customer Care</div>
+                        <ul class="footer_list">
+                            <li><a href ='{{ route('home') }}'>My Account</a></li>
+                            <li><a href ='{{ route('cart.show') }}'>My Cart</a></li>
+                            <li><a href ='{{ route('wishlist.index') }}'>My WishList</a></li>
+                            <li><a href="{{ route('cancel_orders.index') }}">Cancel Order</a></li>
+                            <li><a href="{{ route('return_orders.index') }}">Return Order</a></li>
+                            <li><a href ='{{ route('contact.index') }}'>Contact Us</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-
-            <div class="col-lg-2">
-                <div class="footer_column">
-                    <div class="footer_title">Customer Care</div>
-                    <ul class="footer_list">
-                        <li><a href="#">My Account</a></li>
-                        <li><a href="#">Order Tracking</a></li>
-                        <li><a href="#">Wish List</a></li>
-                        <li><a href="#">Customer Services</a></li>
-                        <li><a href="#">Returns / Exchange</a></li>
-                        <li><a href="#">FAQs</a></li>
-                        <li><a href="#">Product Support</a></li>
-                    </ul>
-                </div>
-            </div>
-
+            @endauth
+            
         </div>
     </div>
 </footer>

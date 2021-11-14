@@ -162,12 +162,14 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
-        Intervention\Image\ImageServiceProvider::class,
-
-
         /*
          * Package Service Providers...
          */
+        
+        App\Providers\ComposerServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -177,9 +179,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        
-        App\Providers\ComposerServiceProvider::class,
-        Laravel\Socialite\SocialiteServiceProvider::class,
     ],
 
     /*
@@ -233,7 +232,7 @@ return [
 
         'Image' => Intervention\Image\Facades\Image::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 
 ];

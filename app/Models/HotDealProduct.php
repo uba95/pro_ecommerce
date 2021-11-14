@@ -19,7 +19,11 @@ class HotDealProduct extends Model
         return $this->belongsTo(Product::class)->select(
             [
                 'id','category_id','subcategory_id','brand_id','sku','product_name','product_slug','selling_price',
-                'product_quantity','discount_price','status','hot_new','cover'
+                'product_quantity','discount_price','status', 'cover'
             ]);
+    }
+
+    public function  scopeActive($q){
+        return $q->whereEnum('status', 'active');
     }
 }

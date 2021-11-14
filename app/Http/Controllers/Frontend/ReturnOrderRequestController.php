@@ -23,10 +23,14 @@ class ReturnOrderRequestController extends Controller
     use CourierTrait;
     
     public function index() {
-        return view('pages.orders.return.index', ['return_order_requests' => ReturnOrderRequest::with('order')->get()]);
+        return view('pages.orders.return.index', [
+            'return_order_requests' => ReturnOrderRequest::with('order')
+                ->whereHas('order', fn($q) => $q->where('user_id', current_user()->id))->latest()->get()]);
     }
 
     public function show(ReturnOrderRequest $returnOrder) {
+        
+        $this->authorize('view', $returnOrder->order);
         $returnOrderItems = $returnOrder->returnOrderItems->load('orderItem');
         return view('pages.orders.return.show', compact('returnOrder', 'returnOrderItems'));
     }
@@ -38,19 +42,19 @@ class ReturnOrderRequestController extends Controller
         }
 
         return view('pages.orders.return.create', [
-            'orders' => Order::where('user_id', Auth::id())
-            ->whereEnum('status', ['delivered', 'returning', 'partiallyReturned'])
-            ->with('orderItems','user:id','user.addresses.country:id,name')
+            'orders' => Order::with('orderItems','user:id')
+            ->returnable()
+            ->where('user_id', current_user()->id)
             ->latest('id')
             ->get(['id','user_id']),
+            'reasons' => ReturnOrderRequest::REASONS
         ]);
     }
 
     public function store(ReturnOrderFormRequest $request) {
-        // dd($request->all());
         try {
             $courier = $this->courier();
-            switch (request('payment_method')) {
+            switch ($request->payment_method) {
                
                 case 'stripe':
                     return StripeService::charge($courier['amount'], $courier, true);
@@ -61,7 +65,7 @@ class ReturnOrderRequestController extends Controller
                     break;
                 
                 case 'cash':
-                    return ReturnOrderService::create('Cash On Delivery', $courier);
+                    return ReturnOrderService::create(Order::PAYMENT_METHODS['cash'], $courier, $request->all());
                     break;
                 default:
                     return redirect()->route('home')->with(toastNotification('No Payment Method', 'error'));
@@ -73,29 +77,44 @@ class ReturnOrderRequestController extends Controller
     }
 
     private function shipment($request) {
-     
-        $orderItems = OrderItem::with('order:id,user_id')->find($request->order_items);
-        if ($orderItems->isEmpty()) {
+
+        $order  =  Order::with('orderItems')->returnable()->where('id', $request->order_id)->firstOrFail();
+        $orginalOrderItems  =  $order->orderItems;
+
+        if (!$request->order_items || array_diff($request->order_items, $orginalOrderItems->pluck('id')->toArray())) {
             return response()->json(['html' => 'Error, Check Your Order Items']);
         }
 
-        // $orderItems->each(fn($orderItem) => $this->authorize('create', [ReturnOrderRequest::class, $orderItem]));
-        $orderItems->each(fn($orderItem) => $this->authorize('view', $orderItem->order));
+        $this->authorize('view', $order);
+        $orderItems = $orginalOrderItems->whereIn('id', $request->order_items);
+        $return_order_items = ReturnOrderService::returnableQuantitiesRequset($orderItems, $request->quantity);
 
-        $products = OrderItem::returnableQuantitiesRequset($orderItems, $request->quantity);
-        if (!$products) {
+        if (!$return_order_items) {
             return response()->json(['html' => 'Error, Check Your Order Items Quantities']);
         }
 
-        Session::put('return_order_items', $products);
+        Session::put('return_order_items', $return_order_items);
 
-        $address =  Address::where(['id' => $request->address_id, 'user_id' => Auth::id()])->first();
-        $shipment = Shipment::setAddress($address, true)->readyParcel($products, false)->readyShipment();
+        $address =  Address::where(['id' => $request->address_id, 'user_id' => current_user()->id])->first();
+        $shipment = $address ? Shipment::setAddress($address, true)->readyParcel($return_order_items, false)->readyShipment() : null;
         
-        $html = !$shipment || optional($shipment)->rates 
+        $html = optional($shipment)->rates 
         ? view('pages.checkout.rates', compact('shipment'))->render()
         : 'Sorry No Couriers To Your Address'; 
             
         return response()->json(compact('html'));    
     }
+
+    public function destroy(ReturnOrderRequest $returnOrder) {
+
+        $this->authorize('view', $returnOrder->order);
+
+        if ($returnOrder->status != 'pending') {
+            return redirect()->route('return_orders.index')->with(toastNotification('Return Order Request Can\'t Be Deleted', 'error'));
+        }
+
+        $returnOrder->delete();
+        return redirect()->route('return_orders.index')->with(toastNotification('Return Order Request', 'deleted'));
+    }
+
 }

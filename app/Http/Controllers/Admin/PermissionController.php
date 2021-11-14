@@ -42,4 +42,9 @@ class PermissionController extends Controller
         $permission->delete();
         return redirect()->back()->with(toastNotification('Permission', 'deleted'));
     }
+    
+    public function destroyAll(Request $request) {
+        Permission::destroy($request->id);
+        return redirect()->back()->with(toastNotification('Permissions', 'deleted'));
+    }
 }

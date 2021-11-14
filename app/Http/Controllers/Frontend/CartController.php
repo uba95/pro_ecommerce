@@ -32,7 +32,7 @@ class CartController extends Controller
     
     public function store($id) {
         
-        $product = Product::where('id', $id)->whereEnum('status', 'active')->firstOrFail();
+        $product = Product::where('id', $id)->active()->firstOrFail();
 
         Cart::add($product, request()->product_quantity, [
             'color' => request()->product_color,

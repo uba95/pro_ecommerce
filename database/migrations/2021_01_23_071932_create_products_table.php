@@ -31,13 +31,7 @@ class CreateProductsTable extends Migration
             $table->float('selling_price')->unsigned();
             
             $table->float('discount_price')->unsigned()->nullable();
-            $table->string('video_link')->nullable();
-            $table->boolean('main_slider')->nullable();
-            $table->boolean('hot_deal')->nullable();
-            $table->boolean('best_rated')->nullable();
-            $table->boolean('mid_slider')->nullable();
-            $table->boolean('hot_new')->nullable();
-            $table->boolean('trend')->nullable();
+            $table->string('video_link')->nullable();            
             $table->string('cover')->nullable();
             $table->unsignedTinyInteger('status')->default(0)->index();
             $table->timestamps();

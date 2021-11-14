@@ -14,7 +14,7 @@ class BlogCategoryComposer {
 
     public function composer(View $view) {
         return $view->with('blogCategories', Cache::rememberForever('blogCategories', function () {
-            return BlogCategory::orderBy('id')->pluck('blog_category_name', 'id');
+            return BlogCategory::orderBy('id')->pluck('blog_category_name', 'blog_category_slug');
         }));
     }
 }

@@ -40,7 +40,7 @@ class AdminController extends Controller
     $attributes = $request->validated();
 
     if ($request->hasFile('avatar')) {
-      $attributes['avatar'] = img_upload($request->file('avatar'), 'media/admins/avatars/', true);
+      $attributes['avatar'] = img_upload($request->file('avatar'), Admin::AVATARS_STOREAGE, true);
     }
 
     $admin = Admin::create(Arr::except($attributes, 'roles'));
@@ -68,7 +68,7 @@ class AdminController extends Controller
     if ($request->hasFile('avatar')) {
       // delete old avatar & upload the new one
       Storage::disk('public')->delete($admin->getOriginal('avatar'));
-      $attributes['avatar'] = img_upload($request->file('avatar'), 'media/admins/avatars/', true);
+      $attributes['avatar'] = img_upload($request->file('avatar'), Admin::AVATARS_STOREAGE, true);
     }
 
     $admin->update(Arr::except($attributes, 'roles'));

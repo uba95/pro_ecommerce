@@ -33,7 +33,7 @@ class AddressController extends Controller
     
     public function update(Address $address, AddressRequest $request) {
         $this->authorize('change', $address);
-        $address->update(array_merge($request->validated(), ['user_id' => Auth::id()]));
+        $address->update(array_merge($request->validated(), ['user_id' => current_user()->id]));
         return redirect()->route('addresses.index')->with(toastNotification('Address', 'updated'));
     }
 

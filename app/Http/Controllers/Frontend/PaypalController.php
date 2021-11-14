@@ -8,6 +8,7 @@ use App\Traits\CourierTrait;
 use PayPalHttp\HttpException;
 use App\Services\OrderService;
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Services\ReturnOrderService;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Core\SandboxEnvironment;
@@ -30,8 +31,8 @@ class PaypalController extends Controller
             
             if ($response->result->status == "COMPLETED") {
                 return !request('return') 
-                ?  OrderService::create('Paypal', $this->courier()) 
-                : ReturnOrderService::create('Paypal', $this->courier());
+                ?  OrderService::create(Order::PAYMENT_METHODS['paypal'], $this->courier(), request()->only('billing_address', 'shipping_address')) 
+                : ReturnOrderService::create(Order::PAYMENT_METHODS['paypal'], $this->courier(), request()->all());
             }
         }catch (HttpException $ex) {
             echo $ex->statusCode;

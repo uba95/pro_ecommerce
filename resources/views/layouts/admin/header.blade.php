@@ -15,7 +15,7 @@
             <div class="dropdown-menu dropdown-menu-header wd-200">
               <ul class="list-unstyled user-profile-nav">
                 <li><a href=""><i class="icon ion-ios-person-outline"></i> Edit Profile</a></li>
-                <li><a href='{{ route('admin.admins.edit', Auth::id()) }}'><i class="icon ion-ios-gear-outline"></i> Settings</a></li>
+                <li><a href='{{ route('admin.admins.edit', Auth::guard('admin')->id()) }}'><i class="icon ion-ios-gear-outline"></i> Settings</a></li>
                 <li><a style="color: #ffffffcc;cursor: pointer;" onclick="document.getElementById('logout').submit()">
                   <form id="logout" action="{{ route('admin.logout') }}" method="POST"> @csrf
                   <i class="icon ion-power"></i> 

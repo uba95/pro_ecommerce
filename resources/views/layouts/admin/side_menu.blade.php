@@ -140,6 +140,18 @@
           @endcomponent
         @endcan
 
+        @can('view landing page items')
+          @component('components.admin.side_menu_links')
+            @slot('icon') <i class="menu-item-icon ion-ios-filing-outline tx-20"></i> @endslot
+            @slot('title') Store's Landing Page @endslot
+            @can('view landing page items')
+              <li class="nav-item"><a href ='{{ route('admin.landing_page_items.index', ['type' => 'main_banner']) }}' class="nav-link">Main Banner</a></li>
+              <li class="nav-item"><a href ='{{ route('admin.landing_page_items.index', ['type' => 'banner_slider']) }}' class="nav-link">Banner Slider</a></li>
+              <li class="nav-item"><a href ='{{ route('admin.landing_page_items.index', ['type' => 'advert']) }}' class="nav-link">Advert</a></li>
+              @endcan
+          @endcomponent
+        @endcan
+
         @can('view customers')
           <a href ='{{ route('admin.customers.index') }}' class="sl-menu-link">
             <div class="sl-menu-item">

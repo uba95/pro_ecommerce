@@ -30,7 +30,7 @@ class BrandController extends Controller
         ]);
 
         if($request->brand_logo) {        
-            $validatedData['brand_logo'] = $request->file('brand_logo')->store('media/brands', 'public');
+            $validatedData['brand_logo'] = $request->file('brand_logo')->store(Brand::BRANDS_STOREAGE, 'public');
         }
 
         Brand::create($validatedData);
@@ -52,7 +52,7 @@ class BrandController extends Controller
         if($request->brand_logo) {
 
             Storage::disk('public')->delete($brand->getOriginal('brand_logo'));
-            $validatedData['brand_logo'] = $request->file('brand_logo')->store('media/brands', 'public');
+            $validatedData['brand_logo'] = $request->file('brand_logo')->store(Brand::BRANDS_STOREAGE, 'public');
         }
 
         $brand->update($validatedData);

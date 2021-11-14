@@ -29,7 +29,7 @@
                                         <div class="cart_item_info d-flex flex-md-row flex-column justify-content-between">
                                             <div class="cart_item_name cart_info_col">
                                                 <div class="cart_item_title">Name</div>
-                                                <div class="cart_item_text text-center"><a href='{{ route('products.show', $cart_product->name) }}'>{{ $cart_product->name }}</a></div>
+                                                <div class="cart_item_text text-center" style="width: 150px;font-size: 15px"><a href='{{ route('products.show', $cart_product->name) }}'>{{ $cart_product->name }}</a></div>
                                             </div>
                                             <div class="cart_item_color cart_info_col">
                                                 <div class="cart_item_title">Color</div>

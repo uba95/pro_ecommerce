@@ -25,8 +25,8 @@ trait DateScopesTrait {
         // return $q->whereYear($this->getTable() . '.' . 'created_at', now()->year);
     }
 
-    public function scopeLast30days($q) {
-        return $q->where($this->getTable() . '.' . 'created_at', '>=', now()->subDays(30))
+    public function scopeLastdays($q, $days = 30) {
+        return $q->where($this->getTable() . '.' . 'created_at', '>=', now()->subDays($days))
         ->where($this->getTable() . '.' . 'created_at', '<', now());
         // return $q->whereBetween($this->getTable() . '.' . 'created_at', [now()->subDays(30), now()]);
         // return $q->whereDate($this->getTable() . '.' . 'created_at', '>', now()->subDays(30));

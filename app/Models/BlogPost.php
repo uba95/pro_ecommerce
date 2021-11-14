@@ -11,6 +11,8 @@ class BlogPost extends Model
     use Sluggable;
     use SluggableScopeHelpers;
 
+    const BLOG_STOREAGE =  'media/blog';
+
     protected $guarded = [];
 
     public function category() {

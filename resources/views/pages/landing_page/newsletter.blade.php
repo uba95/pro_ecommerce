@@ -23,3 +23,48 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    function newslaterAjax(form, method, emailInput, email) {
+        $.ajax({
+            url: form.attr('action'),
+            type:method,
+            dataType:"json",
+            data: {"_token": "{{  csrf_token() }}", 'email' : email},
+            success:function(data) { 
+                if (data.error) {
+                    toastr.error(data.error)
+                }
+                if (data.success) {
+                    emailInput.val('')
+                    toastr.success(data.success)
+                }
+            },
+            error:function(data) { 
+                if (email = data.responseJSON.errors.email[0]) {
+                    toastr.error(email)
+                }
+            },
+        });
+    }
+    function storeNewslater(e) {
+        e.preventDefault();
+        var form = $(e.target).parent();
+        var emailInput = form.children('input[name="email"]');
+        var email = emailInput.val();
+        if (email) {   
+            newslaterAjax(form, "POST", emailInput, email);
+        }
+    }
+    function destroyNewslater(e) {
+        e.preventDefault();
+        var form = $(e.target).closest('form');
+        var emailInput = form.siblings('form').children('input[name="email"]');
+        var email = emailInput.val();
+        if (email) {   
+            newslaterAjax(form, "DELETE", emailInput, email);
+        }
+    }
+</script>
+@endpush

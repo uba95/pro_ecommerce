@@ -31,7 +31,7 @@ class Category extends Model
             [
                 'products.id','products.category_id','products.subcategory_id','products.brand_id',
                 'product_name','product_slug','selling_price',
-                'product_quantity','discount_price','status','hot_new','cover'
+                'product_quantity','discount_price','status','cover'
             ]);
     }
    

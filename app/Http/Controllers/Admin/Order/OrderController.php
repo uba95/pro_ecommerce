@@ -7,6 +7,7 @@ use App\Models\OrderItem;
 use App\Enums\OrderStatus;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\AjaxDatatablesService;
 use Spatie\Enum\Laravel\Rules\EnumRule;
 
 class OrderController extends Controller
@@ -18,10 +19,9 @@ class OrderController extends Controller
 
     public function index(Request $request) {
         $orders = $request->status && in_array($request->status, OrderStatus::getValues())
-        ? Order::with('user:id,name', 'shipment:order_id,courier')->whereEnum('status', $request->status)->get()
-        : Order::with('user:id,name', 'shipment:order_id,courier')->get();
-        
-        return view('admin.orders.index', compact('orders'));    
+        ? Order::with('user:id,name', 'shipment:order_id,courier')->whereEnum('status', $request->status)
+        : Order::with('user:id,name', 'shipment:order_id,courier');
+        return request()->expectsJson() ? AjaxDatatablesService::orders($orders) : view('admin.orders.index');
     }
 
     public function show(Order $order) {

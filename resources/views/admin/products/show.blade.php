@@ -39,6 +39,8 @@
             <div class="card-block pd-20">
               <label class="form-control-label">Product Name: </label><br>
               <h5><span class="badge badge-primary">{{  $product->product_name }}</span></h5>
+              <label class="form-control-label">Product Slug: </label><br>
+              <h5><span class="badge badge-primary">{{  $product->product_slug }}</span></h5>
               <label class="form-control-label">SKU: </label><br>
               <h5><span class="badge badge-primary">{{  $product->sku }}</span></h5>
             </div>
@@ -172,18 +174,7 @@
             </div><!-- card -->
           </div><!-- col-6 -->
           @endforeach
-        </div><!-- row -->
-
-        <hr><br><br>
-
-        <div class="row">
-          @component('components.admin.active_badge', ['active' => $product->main_slider]) Main Slider @endcomponent
-          @component('components.admin.active_badge', ['active' => $product->hot_deal]) Hot Deal @endcomponent
-          @component('components.admin.active_badge', ['active' => $product->best_rated]) Best Rated @endcomponent
-          @component('components.admin.active_badge', ['active' => $product->trend]) Trend  @endcomponent
-          @component('components.admin.active_badge', ['active' => $product->mid_slider]) Mid Slider @endcomponent
-          @component('components.admin.active_badge', ['active' => $product->hot_new]) Hot New @endcomponent
-        </div><!-- end row -->
+        </div><!-- row -->        
       </div><!-- form-layout -->
 
     </div><!-- card -->

@@ -10,11 +10,12 @@ Route::group(['middleware' => ['auth:admin', 'verified'], 'as' => 'admin.'], fun
     
     Route::get('/', 'HomeController@index')->name('home');
 
-    Route::resource('admins', 'AdminController');
     Route::put('admins/{admin}/password/update','AdminController@updatePassword')->name('admins.password.update'); 
+    Route::resource('admins', 'AdminController');
 
     Route::resource('roles', 'RoleController');
 
+    Route::delete('permissions', 'PermissionController@destroyAll')->name('permissions.destroyAll');
     Route::resource('permissions', 'PermissionController')->except('show', 'create');
     
     Route::resource('categories', 'Category\CategoryController')->except('create');
@@ -34,9 +35,9 @@ Route::group(['middleware' => ['auth:admin', 'verified'], 'as' => 'admin.'], fun
     Route::put('products/{product}/hot_deals', 'HotDealProductController@update')->name('products.hot_deals.update');
     Route::delete('products/{product}/hot_deals', 'HotDealProductController@destroy')->name('products.hot_deals.destroy');
     
-    Route::resource('products', 'ProductController');
     Route::get('products/{product}/status', 'ProductController@changeStatus')->name('products.status');
     Route::delete('products/images/{productImage}/delete', 'ProductController@destroyImage')->name('products.images.destroy');
+    Route::resource('products', 'ProductController');
     
 
     Route::resource('blog_categories', 'Blog\BlogCategoryController')->except('show', 'create');
@@ -54,8 +55,13 @@ Route::group(['middleware' => ['auth:admin', 'verified'], 'as' => 'admin.'], fun
     Route::get('reports', 'ReportController@index')->name('reports.index');
 
     Route::get('reports/salesBy', 'SalesByController@index')->name('reports.salesBy');
-    Route::post('reports/salesBy', 'SalesByController@index')->name('reports.salesBy');
-    
+    Route::get('reports/salesBy/products', 'SalesByController@index')->name('reports.salesBy.products');
+
+    Route::group(['prefix' => 'landing-page', 'as' => 'landing_page_'], function () {
+        Route::get('items/{item}/status', 'LandingPageController@changeStatus')->name('items.status');
+        Route::resource('items', 'LandingPageController');
+    });
+
     Route::resource('customers', 'CustomerController')->only('index', 'show', 'destroy');
 
     Route::group(['prefix' => 'contact', 'as' => 'contact.'], function () {

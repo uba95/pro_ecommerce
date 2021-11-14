@@ -11,7 +11,7 @@
                     @endif
                 </div>
                 <div class="top_bar_contact_item">
-                    @if ($site_settings->phone)
+                    @if ($site_settings->email)
                         <div class="top_bar_icon">
                             <img src="{{ asset('frontend/images/mail.png')}}" alt="">
                         </div>
@@ -19,28 +19,7 @@
                     @endif
                 </div>
                 <div class="top_bar_content ml-auto">
-                    <div class="top_bar_menu">
-                        <ul class="standard_dropdown top_bar_dropdown">
-                            <li>
-                                <a href="#">English<i class="fas fa-chevron-down"></i></a>
-                                <ul>
-                                    <li><a href="#">Italian</a></li>
-                                    <li><a href="#">Spanish</a></li>
-                                    <li><a href="#">Japanese</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">$ US dollar<i class="fas fa-chevron-down"></i></a>
-                                <ul>
-                                    <li><a href="#">EUR Euro</a></li>
-                                    <li><a href="#">GBP British Pound</a></li>
-                                    <li><a href="#">JPY Japanese Yen</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
                     <div class="top_bar_user">
-
                         @guest('web')
                         <div>
                             <a href="{{ route('login') }}">

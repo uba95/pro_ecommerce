@@ -21,7 +21,7 @@ class CacheBrand
     {
         Cache::forget('brands');
         Cache::rememberForever('brands', function () {
-            return Brand::orderBy('id')->pluck('brand_name', 'brand_slug');
+            return Brand::orderBy('id')->get();
         });
     }
 }

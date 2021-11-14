@@ -11,14 +11,19 @@ use Gloudemans\Shoppingcart\CanBeBought;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Gloudemans\Shoppingcart\Contracts\Buyable;
 use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
+use Illuminate\Support\Facades\DB;
 use Spatie\Enum\Laravel\HasEnums;
-
+use App\Traits\DateScopesTrait;
 class Product extends Model implements Buyable
 {
     use CanBeBought;
     use Sluggable;
     use SluggableScopeHelpers;
     use HasEnums;
+    use DateScopesTrait;
+    
+    const IMAGES_STOREAGE = 'media/products/images/';
+    const COVERS_STOREAGE = 'media/products/covers/';
 
     protected $guarded = [];
     protected $casts = ['product_color' => 'array', 'product_size' => 'array', 'status' => 'int'];
@@ -45,6 +50,11 @@ class Product extends Model implements Buyable
         return $this->hasMany(ProductRating::class);
     }
 
+    public function reviews() {
+        
+        return $this->hasMany(ProductReview::class);
+    }
+
     public function hotDeal() {
         
         return $this->hasOne(HotDealProduct::class);
@@ -55,9 +65,14 @@ class Product extends Model implements Buyable
         return $this->hasOne(ProductMeta::class);
     }
 
+    // public function reviews() {
+
+    //     return $this->belongsToMany(User::class, 'product_reviews')->withPivot('headline', 'body');
+    // }
+
     // public function getUserRateAttribute() {
         
-    //     return optional($this->ratings->firstWhere('user_id', Auth::id()))->value;
+    //     return optional($this->ratings->firstWhere('user_id', current_user()->id))->value;
     // }
 
     public function getRatingAvgAttribute() {
@@ -65,16 +80,35 @@ class Product extends Model implements Buyable
         return number_format($this->ratings()->avg('value') / 10, 1);
     }
 
+    public function getRatingAggAttribute() {
+         
+        return $this->ratings()->selectRaw('avg(`value`) avg, count(*) count')->pluck('avg', 'count');
+    }
+
+    public function userReviewRating($review_user_id) {
+        
+        return number_format(optional($this->ratings->where('user_id', $review_user_id)->first())->value / 10, 1);
+    }
+
     public function getCoverAttribute($value) {
         return asset($value ? 'storage/'. $value : 'storage/media/default.png');
     }
 
     public function getDiscountPercentAttribute() {
-        return intval((($this->selling_price - $this->discount_price) / $this->selling_price) * 100);
+        return intval(getDiscountPercent($this->selling_price,  $this->discount_price));
     }
 
     public function getStockStatusAttribute() {
         return $this->product_quantity > 5 ? "in" : ($this->product_quantity == 0 ? "out" : "only");
+    }
+
+    public function scopeStockStatusQuantity($q, $status) {
+        $getStatusQuantity = [
+            'in' => '> 5',
+            'only' => 'BETWEEN 1 AND 5' ,
+            'out' => '= 0',
+        ][$status];    
+        return $q->whereRaw("product_quantity " . $getStatusQuantity);
     }
     
     public function getVideoEmbedAttribute() {
@@ -84,7 +118,17 @@ class Product extends Model implements Buyable
     }
 
     public function  scopeSelection($q){
-        return $q->select('products.id','products.brand_id', 'products.category_id', 'products.subcategory_id', 'product_name', 'product_slug', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'cover', 'status');
+        $ar = ['id','brand_id', 'category_id', 'subcategory_id', 'product_name', 'product_slug', 'product_quantity', 'selling_price', 'discount_price', 'cover', 'status', 'created_at'];
+        $ar = array_map(fn($v) => 'products.'. $v, $ar);
+        return $q->select(...$ar);
+    }
+
+    public function  scopeSelection2($q){
+        return $q->selection()->addSelect('products.product_color');
+    }
+
+    public function  scopeActive($q){
+        return $q->whereEnum('status', 'active');
     }
     
     public function  scopeFilterPrice($q, $min, $max){
@@ -116,6 +160,16 @@ class Product extends Model implements Buyable
         ->leftJoin('brands', 'products.brand_id', 'brands.id');
     }
 
+    public function scopeSoldQuantities($q) {
+        $q->addSelect(DB::raw('IFNULL(SUM(order_items.product_quantity),0) AS sold_quantity'))
+        ->leftJoin('order_items', 'products.id', 'order_items.product_id')
+        ->groupBy('products.id');
+    }
+        
+    public function getAvailableQuantityPercentAttribute() {
+        return intval(($this->product_quantity / ($this->product_quantity + $this->sold_quantity)) * 100);
+    }
+
     public function sluggable(): array
     { 
         return [
@@ -126,4 +180,7 @@ class Product extends Model implements Buyable
         ];
     }
 
+    public function isNew($days = 30) {
+        return $this->created_at->greaterThan(now()->subDays($days));
+    }
 }

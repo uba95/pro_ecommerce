@@ -1,3 +1,4 @@
+@if (Session::get('recently_viewed'))
 <div class="viewed">
     <div class="container">
         <div class="row">
@@ -13,11 +14,11 @@
                     <!-- Recently Viewed Slider -->
                     <div class="owl-carousel owl-theme viewed_slider">
 
-                        @foreach (Session::get('view_products') ?? [] as $product)
+                        @foreach (Session::get('recently_viewed') as $product)
                             <!-- Recently Viewed Item -->
                             <div class="owl-item">
                                 <div
-                                    class="viewed_item {{ $product->discount_price ? 'discount' :  ($product->hot_new ? 'is_new' : '') }} d-flex flex-column align-items-center justify-content-center text-center">
+                                    class="viewed_item {{ $product->discount_price ? 'discount' :  ($product->isNew() ? 'is_new' : '') }} d-flex flex-column align-items-center justify-content-center text-center">
                                     <div class="viewed_image"><img src="{{ $product->cover}}" alt="" height="120" width="100"></div>
                                     <div class="viewed_content text-center">
                                         @if ($product->discount_price)
@@ -50,3 +51,4 @@
         </div>
     </div>
 </div>
+@endif

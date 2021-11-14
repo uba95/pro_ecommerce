@@ -34,6 +34,23 @@
 
     <!-- toastr -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
+    <style>
+        	.scroll_bar::-webkit-scrollbar {
+					height: 3px;
+				}
+			}
+			.scroll_bar::-webkit-scrollbar-track {
+				box-shadow: inset 0 0 5px grey;
+				border-radius: 20px;
+			}
+			.scroll_bar::-webkit-scrollbar-thumb {
+				background: #0e8ce4;
+				border-radius: 20px;
+			}
+			.scroll_bar::-webkit-scrollbar-thumb:hover {
+				background: #005aff;
+			}
+    </style>
     @stack('styles')
 
 </head>
@@ -78,9 +95,9 @@
 <script src="{{ asset('frontend/plugins/slick-1.8.0/slick.js')}}"></script>
 <script src="{{ asset('frontend/plugins/easing/easing.js')}}"></script>
 
-@unless (in_array(Route::currentRouteName(), ['products.show', 'cart.show']))
+@if (in_array(Route::currentRouteName(), ['pages.landing_page.index']))
     <script src="{{ asset('frontend/js/custom.js')}}"></script>
-@endunless
+@endif
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
@@ -106,7 +123,7 @@
     @if(Session::has('verified') === true)
           toastr.success("Your Email Has Been Successfully Verified");
     @endif
- </script> 
+</script> 
   
     <script type="text/javascript">
         $(document).ready(function(){
@@ -288,7 +305,10 @@
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    //  window.location.href = link;
+                    var formaction = $(this).attr('formaction')
+                    if (formaction) {
+                        form.attr('action', formaction)
+                    }
                     form.submit();
                 }
             });

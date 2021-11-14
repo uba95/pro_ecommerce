@@ -21,13 +21,14 @@
 
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item"> <a href="{{ route('home') }}">Home</a></li>
+                            <li class="list-group-item"> <a href="{{ route('home.edit') }}">My Account</a></li>
                             @if (!empty(current_user()->getOriginal('password')))
-                                <li class="list-group-item"> <a href="{{ route('home.password') }}">Change Password</a></li>
+                                <li class="list-group-item"> <a href="{{ route('home.password') }}">Change My Password</a></li>
                             @endif
-                            <li class="list-group-item"> <a href="{{ route('addresses.index') }}">Addresses</a> </li>
-                            <li class="list-group-item"> <a href="{{ route('orders.index') }}">Orders</a> </li>
-                            <li class="list-group-item"> <a href="{{ route('cancel_orders.index') }}">Cancel Order Requests</a> </li>
-                            <li class="list-group-item"> <a href="{{ route('return_orders.index') }}">Return Order Requests</a> </li>
+                            <li class="list-group-item"> <a href="{{ route('addresses.index') }}">My Addresses</a> </li>
+                            <li class="list-group-item"> <a href="{{ route('reviews.index') }}">My Reviews</a> </li>
+                            <li class="list-group-item"> <a href="{{ route('cancel_orders.index') }}">My Cancel Order Requests</a> </li>
+                            <li class="list-group-item"> <a href="{{ route('return_orders.index') }}">My Return Order Requests</a> </li>
                         </ul>
 
                         <div class="card-body">

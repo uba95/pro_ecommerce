@@ -14,7 +14,7 @@
         </h6>
 
           <div class="table-wrapper">
-            <table id="datatable1" class="table display responsive nowrap">
+            <table id="datatableAjax" class="table display responsive nowrap">
               <thead>
                 <tr>
                   <th class="wd-15p">Message ID</th>
@@ -26,40 +26,19 @@
                   @endcanany
                 </tr>
               </thead>
-              <tbody>
-                @foreach ($messages as $key => $message)
-                    <tr @if (!$message->replied) style="background-color:#c4f9f9 !important" @endif>
-                        <td>{{ $message->id }}</td>
-                        <td>{{ ucwords($message->name) }}</td>
-                        <td>{{ Str::limit($message->subject, 30)  }}</td>
-                        <td>{{ $message->created_at->diffForHumans() }}</td>
-                        @canany(['view contact messages', 'reply contact messages', 'delete contact messages'])
-                        <td class="d-flex">
-                              @can('view contact messages')
-                                <a href ='{{ route('admin.contact.messages.show', $message->id) }}'>
-                                    <i class=" btn btn-sm btn-info fa fa-eye fa-fw" title="view"></i>
-                                </a>
-                              @endcan
-                              @can('reply contact messages')
-                                <a href ='{{ route('admin.contact.messages.reply', $message->id) }}'>
-                                    <i class=" btn btn-sm btn-success ml-1 fa fa-reply fa-fw" title="reply"></i>
-                                </a>
-                              @endcan
-                              @can('delete contact messages')
-                                <form method="POST" action='{{ route('admin.contact.messages.destroy', $message->id) }}' class="delete">
-                                    @csrf @method('DELETE')
-                                    <i class=" btn btn-sm btn-danger ml-1 fa fa-trash fa-fw" title="delete"></i>
-                                </form>
-                              @endcan
-                          </td>
-                        @endcanany
-                    </tr>
-                @endforeach
-              </tbody>
             </table>
           </div><!-- table-wrapper -->
         </div><!-- card -->
       </div><!-- sl-pagebody -->
     </div><!-- sl-mainpanel -->
-    <!-- ########## END: MAIN PANEL ########## -->      
+    <!-- ########## END: MAIN PANEL ########## -->
+    @push('datatableAjax')
+      columns: [
+        { data: "id"},
+        { data: "name"},
+        { data: "subject"},
+        { data: "created_at"},
+        { data: 'action', orderable: false, searchable: false}
+      ],
+    @endpush  
 @endsection

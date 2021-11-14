@@ -16,6 +16,14 @@ class ReturnOrderRequest extends Model
     protected $guarded = [];
     protected $casts = ['shipping_started_at' => 'datetime', 'shipping_returned_at' => 'datetime', 'status' => 'int'];
     protected $enums = ['status' => ReturnOrderStatus::class];
+    const REASONS = [
+        "I don't want the product any more",
+        "Wrong product was shipped",
+        "Package arrived damaged",
+        "Product doesn’t work",
+        "Product doesn’t match the description",
+        "Other",
+    ];
 
     public function order() {
      
@@ -39,14 +47,7 @@ class ReturnOrderRequest extends Model
 
     public function getReasonAttribute($value) {
      
-        return [
-            "I don't want the product any more",
-            "Wrong product was shipped",
-            "Package arrived damaged",
-            "Product doesn’t work",
-            "Product doesn’t match the description",
-            "Other",
-        ][$value];
+        return self::REASONS[$value];
     }
 
     public function scopeTotalReturn($q) {

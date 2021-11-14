@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EditUserRequest;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -14,14 +15,17 @@ use Illuminate\Support\Facades\Validator;
 
 class HomeController extends Controller
 {
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+    
     public function index()
     {
-        return view('auth.edit');
+      return view('pages.orders.index', [
+        'orders' => Order::with('user:id,name', 'shipment:order_id,courier')->where('user_id', current_user()->id)->latest()->get()
+      ]);
+    }
+
+    public function edit()
+    {
+      return view('auth.edit');    
     }
 
     protected function validator(array $data)
@@ -42,7 +46,7 @@ class HomeController extends Controller
       if ($request->hasFile('avatar')) {
         // delete old avatar & upload the new one
         Storage::disk('public')->delete($user->getOriginal('avatar'));
-        $attributes['avatar'] = img_upload($request->file('avatar'), 'media/users/avatars/', true);
+        $attributes['avatar'] = img_upload($request->file('avatar'), User::AVATARS_STOREAGE, true);
       }
       
       $user->update($attributes);
@@ -57,7 +61,7 @@ class HomeController extends Controller
 
     public function updatePassword(Request $request) {
   
-      $user = User::findOrFail(Auth::id());
+      $user = User::findOrFail(current_user()->id);
 
       $attributes = $request->validate([
         'oldpass' => ['required'],

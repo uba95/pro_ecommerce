@@ -25,7 +25,7 @@ class BlogPostRequest extends FormRequest
     public function rules()
     {
         return [
-            'category_id' => 'numeric|required',
+            'category_id' => 'required|exists:blog_categories,id',
             'post_title' => 'required',
             'details' => 'required|min:30',
             'post_image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:4096',

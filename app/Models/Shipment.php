@@ -22,8 +22,7 @@ class Shipment extends Model
     protected $parcel;
     protected $shipment;
 
-    public function __construct()
-    {
+    public function __construct() {
         Shippo::setApiKey(config('shop.shipping_token'));
     }
     
@@ -32,33 +31,29 @@ class Shipment extends Model
         return $this->belongsTo(Address::class);
     }
 
-    public function addShip($ship)
-    {
-        $content = new Collection();
-        $content->put($ship->object_id, $ship);
-        Session::put('ship', $content);
-
-        return $ship;
+    public function order() {
+     
+        return $this->belongsTo(Order::class);
     }
 
-    public static function session_content() : array
-    {
-        $s = Session::get('ship');
+    public function addShipmentSession($shipment) {
+        $content = new Collection();
+        $content->put($shipment->object_id, $shipment);
+        Session::put('shipment', $content);
+        return $shipment;
+    }
+
+    public static function getRates() : array {
+        $s = Session::get('shipment');
         return $s ?  $s->first()->rates : [];
     }
 
-    public static function session_remove()
-    {
-         Session::forget('ship');
-         return Session::save();
-
+    public static function session_remove() {
+        Session::forget('shipment');
+        return Session::save();
     }
 
-    /**
-     * Address where the shipment will be picked up
-     */
-    public static function setAddress(Address $address, $returnOrder = false) :object
-    {
+    public static function setAddress(Address $address, $returnOrder = false) :object {
         $warehouse = [
             'name' => config('app.name'),
             'street1' => config('shop.warehouse.address_1'),
@@ -86,39 +81,6 @@ class Shipment extends Model
         return  $o;
     }
 
-    public function readyShipment()
-    {
-        $shipment = Shippo_Shipment::create([
-                'address_from'=> $this->pickedupAddress,
-                'address_to'=> $this->deliveryAddress,
-                'parcels'=> $this->parcel,
-                'async'=> false
-        ]); 
-        $this->addShip($shipment);  
-        return $shipment; 
-    }
-
-    /**
-     * @param string $id
-     * @param string $currency
-     *
-     * @return \Shippo_Shipment
-     */
-    public static function getRates(string $id, string $currency = 'USD')
-    {
-        return Shippo_Shipment::get_shipping_rates(compact('id', 'currency'));
-    }
-
-    public static function retrieveRate(string $id)
-    {
-        return Shippo_Rate::retrieve($id);
-    }
-
-    /**
-     * @param Collection $collection
-     *
-     * @return void
-     */
     public function readyParcel(Collection $collection, $cart = true)
     {
         $weight =  $cart ?  Cart::weight() : $collection->map(fn($v) => $v->product_weight * $v->product_quantity)->sum();
@@ -136,26 +98,29 @@ class Shipment extends Model
         return $this;
     }
 
-    // public function transaction($selected_rate_object_id) {
-    
+    public function readyShipment() {
+        $shipment = Shippo_Shipment::create([
+                'address_from'=> $this->pickedupAddress,
+                'address_to'=> $this->deliveryAddress,
+                'parcels'=> $this->parcel,
+                'async'=> false
+        ]); 
+        $this->addShipmentSession($shipment);  
+        return $shipment; 
+    }
 
-    //     $transaction = Shippo_Transaction::create(array(
-    //         'rate'=> $selected_rate_object_id,
-    //         'async'=> false,
-    //     ));
-        
-    //     // Print the shipping label from label_url
-    //     // Get the tracking number from tracking_number
-    //     if ($transaction['status'] == 'SUCCESS'){
-    //         echo "--> " . "Shipping label url: " . $transaction['label_url'] . "\n";
-    //         echo "--> " . "Shipping tracking number: " . $transaction['tracking_number'] . "\n";
-    //     } else {
-    //         echo "Transaction failed with messages:" . "\n";
-    //         foreach ($transaction['messages'] as $message) {
-    //             echo "--> " . $message . "\n";
-    //         }
-    //     }
-        
+    /**
+     * @param string $id
+     * @param string $currency
+     *
+     * @return \Shippo_Shipment
+     */
+    // public static function getRates(string $id, string $currency = 'USD') {
+    //     return Shippo_Shipment::get_shipping_rates(compact('id', 'currency'));
+    // }
+
+    // public static function retrieveRate(string $id) {
+    //     return Shippo_Rate::retrieve($id);
     // }
 
 }

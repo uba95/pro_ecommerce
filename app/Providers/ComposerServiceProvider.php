@@ -28,14 +28,14 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer(['layouts.app.index', 'layouts.app.main_nav', 'pages.shop.*'], function ($view) {
+        view()->composer(['layouts.app.index', 'layouts.app.main_nav', 'pages.shop.*', 'pages.product.index', 'pages.landing_page.*'], function ($view) {
             $view->with('categories', Cache::rememberForever('categories', function () {
-                return Category::with('subcategories:category_id,subcategory_name,subcategory_slug')->get();
+                return Category::with('subcategories:id,category_id,subcategory_name,subcategory_slug')->get();
             }));
         });
-        view()->composer(['layouts.app.index', 'layouts.app.main_nav', 'pages.shop.*'], function ($view) {
+        view()->composer(['layouts.app.index', 'layouts.app.main_nav', 'pages.shop.*', 'pages.product.index'], function ($view) {
             $view->with('brands', Cache::rememberForever('brands', function () {
-                return Brand::orderBy('id')->pluck('brand_name', 'brand_slug');
+                return Brand::orderBy('id')->get();
             }));
         });
         view()->composer(['layouts.app.index', 'pages.contact'], function ($view) {

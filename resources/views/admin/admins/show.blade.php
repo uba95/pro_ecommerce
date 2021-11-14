@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <img src="{{ $admin->avatar }}" alt="">
+                            <img src="{{ $admin->avatar }}" alt="" style="max-width: 100%">
                         </div>
                 </div>
 

@@ -7,6 +7,7 @@ use App\Enums\ReturnOrderStatus;
 use Illuminate\Http\Request;
 use App\Models\ReturnOrderRequest;
 use App\Http\Controllers\Controller;
+use App\Services\AjaxDatatablesService;
 use Spatie\Enum\Laravel\Rules\EnumRule;
 
 class ReturnOrderRequestController extends Controller
@@ -18,14 +19,17 @@ class ReturnOrderRequestController extends Controller
 
     public function index(Request $request) {
         $returnOrders = ReturnOrderRequest::with(
-            'order:id,user_id,payment_method,total_price,status,created_at',
+            'order:id,user_id,status,created_at',
             'order.user:id,name'
-        );
-        $return_order_requests = $request->status && in_array($request->status, ReturnOrderStatus::getValues())
-        ? $returnOrders->whereEnum('status', $request->status)->get()
-        : $returnOrders->get();
+        )->select('return_order_requests.*');
 
-        return view('admin.orders.return_order_requests', compact('return_order_requests'));    
+        $return_order_requests = $request->status && in_array($request->status, ReturnOrderStatus::getValues())
+        ? $returnOrders->whereEnum('status', $request->status)
+        : $returnOrders;
+
+        return  request()->expectsJson() 
+                ? AjaxDatatablesService::return_order_requests($return_order_requests) 
+                : view('admin.orders.return_order_requests');
     }
 
     public function show(ReturnOrderRequest $returnOrder) {

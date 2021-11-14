@@ -138,47 +138,6 @@
   
               <hr>
 
-              <div class="row mg-b-25">
-                <div class="col-lg-4">
-                    <label class="ckbox">
-                      <input type="checkbox" name="main_slider">
-                      <span>Main Slider</span>
-                    </label>
-                </div><!-- col-4 -->
-                <div class="col-lg-4">
-                    <label class="ckbox">
-                      <input type="checkbox" name="hot_deal">
-                      <span>Hot Deal</span>
-                    </label>
-                </div><!-- col-4 -->
-                <div class="col-lg-4">
-                    <label class="ckbox">
-                      <input type="checkbox" name="best_rated">
-                      <span>Best Rated</span>
-                    </label>
-                </div><!-- col-4 -->
-                <div class="col-lg-4">
-                    <label class="ckbox">
-                      <input type="checkbox" name="mid_slider">
-                      <span>Mid Slider</span>
-                    </label>
-                </div><!-- col-4 -->
-                <div class="col-lg-4">
-                    <label class="ckbox">
-                      <input type="checkbox" name="hot_new">
-                      <span>Hot new</span>
-                    </label>
-                </div><!-- col-4 -->
-                <div class="col-lg-4">
-                    <label class="ckbox">
-                      <input type="checkbox" name="trend">
-                      <span>Trend</span>
-                    </label>
-                </div><!-- col-4 -->
-              </div><!-- row -->
-
-              <hr>
-
               <div class="row  mg-b-25">
                 <div class="col-lg-4">
                   <div class="form-group">

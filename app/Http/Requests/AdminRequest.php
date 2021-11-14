@@ -29,7 +29,7 @@ class AdminRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('admins')->ignore($this->admin)],
             'phone' => ['required', 'string', 'max:255', Rule::unique('admins')->ignore($this->admin)],
             'avatar' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:4096'],
-            'password' => ['required_without:id', 'string', 'min:8', 'confirmed'],
+            'password' => [Rule::requiredIf(!$this->admin), 'string', 'min:8', 'confirmed'],
             'roles' => ['required'],
         ];
     }

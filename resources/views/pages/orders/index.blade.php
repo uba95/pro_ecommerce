@@ -6,7 +6,6 @@
         <thead>
             <tr>
                 <th scope="col">Order #</th>
-                <th scope="col">Payment Method</th>
                 <th scope="col">Total Price</th>
                 <th scope="col">Date</th>
                 <th scope="col">Status</th>
@@ -18,7 +17,6 @@
             @foreach ($orders as $key => $order)
                 <tr>
                     <td>{{ $order->id }}</td>
-                    <td scope="col">{{ $order->payment_method }} </td>
                     <td scope="col">{{ $order->total_price }}$ </td>
                     <td scope="col">{{ $order->created_at->diffForHumans() }} </td>
                     <td scope="col"> @include('layouts.orders.order_status') </td>

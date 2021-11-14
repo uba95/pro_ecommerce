@@ -16,6 +16,11 @@ class Order extends Model
     protected $guarded = [];
     protected $casts = ['status' => 'int'];
     protected $enums = ['status' => OrderStatus::class];
+    const PAYMENT_METHODS = [
+        'cash' => 'Cash On Delivery',
+        'stripe' => 'Stripe',
+        'paypal' => 'PayPal'
+    ];
 
     public function orderItems() {     
         return $this->hasMany(OrderItem::class);
@@ -23,6 +28,10 @@ class Order extends Model
 
     public function shipment() {     
         return $this->hasOne(Shipment::class);
+    }
+
+    public function coupon() {     
+        return $this->belongsTo(Coupon::class);
     }
 
     public function user() {     
@@ -79,6 +88,16 @@ class Order extends Model
 
     public function scopeSold($q) {
         return $q->whereNotEnum('status', ['pending']); 
+    }
+
+    public function scopeCancelable($q) {
+        return $q->whereEnum('status', ['pending', 'paid'])
+        ->whereDoesntHave('cancelOrderRequests', fn($q) => $q->whereEnum('status', ['pending'])); 
+    }
+
+    public function scopeReturnable($q) {
+        return $q->whereEnum('status', ['delivered', 'partiallyReturned'])
+        ->whereDoesntHave('returnOrderRequests', fn($q) => $q->whereEnum('status', ['pending'])); 
     }
 
     public function itemsAreAvailable() {

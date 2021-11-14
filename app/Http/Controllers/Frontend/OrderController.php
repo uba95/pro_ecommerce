@@ -6,30 +6,29 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\ReturnOrderService;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function show($order_id, Request $request)
     {
-        return view('pages.orders.index', [
-          'orders' => Order::with('user:id,name', 'shipment:order_id,courier')->where('user_id', Auth::id())->latest()->get()
-        ]);
-    }
-
-    public function show(Order $order, Request $request)
-    {
-        $orderItems = OrderItem::with('product')->where('order_id', $order->id)->get();
-        $this->authorize('view', $order);
-
+        $order  =  Order::with(['orderItems' => fn($q) => $q->notCanceled()->with('product')])
+            ->where('id', $order_id)
+            ->where('user_id', current_user()->id);
+        
         if ($request->expectsJson()) {
             if ($request->cancel) {
-                return response()->json(OrderItem::withCancelableQuantities($orderItems));
+                $order  = $order->cancelable()->firstOrFail();
+                return response()->json($order->orderItems);
             }
             if ($request->return) {
-                return response()->json(OrderItem::withReturnableQuantities($orderItems));
+                $order  = $order->returnable()->firstOrFail();
+                return response()->json(ReturnOrderService::returnableQuantities($order->orderItems));
             }
         }
-        return view('pages.orders.show', compact('order', 'orderItems')); 
+
+        $order  = $order->firstOrFail();
+        return view('pages.orders.show', compact('order')); 
     }
 }

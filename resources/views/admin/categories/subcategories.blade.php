@@ -105,8 +105,5 @@
           </div><!-- modal-dialog -->
       </div><!-- modal -->
 
-      @push('styles')
-        <style>.select2-container {width: 100% !important}</style>
-      @endpush
     @endcan
 @endsection

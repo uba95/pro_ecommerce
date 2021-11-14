@@ -164,19 +164,19 @@
 
             #progressbar #order:before {
                 font-family: "Font Awesome 5 Free";
-                content: "\f023";
+                content: "\f328";
                 font-weight: 900;
             }
 
             #progressbar #reason:before {
                 font-family: "Font Awesome 5 Free";
-                content: "\f007";
+                content: "\f075";
                 font-weight: 900;
             }
 
             #progressbar #address:before {
                 font-family: "Font Awesome 5 Free";
-                content: "\f007";
+                content: "\f3c5";
                 font-weight: 900;
             }
 
@@ -188,7 +188,7 @@
 
             #progressbar #courier:before {
                 font-family: "Font Awesome 5 Free";
-                content: "\f00c";
+                content: "\f0d1";
                 font-weight: 900;
             }
 
@@ -280,32 +280,23 @@
                                                 @endforeach
                                                 </select>
 
-                                                <label id="order_items_label" style="display: none" for="order_items" class="mt-4">Order Items</label>
-                                                <table class="table" style="display: none" id="order_items">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">Select</th>
-                                                            <th scope="col">Name</th>
-                                                            <th scope="col">Color</th>
-                                                            <th scope="col">Size</th>
-                                                            <th scope="col">Quantity</th>
-                                                            <th scope="col">Unit Price</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="order_item">
-                                                    </tbody>
-                                                </table>
-
-                                                @if ($errors->any())
-                                                    <div class="alert alert-danger mt-5">
-                                                        <ul>
-                                                            @foreach ($errors->all() as $error)
-                                                                <li class="mg-t-10"><strong>{{ $error }}</strong></li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @endif
-                                        
+                                                <div style="display: none" id="order_items">
+                                                    <label id="order_items_label" for="order_items" class="mt-4">Order Items</label>
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col">Select</th>
+                                                                <th scope="col">Name</th>
+                                                                <th scope="col">Color</th>
+                                                                <th scope="col">Size</th>
+                                                                <th scope="col">Quantity</th>
+                                                                <th scope="col">Unit Price</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="order_item">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div> 
                                             <input type="button"  class="next action-button" value="Next Step" />
                                         </fieldset>
@@ -317,12 +308,9 @@
                                                 <label for="reason_select">Reason</label>
                                                 <select name="reason" class="custom-select d-block w-100" id="reason_select" required>
                                                 <option value="">Choose Reason</option>
-                                                <option value="0">I don't want the product any more</option>
-                                                <option value="1">Wrong product was shipped</option>
-                                                <option value="2">Package arrived damaged</option>
-                                                <option value="3">Product doesn’t work</option>
-                                                <option value="4">Product doesn’t match the description</option>
-                                                <option value="5">Other</option>
+                                                @foreach ($reasons as $key => $reason)
+                                                    <option value="{{ $key }}">{{ $reason }}</option>
+                                                @endforeach
                                                 </select>
 
                                                 <label class="mt-4" for="reason_select">details</label>
@@ -496,33 +484,38 @@
                         type:"GET",
                         dataType:"json",
                         success:function(data) { 
-                        var order_item = $('#order_item');
-                        $('#order_items_label').fadeIn();
-                        order_item.empty();
-                        $('#order_items').fadeOut(600, function () {
+
+                            var order_items = $('#order_items');
+                            var order_item = $('#order_item');
+                            
                             if (data.error) {
                                 return toastr.error(data.error)
                             }
-                            data.forEach( (value) => order_item.append(
-                                `
-                                <tr>
-                                    <td scope="row">
-                                        <input name="order_items[]" type="checkbox" value="${value.id}">
-                                    </td>
-                                    <td>${value.product_name}</td>
-                                    <td>${value.product_color}</td>
-                                    <td>${value.product_size}</td>
-                                    <td style="width: 60px">
-                                        <input name="quantity[]" type="number" value="1" min="1" max="${value.product_quantity}">
-                                    </td>
-                                    <td>${value.product_price}$</td>
-                                <tr>
-                                `
-                            ));
-                            var quantity = $('input[name="quantity[]"]');
-                            $('input[name="order_items[]"]').first().prop('checked', true)
-                            quantity.not(quantity.first()).attr('disabled', true);
-                        }).fadeIn(600);
+
+                            order_items.fadeOut(600, function () {
+
+                                order_item.empty();
+                                order_item.append(`<input name="order_id" type="hidden" value="${order_id}">`);
+
+                                data.forEach( (value) => order_item.append(
+                                    `
+                                    <tr>
+                                        <td scope="row">
+                                            <input name="order_items[]" type="checkbox" value="${value.id}">
+                                        </td>
+                                        <td>${value.product_name}</td>
+                                        <td><span style="background-color:${value.product_color}">&nbsp; &nbsp; &nbsp;</span></td>
+                                        <td>${value.product_size}</td>
+                                        <td>
+                                            <input name="quantity[]" type="number" value="1" min="1" max="${value.product_quantity}">
+                                        </td>
+                                        <td>${value.product_price}$</td>
+                                    <tr>
+                                    `
+                                ));
+                                var quantity = $('input[name="quantity[]"]');
+                                quantity.attr('disabled', true);
+                            }).fadeIn(600);
                         },
                         error: function (data) {
                             return toastr.error(data.responseJSON.message)

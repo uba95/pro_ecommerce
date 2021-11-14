@@ -42,34 +42,16 @@ class OrderItem extends Model
     //     // return $q->whereDate('order_items.created_at', '>', now()->subDays(30));
     // }
 
-    public static function withCancelableQuantities($orderItems) {
-
-        return $orderItems->filter(fn($v) => $v->product_quantity > 0)->values();
-        // return tap($orderItems)
-        // ->map(fn($v) => $v->product_quantity -=  $v->cancelOrderItems()->sum('product_quantity'))
-        // ->filter(fn($v) => $v->product_quantity > 0)->values();
+    public function scopeProductSoldQuantities($q) {
+        return $q->selectRaw("
+          order_items.product_id, order_items.product_name,
+          SUM(order_items.product_quantity) AS sold_quantity,
+          SUM(order_items.product_price * order_items.product_quantity) AS sales
+        ")
+        ->groupBy('order_items.product_id');
     }
 
-    public static function cancelableQuantitiesRequset($orderItems, $quantity) {
-
-        $orderItemsCancelableQuantities = self::withCancelableQuantities($orderItems);
-        return $orderItemsCancelableQuantities->every(fn($v, $k) => $v->product_quantity >= $quantity[$k]) 
-        ? tap($orderItemsCancelableQuantities)->map(fn($v, $k) => $v->product_quantity = $quantity[$k])
-        : null;
-    }
-
-    public static function withReturnableQuantities($orderItems) {
-
-        return tap($orderItems)
-        ->map(fn($v) => $v->product_quantity -=  $v->returnOrderItems()->sum('product_quantity'))
-        ->filter(fn($v) => $v->product_quantity > 0)->values();
-    }
-
-    public static function returnableQuantitiesRequset($orderItems, $quantity) {
-
-        $orderItemsReturnableQuantities = self::withReturnableQuantities($orderItems);
-        return $orderItemsReturnableQuantities->every(fn($v, $k) => $v->product_quantity >= $quantity[$k]) 
-        ? tap($orderItemsReturnableQuantities)->map(fn($v, $k) => $v->product_quantity = $quantity[$k])
-        : null;
+    public function scopeNotCanceled($q) {
+        return $q->where('product_quantity', '>', 0);
     }
 }

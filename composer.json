@@ -21,7 +21,8 @@
         "shippo/shippo-php": "1.4",
         "spatie/laravel-enum": "1.6.1",
         "spatie/laravel-permission": "^4.3",
-        "stripe/stripe-php": "^7.63"
+        "stripe/stripe-php": "^7.63",
+        "yajra/laravel-datatables-oracle": "~9.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

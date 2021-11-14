@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\AjaxDatatablesService;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -14,11 +15,10 @@ class CustomerController extends Controller
     }
 
     public function index() {
-        return view('admin.customers.index', ['customers' => User::all()]);
+        return request()->expectsJson() ? AjaxDatatablesService::customers(User::select()) : view('admin.customers.index');
     }
 
     public function show(User $customer) {
-
         return view('admin.customers.show', compact('customer'));
     }
 

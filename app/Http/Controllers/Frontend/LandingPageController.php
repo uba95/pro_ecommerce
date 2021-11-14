@@ -6,32 +6,56 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Http\Controllers\Controller;
 use App\Models\HotDealProduct;
+use App\Models\LandingPageItem;
 use App\Models\Product;
+use App\Services\ReportService;
 use Illuminate\Support\Facades\DB;
 
 class LandingPageController extends Controller
 {
     public function __invoke()
     {
-        // $categories = Category::with('subcategories:category_id,subcategory_name')->get();
-        // $categories = DB::table('categories')->get();
-        // $subcategories = DB::table('subcategories')->get();
+        $featured_products = Product::active()->selection2()->inRandomOrder()->limit(18)->get();
 
-        // $featured_products = Product::selection()->where('status', 1)->with('brand:id,brand_name')->latest()->get();
-        // productSelectScope(DB::table('products')->where('status', 1)->join('brands', 'products.brand_id', 'brands.id')->addSelect('brands.brand_name'))->latest('products.created_at')->get();
-        $featured_products = Product::whereEnum('status', 'active')->join('brands', 'products.brand_id', 'brands.id')
-        ->selection()->addSelect('brands.brand_name')->latest('id')->get();
-        $main_slider_product = $featured_products->filter(fn($v) => $v->main_slider == 1)->first();
-        $trend_products = $featured_products->filter(fn($v) => $v->trend == 1);
-        $best_rated_products = $featured_products->filter(fn($v) => $v->best_rated == 1);
-        $mid_slider_products = $featured_products->filter(fn($v) => $v->mid_slider == 1);
-        $hot_deal_products =    HotDealProduct::with('product')
-                                ->whereHas('product' ,  fn($q) => $q->where('product_quantity', '>', 0))
-                                ->where('started_at', '<', now())
-                                ->whereEnum('status', 'active')
-                                ->latest()
-                                ->get();
+        $trend_products = ReportService::mostSoldProducts(18)->map->product;
 
-        return view('pages.landing_page.index', compact('main_slider_product', 'featured_products', 'trend_products', 'best_rated_products', 'hot_deal_products', 'mid_slider_products'));
+        $best_rated_products = Product::selection2()
+        ->orderByRaw('(SELECT AVG(value) FROM product_ratings WHERE products.id = product_ratings.product_id) DESC')
+        ->limit(18)
+        ->get();
+
+        $hot_deal_products =  HotDealProduct::with([
+            'product' => fn($q) => $q->selection2()->soldQuantities()
+        ])->whereHas('product' ,  fn($q) => $q->where('product_quantity', '>', 0)->active())
+        ->where('started_at', '<', now())
+        ->active()
+        ->latest()
+        ->get();
+
+        $new_arrivals_products = Product::selection2()->lastdays(30)->latest()->limit(20)->get();
+
+        $discounts_products = Product::selection2()->with(['ratings' => fn($q) => $q->getAvg()])
+        ->whereNotNull('discount_price')
+        ->latest()
+        ->limit(20)
+        ->get();
+
+        $trend_year_products = ReportService::mostSoldProducts(10, 'lastdays', 365)->map->product;
+
+        $landing_page_items = LandingPageItem::active()
+        ->with([ 
+            'product:id,category_id,product_name,product_slug,discount_price,selling_price', 
+            'product.ratings' => fn($q) => $q->getAvg()
+        ])
+        ->get();
+
+        $main_banner = $landing_page_items->filter(fn($v) => $v->is_main_banner)->random();
+
+        $banner_slider_items = $landing_page_items->filter(fn($v) => $v->is_banner_slider);
+
+        $ad_count = $landing_page_items->filter(fn($v) => $v->is_advert)->count();
+        $adverts = $landing_page_items->filter(fn($v) => $v->is_advert)->random($ad_count < 3 ? $ad_count : 3);
+
+        return view('pages.landing_page.index', compact('main_banner', 'featured_products', 'trend_products', 'best_rated_products', 'hot_deal_products', 'banner_slider_items', 'adverts', 'new_arrivals_products', 'discounts_products', 'trend_year_products'));
     }
 }

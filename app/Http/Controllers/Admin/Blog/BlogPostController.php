@@ -32,7 +32,7 @@ class BlogPostController extends Controller
 
         if($request->post_image) {
             
-            $validatedData['post_image'] = $request->file('post_image')->store('media/blog', 'public');
+            $validatedData['post_image'] = $request->file('post_image')->store(BlogPost::BLOG_STOREAGE, 'public');
         }
 
         BlogPost::create($validatedData);
@@ -52,7 +52,7 @@ class BlogPostController extends Controller
         if($request->post_image) {
 
             Storage::disk('public')->delete($blogPost->getOriginal('post_image'));
-            $validatedData['post_image'] = $request->file('post_image')->store('media/blog', 'public');
+            $validatedData['post_image'] = $request->file('post_image')->store(BlogPost::BLOG_STOREAGE, 'public');
         }
 
         $blogPost->update($validatedData);

@@ -27,7 +27,7 @@ class CheckoutController extends Controller
             $cart_session = $cart_coll->push(Cart::content()->values());
             Session::put('checkout_cart', $cart_session);
 
-            $customer = User::with('addresses')->find(Auth::id());
+            $customer = User::with('addresses')->find(current_user()->id);
             $addresses = $customer->addresses;
             $address = request('address_id') ? $addresses->where('id', request('address_id'))->first() : $addresses->first();
             $shipment = $address && count($cart_products) ? 
@@ -35,14 +35,14 @@ class CheckoutController extends Controller
             
             if (request()->expectsJson()) {
 
-                $html = !$shipment || optional($shipment)->rates 
+                $html = optional($shipment)->rates 
                 ? view('pages.checkout.rates', compact('shipment'))->render()
                 : 'Sorry No Couriers To Your Address'; 
                    
                 return response()->json(compact('html'));    
             }
             
-            return !$shipment || optional($shipment)->rates ? 
+            return optional($shipment)->rates ? 
             view('pages.checkout.index', compact('cart_products', 'addresses', 'shipment')) :
             redirect()->route('home')->with(toastNotification('Sorry No Couriers To Your Address', 'error'));
 

@@ -8,6 +8,7 @@ use App\Services\PaypalService;
 use App\Services\StripeService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaymentRequest;
+use App\Models\Order;
 use Illuminate\Support\Facades\Session;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Shippo_Object;
@@ -35,7 +36,7 @@ class PaymentController extends Controller
                     break;
                 
                 case 'cash':
-                    return OrderService::create('Cash On Delivery', $courier);
+                    return OrderService::create(Order::PAYMENT_METHODS['cash'], $courier, $request->only('billing_address', 'shipping_address'));
                     break;
                 default:
                     return redirect()->route('home')->with(toastNotification('Payment Method Not Exist', 'error'));

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\CancelOrderStatus;
+use App\Enums\OrderStatus;
 use App\Traits\DateScopesTrait;
 use Spatie\Enum\Laravel\HasEnums;
 use Illuminate\Database\Eloquent\Model;
@@ -13,8 +14,8 @@ class CancelOrderRequest extends Model
     use DateScopesTrait;
 
     protected $guarded = [];
-    protected $casts = ['status' => 'int'];
-    protected $enums = ['status' => CancelOrderStatus::class];
+    protected $casts = ['status' => 'int', 'order_status' => 'int'];
+    protected $enums = ['status' => CancelOrderStatus::class, 'order_status' => OrderStatus::class];
 
     public function order() {
      
@@ -24,6 +25,16 @@ class CancelOrderRequest extends Model
     public function cancelOrderItems() {
      
         return $this->hasMany(CancelOrderItem::class, 'request_id');
+    }
+    
+    public function billingAddress() {
+     
+        return $this->belongsTo(Address::class, 'billing_address_id');
+    }
+
+    public function shippingAddress() {
+     
+        return $this->belongsTo(Address::class, 'shipping_address_id');
     }
 
     public function decrementOrderItems() {

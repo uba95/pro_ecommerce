@@ -1,6 +1,5 @@
 @extends('layouts.admin.index')
 
-
 @section('admin_content')
     <!-- ########## START: MAIN PANEL ########## -->
     <div class="sl-mainpanel">
@@ -13,8 +12,62 @@
 
         @can('view orders')
           
-        <br><br><br>
         <div class="row row-sm mg-t-20">
+          <div class="col-lg-12">
+            <div class="card overflow-hidden mb-4">
+              <div class="card-header bg-transparent pd-y-20 d-sm-flex align-items-center justify-content-between">
+                <div class="mg-b-20 mg-sm-b-0">
+                  <h6 class="card-title mg-b-5 tx-13 tx-uppercase tx-bold tx-spacing-1">Last 30 Days</h6>
+                  {{-- <span class="d-block tx-12">October 23, 2017</span> --}}
+                </div>
+              </div><!-- card-header -->
+              <div class="card-body pd-0 bd-color-gray-lighter">
+                <div class="row no-gutters tx-center">
+                  {{-- <div class="col-12 col-sm-4 pd-y-20 tx-left">
+                    <p class="pd-l-20 tx-12 lh-8 mg-b-0">Note: Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula...</p>
+                  </div><!-- col-4 --> --}}
+                  @foreach ($last30Days as $key => $item)
+
+                  <div class="col-6 col-sm-2 pd-y-20">
+                    <h4 class="tx-inverse tx-lato tx-bold mg-b-5">{{ $item }}</h4>
+                    <p class="tx-11 mg-b-0 tx-uppercase">{{ $key }}</p>
+                  </div><!-- col-2 -->
+
+                  @endforeach
+
+                </div><!-- row -->
+              </div><!-- card-body -->
+              <div class="card-body pd-0">
+                <canvas id="chartArea1" height="100"></canvas>
+              </div><!-- card-body -->
+            </div><!-- card -->
+          </div>
+
+          <div class="col-lg-6 mg-t-20 mg-lg-t-0">
+            <div class="card mb-4 bd-0">
+              <div class="card-header  card-header-default bg-light card-title tx-uppercase tx-12 mg-b-0 bd-b bd-gray-200">
+                Price Totals
+              </div><!-- card-header -->
+              <div class="card-body bd bd-t-0 rounded-bottom">
+
+                @foreach ($priceTotals as $key => $price)
+                <div class="d-flex justify-content-between tx-inverse  tx-12">
+                  <strong class="tx-uppercase">{{ $key }}</strong>
+                  <span>${{ $price }}</span>
+                </div>
+                <hr>
+                @endforeach
+
+              </div><!-- card-body -->
+            </div><!-- card -->
+          </div>
+
+          <div class="card mb-4 pd-20 pd-sm-25 col-lg-6">
+            <h6 class="card-body-title">Payment Methods Totals</h6>
+            <p class="mg-b-20 mg-sm-b-30"></p>
+            <div id="flotPie2" class="ht-200 ht-sm-250"></div>
+          </div><!-- card -->
+
           <div class="col-lg-6">
             <div class="card p-1">
               <div class="card-header bg-transparent pd-20 bd-b bd-gray-200">
@@ -53,12 +106,10 @@
             </div><!-- card -->
           </div><!-- col-6 -->
 
-
-
-          <div class="col-lg-4 mg-t-20 mg-lg-t-0">
-            <div class="card">
+          <div class="col-lg-6 mg-t-20 mg-lg-t-0">
+            <div class="card mb-4">
               <div class="card-header pd-20 bg-transparent bd-b bd-gray-200">
-                <h6 class="card-title tx-uppercase tx-12 mg-b-0">Latest Product Purchases</h6>
+                <h6 class="card-title tx-uppercase tx-12 mg-b-0">Most Sold Products Last 30 Days</h6>
               </div><!-- card-header -->
               <table class="table table-white table-responsive mg-b-0 tx-12">
                 <thead>
@@ -69,7 +120,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @foreach ($mostSoldProductsThisMonth as $orderItem)
+                  @foreach ($mostSoldProductsLast30Days as $orderItem)
                   <tr>
                     <td class="pd-l-20">
                       <img src="{{ $orderItem->product->cover  }}" class="wd-55" alt="Image">
@@ -97,33 +148,8 @@
               </div><!-- card-footer -->
             </div><!-- card -->
           </div><!-- col-6 -->
-        </div><!-- row -->
-       <br> <br> <br>
-        <div class="row">
-          @foreach ($lists as $key => $list)
-          <div class="col-lg-4 mg-t-20 mg-lg-t-0">
-            <div class="card bd-0">
-              <div class="card-header  card-header-default bg-light card-title tx-uppercase tx-12 mg-b-0 bd-b bd-gray-200">
-                {{ $listsNames[$key] }}
-              </div><!-- card-header -->
-              <div class="card-body bd bd-t-0 rounded-bottom">
-                @foreach ($list as $key => $item)
-                <div class="d-flex justify-content-between tx-inverse  tx-12">
-                  <strong class="tx-uppercase">{{ $key }}</strong>
-                  <span>{{ $item }}</span>
-                </div>
-                <hr>
-                @endforeach
-              </div><!-- card-body -->
-            </div><!-- card -->
-          </div>
-          @endforeach
 
-          <div class="card pd-20 pd-sm-25 col-lg-4">
-            <h6 class="card-body-title">Payment Methods Totals</h6>
-            <p class="mg-b-20 mg-sm-b-30"></p>
-            <div id="flotPie2" class="ht-200 ht-sm-250"></div>
-          </div><!-- card -->
+
         </div><!-- row -->
         
         @endcan
@@ -132,36 +158,109 @@
     </div><!-- sl-mainpanel -->
     <!-- ########## END: MAIN PANEL ########## -->
 
-    @push('charts')
-      <script>
-        var paymentMethods = @json($paymentMethods);
-        var piedata = [];
-        paymentMethods.forEach( (v) => piedata.push({ label: v.label, data: [[1, v.data]], color: v.color}) )
+    @can('view orders')
+      @push('charts')
+        <script>
+          var paymentMethods = @json($paymentMethods);
+          var piedata = [];
+          paymentMethods.forEach( (v) => piedata.push({ label: v.label, data: [[1, v.data]], color: v.color}) )
 
-        $.plot('#flotPie2', piedata, {
-          series: {
-            pie: {
-              show: true,
-              radius: 1,
-              innerRadius: 0.5,
-              label: {
+          $.plot('#flotPie2', piedata, {
+            series: {
+              pie: {
                 show: true,
-                radius: 2/3,
-                formatter: labelFormatter,
-                threshold: 0.1
+                radius: 1,
+                innerRadius: 0.5,
+                label: {
+                  show: true,
+                  radius: 2/3,
+                  formatter: labelFormatter,
+                  threshold: 0.1
+                }
               }
-            }
-          },
-          grid: {
-            hoverable: true,
-            clickable: true
-          },
-          legend: { show: true }
-        });
+            },
+            grid: {
+              hoverable: true,
+              clickable: true
+            },
+            legend: { show: true }
+          });
 
-        function labelFormatter(label, series) {
-          return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + Math.round(series.percent) + "%</div>";
-        }
-      </script>
-    @endpush
+          function labelFormatter(label, series) {
+            return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + Math.round(series.percent) + "%</div>";
+          }
+        </script>
+
+
+        <script>
+
+          $(function() {
+
+            var days = @json($salesLast30Days->collapse()->keys());
+            var sales = @json($salesLast30Days->collapse()->values());
+            var ctx5 = document.getElementById('chartArea1');
+
+            var myChart5 = new Chart(ctx5, {
+              type: 'line',
+              data: {
+                labels: [...days],
+                datasets: [{
+                  data: [...sales],
+                  backgroundColor: '#7CBDDF', //rgba(240, 113, 36, 0.4)
+                  fill: true,
+                  borderWidth: 0,
+                  borderColor: '#fff'
+                }]
+              },
+              options: {
+                legend: {
+                  display: false,
+                    labels: {
+                      display: false
+                    }
+                },
+                layout: {
+                  padding: {
+                      left: 10
+                  }
+                },
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero:true,
+                      fontSize: 11,
+                      max: Math.ceil(Math.max(...sales)/1000)*1000,  
+                      stepSize: 1000, 
+                      callback: function(value) {
+                        var ranges = [
+                            { divider: 1e6, suffix: 'M' },
+                            { divider: 1e3, suffix: 'k' }
+                        ];
+                        function formatNumber(n) {
+                            for (var i = 0; i < ranges.length; i++) {
+                              if (n >= ranges[i].divider) {
+                                  return (n / ranges[i].divider).toString() + ranges[i].suffix;
+                              }
+                            }
+                            return n;
+                        }
+                        return '$' + formatNumber(value);
+                      }
+                    }
+                  }],
+                  xAxes: [{
+                    ticks: {
+                      beginAtZero:true,
+                      fontSize: 10
+                    }
+                  }]
+                }
+              }
+            });
+
+          });
+
+        </script>
+      @endpush
+    @endcan
 @endsection

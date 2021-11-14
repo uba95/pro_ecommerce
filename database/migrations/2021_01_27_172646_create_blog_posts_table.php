@@ -20,6 +20,7 @@ class CreateBlogPostsTable extends Migration
             $table->string('post_slug')->unique();
             $table->string('post_image')->nullable();
             $table->text('details');
+            $table->unsignedTinyInteger('status')->default(0)->index();
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('blog_categories')->onDelete('cascade');

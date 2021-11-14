@@ -59,10 +59,14 @@
                                 </div>
                             </div>
     
-                            <div class="product_grid d-flex">
+                            <div class="product_grid">
                                 <div class="product_grid_border"></div>
-                                <!-- Product Item -->
-                                @include('pages.shop.product')
+                                {{-- <div class="row"> --}}
+                                    {{-- <div class=" "> --}}
+                                        <!-- Product Item -->
+                                        @include('pages.shop.product')
+                                    {{-- </div> --}}
+                                {{-- </div> --}}
                             </div>
     
                             <!-- Shop Page Navigation -->

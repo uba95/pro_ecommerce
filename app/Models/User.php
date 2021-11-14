@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Hash;
 class User extends Authenticatable implements MustVerifyEmail 
 {
     use  Notifiable;
+
+    const AVATARS_STOREAGE = 'media/users/avatars/';
+
     protected $guard = 'web';
 
     /**
@@ -58,7 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function wishlistItems() {
         
-        return $this->belongsToMany(Product::class, 'wishlist_items')->withTimestamps()->select(['id','product_name','selling_price','discount_price','hot_new','cover']);
+        return $this->belongsToMany(Product::class, 'wishlist_items')->withTimestamps()->select(['id','product_name','selling_price','discount_price','cover']);
     }
 
     public function hasProductOnWishlist($product_id) {
@@ -66,19 +69,34 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->wishlistItems->contains('pivot.product_id', $product_id);
     }
 
-    // public function ratings() {
+    public function ratings() {
         
-    //     return $this->hasMany(ProductRating::class);
-    // }
+        return $this->hasMany(ProductRating::class);
+    }
     
     public function productRatings() {
 
-        return $this->belongsToMany(Product::class, 'product_ratings')->withTimestamps()->select('id')->withPivot('value');
+        return $this->belongsToMany(Product::class, 'product_ratings')->withTimestamps()->select('id', 'value');
+    }
+
+    public function reviews() {
+        
+        return $this->hasMany(ProductReview::class);
+    }
+
+    public function productReviews() {
+
+        return $this->belongsToMany(Product::class, 'product_reviews')->withTimestamps()->selection()->withPivot('headline', 'body');
     }
 
     public function theirProductRating($product_id) {
         
-        return optional($this->productRatings()->firstWhere('products.id', $product_id))->value;
+        return number_format($this->ratings()->where('product_id', $product_id)->value('value') / 10, 1);
+    }
+
+    public function theirProductReview($product_id) {
+        
+        return $this->reviews()->firstWhere('product_id', $product_id);
     }
 
     public function getAvatarAttribute($value) {

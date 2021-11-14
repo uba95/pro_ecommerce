@@ -43,6 +43,8 @@
     <link href="{{asset('backend/lib/highlightjs/github.css')}}" rel="stylesheet">
     <link href="{{asset('backend/lib/datatables/jquery.dataTables.css')}}" rel="stylesheet">
     <link href="{{asset('backend/lib/select2/css/select2.min.css')}}" rel="stylesheet">
+    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css"> --}}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/b-2.0.0/b-colvis-2.0.0/b-html5-2.0.0/b-print-2.0.0/datatables.min.css"/>
 
     <!-- Forms -->
     <link href="{{asset('backend/lib/spectrum/spectrum.css')}}" rel="stylesheet">
@@ -53,6 +55,11 @@
   </head>
   <style>
     table.dataTable.nowrap th, table.dataTable.nowrap td {white-space: initial}
+    .dataTables_wrapper .dataTables_processing {
+      z-index: 9;
+      background: transparent;
+    }
+    .table-wrapper .select2-container {width: 100% !important}
   </style>
   <body>
 
@@ -63,7 +70,6 @@
     @endauth
 
     @yield('admin_content')
-
     <script src="{{asset('backend/lib/jquery/jquery.js')}}"></script>
     <script src="{{asset('backend/lib/popper.js/popper.js')}}"></script>
     <script src="{{asset('backend/lib/bootstrap/bootstrap.js')}}"></script>
@@ -74,32 +80,10 @@
     <script src="{{asset('backend/lib/datatables/jquery.dataTables.js')}}"></script>
     <script src="{{asset('backend/lib/datatables-responsive/dataTables.responsive.js')}}"></script>
     <script src="{{asset('backend/lib/select2/js/select2.min.js')}}"></script>
-    <script src="{{asset('backend/lib/spectrum/spectrum.js')}}"></script>
-    <script>
-      $(function(){
-        'use strict';
-
-        $('#datatable1').DataTable({
-          responsive: true,
-          language: {
-            searchPlaceholder: 'Search...',
-            sSearch: '',
-            lengthMenu: '_MENU_ items/page',
-          }
-        });
-
-        $('#datatable2').DataTable({
-          bLengthChange: false,
-          searching: false,
-          responsive: true
-        });
-
-        // Select2
-        $('.dataTables_length select').select2({ minimumResultsForSearch: Infinity });
-
-      });
-    </script>
-
+    <script src="{{asset('backend/lib/spectrum/spectrum.js')}}"></script> 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jszip-2.5.0/b-2.0.0/b-colvis-2.0.0/b-html5-2.0.0/b-print-2.0.0/datatables.min.js"></script>    
 
     <script>
       $(function(){
@@ -195,6 +179,131 @@
     @stack('charts')
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="{{ asset('https://unpkg.com/sweetalert/dist/sweetalert.min.js')}}"></script>
+    <script>
+      $(function(){
+        'use strict';
+
+        var datatable1 = $('#datatable1').DataTable({
+          dom: 'lBfrtip',
+          lengthMenu: [ 10, 25, 50, 100],
+          responsive: true,
+          buttons: [
+            'copy','excel','pdf','print','colvis'
+          ],
+          language: {
+            searchPlaceholder: 'Search...',
+            sSearch: '',
+            lengthMenu: '_MENU_ items/page',
+          },
+        });
+
+        var datatable2 = $('#datatable2').DataTable({
+          dom: 'lBfrtip',
+          lengthMenu: [ 10, 25, 50, 100],
+          responsive: true,
+          buttons: [
+            'copy','excel','pdf','print','colvis'
+          ],
+          language: {
+            searchPlaceholder: 'Search...',
+            sSearch: '',
+            lengthMenu: '_MENU_ items/page',
+          },
+          columnDefs: [{
+            'targets': 0,
+            "width": "1%",
+            'searchable':false,
+            'orderable':false,
+            'render': function (data, type, full, meta){
+                return '<input type="checkbox" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+            }
+          }],
+        });
+
+        $('#datatableAjax').DataTable({
+              dom: 'lBfrtip',
+              lengthMenu: [ 10, 25, 50, 100],
+              responsive: true,
+              processing: true,
+              serverSide: true,
+              ajax: `{{ request()->url() }}`,
+              @stack('datatableAjax')
+              buttons: [
+                  'copy','excel','pdf','print','colvis'
+              ],
+              language: {
+                searchPlaceholder: 'Search...',
+                sSearch: '',
+                lengthMenu: '_MENU_ items/page',
+                processing: `
+                  <span class="text-primary" style="position:absolute;left: 50%;top:50%">
+                    <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i>
+                    <span class="sr-only">Loading...</span>
+                  </span>
+                  `,
+              },
+              initComplete: function () {
+                $('#fa-spin').hide()
+              }
+        });
+
+        // Select2
+        $('.dataTables_length select').select2({ minimumResultsForSearch: Infinity });
+
+        $('#select-all').on('click', function(){
+          var rows = datatable2.rows({ 'search': 'applied', page: 'current' }).nodes();
+          $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        });
+
+        $(document).on('change', 'input[type="checkbox"]', function(){
+
+          // If checkbox is not checked
+          if(!this.checked) {
+              var el = $('#select-all').get(0);
+              // If "Select all" control is checked and has 'indeterminate' property
+              if(el && el.checked && ('indeterminate' in el)){
+                // Set visual state of "Select all" control
+                // as 'indeterminate'
+                el.indeterminate = true;
+              }
+
+          }
+
+          $('button.select-all').attr('disabled', !this.checked)
+
+        });
+        
+        // Handle form submission event
+        $('button.select-all').on('click', function(e){
+          e.preventDefault();
+
+          swal({
+            title:  "Are You Sure  You Want To Delete All Selected Items?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+
+              var form =  $(this).closest("form");
+
+              datatable2.$('input[type="checkbox"]').each(function(){
+                  if(this.checked){
+                      form.append(
+                        $('<input>')
+                            .attr('type', 'hidden')
+                            .attr('name', this.name)
+                            .val(this.value)
+                      );
+                  }
+              });
+              form.submit();
+            }
+          });
+        });
+      });
+    </script>
 
 
     <script>
@@ -231,33 +340,33 @@
                   var danger = false;
                   switch (myclass) {
                     case ".approve":
-                      title = "Are You Sure Want To Approve This Request?";
+                      title = "Are You Sure You  Want To Approve This Request?";
                       text = "The Order Will Be Canceled";
                       break;
                     case ".refuned":
-                      title = "Are You Sure Payment Is Refunded?";
+                      title = "Are You Sure You  Payment Is Refunded?";
                       break;
                     case ".reject":
-                      title = "Are You Sure Want To Reject This Request?";
+                      title = "Are You Sure You  Want To Reject This Request?";
                       danger = true;
                       break;
 
                     case ".cancel":
-                      title = "Are You Sure Want To Cancel This Order?";
+                      title = "Are You Sure You  Want To Cancel This Order?";
                       danger = true;
                       break;
                     case ".pay":
-                      title = "Are You Sure Want To Accept Payment To This Order?";
+                      title = "Are You Sure You  Want To Accept Payment To This Order?";
                       break;
                     case ".ship":
-                      title = "Are You Sure Want To Start Shipping This Order?";
+                      title = "Are You Sure You  Want To Start Shipping This Order?";
                       break;
                     case ".deliver":
                       title = "Are You Sure This Order Is Delivered?";
                       break;
                   
                     default:
-                      title = "Are You Sure Want To Delete This Item?";
+                      title = "Are You Sure You  Want To Delete This Item?";
                       danger = true;
                       break;
                   }

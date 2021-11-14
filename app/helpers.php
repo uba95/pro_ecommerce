@@ -1,8 +1,31 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Str;
+
+function checkArrayElementsAreUnique($array)  {
+    return count($array) === count(array_flip($array));
+}
+
+function debugInfo($data)  {
+    return Barryvdh\Debugbar\Facade::info($data);
+}
+
+function getDiscountPercent($selling_price,  $discount_price)  {
+    return (($selling_price - $discount_price) / $selling_price) * 100;
+}
+
+function priceAfterDiscount($selling_price,  $percent, $intval = false)  {
+    $price = $selling_price - ($selling_price * $percent / 100);
+    return $intval ? intval($price) : number_format($price, 2);
+}
+
+function discountPrice($price,  $percent)  {
+    $price = ($price * $percent / 100);
+    return number_format($price, 2);
+}
 
 function calculateTotalPrice(float $price, int $quantity) : float {
     return  round($price *  $quantity, 2);
@@ -16,11 +39,6 @@ function  snakeToTitle($value){
 function  camelToTitle($value){
 
     return ucwords(implode(' ', preg_split('/(?=[A-Z])/', $value)));
-}
-
-function  productSelectScope( $q){
-
-    return $q -> select('products.id','brand_id', 'product_name', 'product_quantity', 'selling_price', 'discount_price', 'main_slider', 'hot_deal', 'best_rated', 'mid_slider', 'hot_new', 'trend', 'cover', 'status');
 }
 
 function isAdmin() {
@@ -44,10 +62,10 @@ function current_user(){
 //     return $image_name;
 // }
 
-function img_upload($image, $path = 'media/products/images/', $resize = false) {
+function img_upload($image, $path, $resize = false) {
 
     $image_name = $path . hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
-
+    Log::info($image_name);
     if ($resize) {
         Image::make($image)->resize(300,300)->save(storage_path("app/public/".$image_name));
         return $image_name;

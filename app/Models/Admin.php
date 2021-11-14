@@ -15,8 +15,9 @@ class Admin extends Authenticatable implements MustVerifyEmail
     use Notifiable;
     use HasRoles;
 
+    const AVATARS_STOREAGE = 'media/admins/avatars/';
+
     protected $guarded = [];
-    
     protected $hidden = [
         'password', 'remember_token',
     ];

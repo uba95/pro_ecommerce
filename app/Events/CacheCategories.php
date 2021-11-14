@@ -25,7 +25,7 @@ class CacheCategories
     {
         Cache::forget('categories');
         Cache::rememberForever('categories', function () {
-            return Category::with('subcategories:category_id,subcategory_name,subcategory_slug')->get();
+            return Category::with('subcategories:id,category_id,subcategory_name,subcategory_slug')->get();
         });
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\ProductImage;
 use App\Models\ProductMeta;
+use App\Services\AjaxDatatablesService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\Facades\Image;
@@ -26,8 +27,8 @@ class ProductController extends Controller
     }
 
     public function index() {
-        $products = Product::with('category:id,category_name', 'subcategory:id,subcategory_name','brand:id,brand_name')->get();
-        return view('admin.products.index', compact('products'));
+        $products = Product::with('category:id,category_name', 'subcategory:id,subcategory_name','brand:id,brand_name')->select('products.*');
+        return request()->expectsJson() ? AjaxDatatablesService::products($products) : view('admin.products.index');
     }
 
     public function show(Product $product) {
@@ -46,7 +47,7 @@ class ProductController extends Controller
         $attributes = $request->validated();
     
         if ($request->hasFile('cover')) {
-            $attributes['cover'] = img_upload($request->file('cover'), 'media/products/covers/', true);
+            $attributes['cover'] = img_upload($request->file('cover'), Product::COVERS_STOREAGE, true);
         }
 
         $meta = ['meta_title', 'meta_keywords', 'meta_description'];
@@ -56,7 +57,7 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
 
             $data = ['product_id' => $product->id, 'created_at' => now(), 'updated_at' => now()];
-            $imgs = array_map(fn($v) => img_upload($v), $request->file('image'));
+            $imgs = array_map(fn($v) => img_upload($v, Product::IMAGES_STOREAGE), $request->file('image'));
             
             DB::table('product_images')->insert(
                 array_map(fn($img) => ['name' => $img] + $data , $imgs)    
@@ -90,7 +91,7 @@ class ProductController extends Controller
         if ($request->hasFile('cover')) {
 
             Storage::disk('public')->delete($product->getOriginal('cover'));
-            $attributes['cover'] = img_upload($request->file('cover'), 'media/products/covers/', true);
+            $attributes['cover'] = img_upload($request->file('cover'), Product::COVERS_STOREAGE, true);
         }
         
         $meta = ['meta_title', 'meta_keywords', 'meta_description'];
@@ -100,7 +101,7 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
 
             $data = ['product_id' => $product->id, 'created_at' => now(), 'updated_at' => now()];
-            $imgs = array_map(fn($v) => img_upload($v), $request->file('image'));
+            $imgs = array_map(fn($v) => img_upload($v, Product::IMAGES_STOREAGE), $request->file('image'));
 
             DB::table('product_images')->insert(
                 array_map(fn($img) => ['name' => $img] + $data , $imgs)    

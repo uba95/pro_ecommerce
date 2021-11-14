@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class MyCountryTableSeeder extends Seeder
+class CountrySeeder extends Seeder
 {
     /**
      * Run the database seeds.

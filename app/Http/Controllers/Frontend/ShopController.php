@@ -32,7 +32,7 @@ class ShopController extends Controller
         } 
 
         if ($request->expectsJson()) {
-            $filteredProducts = $products->filterPrice($request->min, $request->max)->paginate(3);
+            $filteredProducts = $products->filterPrice($request->min, $request->max)->paginate(10);
 
             $sort_html =  view('pages.shop.sort')->render();
             $pagination = $filteredProducts->appends(request()->except('page'))->links('vendor.pagination.shop')->render();
@@ -43,7 +43,7 @@ class ShopController extends Controller
         
         return view('pages.shop.index', [
             'model' => $find->modelData,
-            'products' => $products->paginate(3),
+            'products' => $products->paginate(10),
             'homeTitle' => $find->getTitle($request->search)
         ]);
     }

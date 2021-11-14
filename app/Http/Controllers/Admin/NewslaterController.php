@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Newslater;
+use App\Services\AjaxDatatablesService;
 
 class NewslaterController extends Controller
 {
@@ -15,7 +16,7 @@ class NewslaterController extends Controller
     }
 
     public function index() {
-        return view('admin.newslater', ['newslaters' => Newslater::all()]);
+        return request()->expectsJson() ? AjaxDatatablesService::newslaters(Newslater::select()) : view('admin.newslater');
     }
 
     public function destroy(Newslater $newslater) {

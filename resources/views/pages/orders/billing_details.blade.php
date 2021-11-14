@@ -47,7 +47,7 @@
 
         <tr>
           <th> Discount : </th>
-          <th>- {{ $order->discount_price }} $ </th>
+          <th>- {{ $order->discount}} $ </th>
         </tr>
 
         <tr>

@@ -2,13 +2,21 @@
 
 use App\Enums\ReturnOrderStatus;
 use App\Models\Coupon;
+use App\Models\LandingPageItem;
+use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductRating;
 use App\Models\ReturnOrderRequest;
+use App\Models\User;
+use App\Services\OrderService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Gloudemans\Shoppingcart\Facades\Cart;
-
+use Illuminate\Http\File as HttpFile;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 // Route::get('/', function () {return view('pages.landing_page.index');});
 //auth & user
@@ -29,7 +37,6 @@ Route::group(['namespace' => 'Frontend'], function () {
     Route::patch('cart/{cartItem}', 'CartController@update')->name('cart.update');
     Route::delete('cart', 'CartController@destroyAll')->name('cart.destroyAll');
     
-    Route::get('products/{product_slug}', 'ShowProductController')->name('products.show');
     
     Route::get('blog/posts', 'BlogController@index')->name('blog.index');
     Route::get('blog/posts/{blog_post}', 'BlogController@show')->name('blog.show');
@@ -47,6 +54,7 @@ Route::group(['namespace' => 'Frontend'], function () {
     Route::group(['middleware' => ['auth:web', 'verified']], function () {
 
         Route::get('/home', 'HomeController@index')->name('home');
+        Route::get('/home/edit', 'HomeController@edit')->name('home.edit');
         Route::put('/home', 'HomeController@update')->name('home.update')->middleware('password.confirm');
         Route::get('/home/password', 'HomeController@password')->name('home.password');
         Route::put('/home/password/update', 'HomeController@updatePassword')->name('home.password.update');
@@ -66,20 +74,30 @@ Route::group(['namespace' => 'Frontend'], function () {
     
         Route::resource('orders', 'OrderController')->only('index', 'show');
         
-        Route::resource('cancel_orders', 'CancelOrderRequestController')->only('index', 'show','create','store');
+        Route::resource('cancel_orders', 'CancelOrderRequestController')->except('edit', 'update');
         
-        Route::resource('return_orders', 'ReturnOrderRequestController')->only('index', 'show','create','store');
+        Route::resource('return_orders', 'ReturnOrderRequestController')->except('edit', 'update');
 
-        Route::post('product/ratings/{product}', 'ProductRatingController@store')->name('rating.store');
-        Route::delete('product/ratings/{product}', 'ProductRatingController@destroy')->name('rating.destroy');
+        Route::post('products/ratings/{product}', 'ProductRatingController@store')->name('rating.store');
+        Route::delete('products/ratings/{product}', 'ProductRatingController@destroy')->name('rating.destroy');
+
+        Route::get('products/reviews', 'ProductReviewController@index')->name('reviews.index');
+        Route::post('products/reviews/{product}', 'ProductReviewController@store')->name('reviews.store');
+        Route::get('products/reviews/{product_slug}', 'ProductReviewController@edit')->name('reviews.edit');
+        Route::put('products/reviews/{product}', 'ProductReviewController@update')->name('reviews.update');
+        Route::delete('products/reviews/{product}', 'ProductReviewController@destroy')->name('reviews.destroy');
 
         Route::get('ss', function () {
-        // \Debugbar::startMeasure('render');
-		// foreach (App\Models\User::cursor()as $u) {
-		// 	$u->name;
-		// }
-		// \Debugbar::stopMeasure('render');
-		// return view('welcome');
-        });
+
+            //  $faker = Faker\Factory::create();  
+            // $products = Product::all();
+            // for ($i=0; $i < 10; $i++) { 
+            //     factory(LandingPageItem::class)->create(['product_id' => $products->random()->id]);
+            // }
+                        
+     });
     });
+
+    Route::get('products/{product_slug}', 'ShowProductController')->name('products.show');
+    Auth::guard('web')->loginUsingId(7);
 });

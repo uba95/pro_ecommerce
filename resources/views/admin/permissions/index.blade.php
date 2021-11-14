@@ -10,17 +10,25 @@
         </div><!-- sl-page-title -->
 
         <div class="card pd-20 pd-sm-40">
-          <h6 class="card-body-title">
-            Permissions List
+          <h6 class="card-body-title d-flex">
+            
+            <span class="mr-auto">Permissions List</span>
+
             @can('create permissions')
-              <a href="" class="btn btn-sm btn-success float-right" data-toggle="modal" data-target="#modaldemo3">Add New Permission</a>
+              <a href="" class="btn btn-sm btn-success mr-1" data-toggle="modal" data-target="#modaldemo3">Add New Permission</a>
             @endcan
+            @can('delete permissions')
+            <form method="POST" action='{{ route('admin.permissions.destroyAll') }}' class="">
+              @csrf @method('DELETE') <button class="select-all btn btn-sm btn-danger" disabled>Delete All</button> 
+            </form>
+          @endcan
         </h6>
 
           <div class="table-wrapper">
-            <table id="datatable1" class="table display responsive nowrap">
+            <table id="datatable2" class="table display select responsive nowrap">
               <thead>
                 <tr>
+                  <th><input type="checkbox" name="select_all" value="1" id="select-all"></th>
                   <th class="wd-15p">Permission ID</th>
                   <th class="wd-15p">Permission Name</th>
                   @canany(['edit permissions', 'delete permissions'])
@@ -31,6 +39,7 @@
               <tbody>
                 @foreach ($permissions as $key => $permission)
                     <tr>
+                        <td>{{ $permission->id }}</td>
                         <td>{{ $permission->id }}</td>
                         <td>{{ ucwords($permission->name) }}</td>
                         @canany(['edit permissions', 'delete permissions'])

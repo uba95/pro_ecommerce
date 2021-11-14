@@ -12,27 +12,32 @@
         <div class="card pd-20 pd-sm-40">
 
           <div class="table-wrapper">
-            <table id="datatable1" class="table display responsive nowrap">
+            <table id="datatableAjax" class="table display responsive nowrap">
               <thead>
                 <tr>
                   <th class="wd-15p">Product Id</th>
                   <th class="wd-15p">Product Name</th>
                   <th class="wd-15p">Quantity</th>
+                  <th class="wd-15p">Action</th>
                 </tr>
               </thead>
-              <tbody>
-                @foreach ($products as $product)
-                    <tr>
-                        <td>{{ $product->id }}</td>
-                        <td><a href ='{{ route('admin.products.show', $product->id) }}'>{{ $product->product_name }}</a></td>
-                        <td>{{ $product->product_quantity }}</td>
-                    </tr>
-                @endforeach
-              </tbody>
             </table>
           </div><!-- table-wrapper -->
         </div><!-- card -->
       </div><!-- sl-pagebody -->
     </div><!-- sl-mainpanel -->
     <!-- ########## END: MAIN PANEL ########## -->
+    @push('datatableAjax')
+      "ajax": {
+        "url": `{{ request()->url() }}`,
+        "type": 'GET',
+        "data":  {status: '{{request()->status}}'}
+      },
+      columns: [
+        { data: "id" },
+        { data: "product_name" },
+        { data: "product_quantity" },
+        { data: 'action', orderable: false, searchable: false}
+      ],
+    @endpush
 @endsection

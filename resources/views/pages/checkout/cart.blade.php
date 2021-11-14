@@ -22,11 +22,11 @@
                 <i class="fa fas fa-times btn btn-danger" style="font-size: 12px;padding: 0px 2px;"></i>
               </form>
             </h6>
-            <small class="coupon_code">EXAMPLECODE</small>
+            <small class="coupon_code"></small>
   
           </div>
           
-          <span class="text-success">-$<span class="discount_price">5</span></span>
+          <span class="text-success">-$<span class="discount_value">5</span></span>
 
       </li>
     </div>
@@ -35,7 +35,7 @@
       <div>
         <h6 class="my-0">Shipping Cost</h6>
         <small class="text-muted rate_provider">
-          {{  $shipment->rates[0]->servicelevel->name . ' ' .  $shipment->rates[0]->provider }}}}
+          {{  $shipment->rates[0]->servicelevel->name . ' ' .  $shipment->rates[0]->provider }}
         </small> <br>
         <small class="text-muted rate_days"> {{  $shipment->rates[0]->estimated_days  }} days</small>
       </div>
@@ -43,8 +43,8 @@
     </li>
 
     <li class="list-group-item d-flex justify-content-between">
-      <span>Total (USD)</span>
-      <strong class="total_pay">${{ Cart::priceTotal() + $shipment->rates[0]->amount }}</strong>
+      <span>Total</span>
+      <strong>$<span class="total_pay">{{ Cart::priceTotal() + $shipment->rates[0]->amount }}</span></strong>
     </li>
 
     <div class="spinner2 spinner-border text-primary position-absolute"

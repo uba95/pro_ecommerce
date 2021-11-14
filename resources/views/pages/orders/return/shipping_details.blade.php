@@ -29,7 +29,7 @@
         </tr>
 
         <tr>
-          <th> Status: </th>
+          <th>Request Status: </th>
           <th>
             @include('layouts.orders.return_order_request_status', ['request' => $returnOrderRequest])
           </th>

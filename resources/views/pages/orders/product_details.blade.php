@@ -1,7 +1,10 @@
+@push('styles')
+    <style>.table_details td {text-align: center}</style>
+@endpush
 <div class="card col-lg-12 p-0">
     <h6 class="card-header">Product Details</h6>
     <div class="table-wrapper">
-      <table class="table display responsive nowrap">
+      <table class="table table_details display responsive nowrap">
         <thead>
           <tr>
             <th class="wd-15p">Order Item ID</th>
@@ -17,13 +20,13 @@
           </tr>
         </thead>
         <tbody>
-          @foreach($orderItems as $orderItem)
+          @foreach($order->orderItems as $orderItem)
           <tr>
             <td>{{ $orderItem->id }}</td>
             <td>{{ $orderItem->product_id }}</td>
-            <td>{{ $orderItem->product_name }}</td>
+            <td class="text-left">{{ $orderItem->product_name }}</td>
             <td> <img src="{{ $orderItem->product->cover }}" height="50px;" width="50px;"> </td>
-            <td>{{ $orderItem->product_color }}</td>
+            <td><span style="background-color:{{ $orderItem->product_color }}">&nbsp; &nbsp; &nbsp;</span></td>
             <td>{{ $orderItem->product_size }}</td>
             <td>{{ $orderItem->product_quantity }}</td>
             <td>{{ $orderItem->product_weight }}</td>

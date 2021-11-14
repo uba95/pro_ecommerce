@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Mail\ReplyContact as MailReplyContact;
 use App\Models\Contact;
+use App\Services\AjaxDatatablesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -17,7 +18,9 @@ class ContactController extends Controller
     }
 
     public function index() {
-        return view('admin.contact-messages.index', ['messages' => Contact::all()]);
+        return  request()->expectsJson() 
+                ? AjaxDatatablesService::contactMessages(Contact::select()) 
+                : view('admin.contact-messages.index');
     }
 
     public function show(Contact $message) {
