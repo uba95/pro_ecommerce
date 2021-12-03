@@ -29,7 +29,11 @@
                                         <div class="cart_item_info d-flex flex-md-row flex-column justify-content-between">
                                             <div class="cart_item_name cart_info_col">
                                                 <div class="cart_item_title">Name</div>
-                                                <div class="cart_item_text text-center" style="width: 150px;font-size: 15px"><a href='{{ route('products.show', $cart_product->name) }}'>{{ $cart_product->name }}</a></div>
+                                                <div class="cart_item_text text-center" style="font-size: 15px">
+                                                    <a href='{{ route('products.show',  $cart_product->options->slug) }}' style="display: inline-block; width: 150px; overflow: hidden !important; text-overflow: ellipsis;white-space: nowrap;">
+                                                        {{ $cart_product->name }}
+                                                    </a>
+                                                </div>
                                             </div>
                                             <div class="cart_item_color cart_info_col">
                                                 <div class="cart_item_title">Color</div>
@@ -41,8 +45,8 @@
                                                 <div class="cart_item_title">Quantity</div>
                                                 <div class="cart_item_text text-center" style="margin-top: 25px;">
                                                     <div class="product_quantity clearfix">
-                                                        <input name="product_quantity" class="quantity_input" type="number" min="1" max="{{$products->filter(fn($v) => $v->id === $cart_product->id)->first()->product_quantity }}"
-                                                         value="{{ $cart_product->qty }}"data-id="{{ $cart_product->rowId }}"  style="width: 40px;" id="{{ 'quantity_input' . $cart_product->rowId }}">
+                                                        <input name="product_quantity" class="quantity_input" type="number" min="1" max="{{$products->filter(fn($v, $k) => $k === $cart_product->id)->first() }}"
+                                                         value="{{ $cart_product->qty }}" data-id="{{ $cart_product->rowId }}"  style="width: 40px;" id="{{ 'quantity_input' . $cart_product->rowId }}">
                                                         <div class="quantity_buttons">
                                                             <div class="quantity_inc quantity_control quantity_inc_button" data-id="{{ $cart_product->rowId }}" style="z-index: 1000;"><i class="fas fa-chevron-up"></i></div>
                                                             <div class="quantity_dec quantity_control quantity_dec_button" data-id="{{ $cart_product->rowId }}" style="z-index: 1000;"><i class="fas fa-chevron-down"></i></div>
@@ -69,7 +73,7 @@
                                             <div class="cart_item_total cart_info_col">
                                                 <div class="cart_item_title">Action</div>
                                                 <div class="cart_item_text text-center">
-                                                    <form action ='{{ route('cart.destroy', $cart_product->rowId) }}' class="delete" style="cursor:pointer">
+                                                    <form action ='{{ route('cart.destroy', $cart_product->rowId) }}' class="delete_cart_item" style="cursor:pointer">
                                                         @csrf @method('DELETE')
                                                         <i class="fa fas fa-times btn btn-danger" ></i>
                                                     </form>
@@ -94,7 +98,7 @@
                             </div>
 
                             <div class="cart_buttons" style="display: {{ !$cart_products->count() ? 'none' : ''}}">
-                                <form action ='{{ route('cart.destroyAll') }}' class="destroyAll button cart_button_clear" method="POST">
+                                <form action ='{{ route('cart.destroyAll') }}' class="destroy_all_cart button cart_button_clear" method="POST">
                                     @csrf @method('DELETE')
                                     Cancel
                                 </form>
@@ -110,74 +114,6 @@
         {{-- <script src="{{ asset('frontend/js/product_custom.js')}}"></script> --}}
         <script src="{{ asset('frontend/js/cart_custom.js')}}"></script>
         <script src="https://unpkg.com/underscore@1.12.0/underscore-min.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                $(document).on('change', '.quantity_input', _.debounce(function(e){
-                    e.preventDefault();
-                    var id = $(this).data('id');
-                    var val = $(this).val();
-                    if (id && val > 0) {
-                        $.ajax({
-                            url: `/cart/${id}`,
-                            type:"PATCH",
-                            datType:"json",
-                            data: {"_token": "{{  csrf_token() }}", 'val' : val},
-                            success:function(data){
-
-                                    $('.order_total_amount').text('$' + data.cart_price);
-                                    $('.cart_count').text(data.cart_count)
-                                    $('.cart_price').text('$' + data.cart_price)
-                                    $('#cartItem_price'+id).text('$' + data.cartItem_price)
-                        },
-                    });
-            
-                    }else{
-                        alert('danger');
-                    }
-                }, 300));
-            });
-        </script>
-        <script>
-            $(function () {
-                function initQuantity() {
-                    // Handle product quantity input
-                    if($('.product_quantity').length)
-                    {
-                        var input = $('.quantity_input');
-                        var incButton = $('.quantity_inc_button');
-                        var decButton = $('.quantity_dec_button');
-
-                        var originalVal;
-                        var endVal;
-
-                        incButton.on('click', function()
-                        {
-                            var id =  $(this).data('id');
-                            var input =  $('#quantity_input'+id).length > 0 ? $('#quantity_input'+id) : $('.quantity_input'); 
-                            originalVal = input.val();
-                            if (input.val() == input.attr('max')) {return}
-                            endVal = parseFloat(originalVal) + 1;
-                            input.val(endVal).trigger( "change" )
-                            // input.attr('value', endVal);
-                        });
-
-                        decButton.on('click', function()
-                        {
-                            var id =  $(this).data('id');
-                            var input =  $('#quantity_input'+id).length > 0 ? $('#quantity_input'+id) : $('.quantity_input'); 
-
-                            originalVal = input.val();
-                            if(originalVal > 1)
-                            {
-                                endVal = parseFloat(originalVal) - 1;
-                                input.val(endVal).trigger( "change" );
-                            }
-                        });
-                    }
-                }
-                initQuantity();
-            });
-        </script>
     @endpush
 
 @endsection

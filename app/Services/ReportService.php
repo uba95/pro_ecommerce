@@ -131,7 +131,7 @@ class ReportService
 
         if ($sales) {
           $salesDays =  Order::lastdays(30)
-          ->selectRaw('DATE(`created_at`) as Date, SUM(`total_price`) Total')
+          ->selectRaw('DATE(`created_at`) as Date, ROUND(SUM(`total_price`)) Total')
           ->groupBy('Date')
           ->pluck('Total', 'Date');
 
@@ -233,8 +233,8 @@ class ReportService
       return DB::table(DB::raw("({$left->toSql()} UNION ALL {$right->toSql()}) AS d")) 
       ->selectRaw('DISTINCT *') 
       ->mergeBindings($left) 
-      ->mergeBindings($right) 
-      ->get();
+      ->mergeBindings($right); 
+      // ->get();
     }
 
     private static function dirJoin($dir, $name, $join, $returns) {

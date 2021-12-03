@@ -7,21 +7,19 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ReplyContact extends Mailable
+class ContactMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $contactMessage;
-    public $reply;
+    public $name;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($message, $reply)
+    public function __construct($name)
     {
-        $this->contactMessage = $message;
-        $this->reply = $reply;
+        $this->name = $name;
     }
 
     /**
@@ -31,6 +29,6 @@ class ReplyContact extends Mailable
      */
     public function build()
     {
-        return $this->subject($this->reply->subject)->view('emails.reply_contact');
+        return $this->subject("[Request recieved] We've Received Your Request.")->markdown('emails.contact');
     }
 }

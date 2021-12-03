@@ -25,7 +25,7 @@
                   <th class="wd-15p">Brand Name</th>
                   <th class="wd-15p">Brand Logo</th>
                   @canany(['edit categories', 'delete categories'])
-                    <th class="wd-20p">Action</th>
+                    <th class="wd-20p" data-orderable="false" data-searchable="false">Action</th>
                   @endcanany
                 </tr>
               </thead>

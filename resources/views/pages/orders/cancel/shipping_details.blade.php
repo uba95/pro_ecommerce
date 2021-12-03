@@ -1,5 +1,7 @@
 <div class="card">
-    <h6 class="card-header">Shipping Details</h6>
+    @if ($cancelOrderRequest->shippingAddress)
+      <h6 class="card-header">Shipping Details</h6>
+    @endif
     <div class="card-body">
       <table class="table">
 

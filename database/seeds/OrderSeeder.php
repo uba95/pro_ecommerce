@@ -96,7 +96,7 @@ class OrderSeeder extends Seeder
         ->whereEnum('status', ['pending', 'paid']) 
         ->get();
         $cancelQ = [];
-        // $items1 = [];
+        
         for ($i=0; $i < $cancelOrderRequestsCount; $i++) { 
 
             $order = $cancelable_orders->random();
@@ -110,7 +110,7 @@ class OrderSeeder extends Seeder
                 array_pop($cancelQ);
                 continue;
             }
-            // $items1[] =  $items;
+
             CancelOrderService::create(
                 $this->courier($items->map(fn($v) => $v->product_quantity * $v->product_price)->sum()),
                 [
@@ -124,18 +124,27 @@ class OrderSeeder extends Seeder
         
         // Update Cancel Order Requests
 
-        CancelOrderRequest::with('order:id')->get()->each(function ($v) {
+        CancelOrderRequest::with('order:id,coupon_id', 'order.orderItems')->get()->each(function ($v) {
 
             $status = collect(CancelOrderStatus::getValues())->random();
             $v->update(['status' => $status]);
 
             if (in_array($status, ['approved', 'refunded'])) {
-    
+
                 $v->decrementOrderItems();
-            
+
+                $data = [
+                    'subtotal_price' => $totalPrice = $v->order->orderItems->sum->totalPrice,
+                    'discount' => $discount = (float) discountPrice($totalPrice, optional($v->order->coupon)->discount),
+                    'shipping_cost' => $shipping = $v->shipping_cost,
+                    'total_price' => $totalPrice - $discount + $shipping,    
+                ];
+    
                 if ($v->order->areAllItemsCanceled()) {
-                    $v->order->update(['status' =>    OrderStatus::canceled()->getIndex()]);
+                    $data['status'] = OrderStatus::canceled()->getIndex();
                 }
+    
+                $v->order->update($data);
             }
         });
 

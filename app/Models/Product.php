@@ -75,6 +75,11 @@ class Product extends Model implements Buyable
     //     return optional($this->ratings->firstWhere('user_id', current_user()->id))->value;
     // }
 
+    public function getPriceAttribute() {
+        
+        return $this->discount_price ?? $this->selling_price;
+    }
+
     public function getRatingAvgAttribute() {
         
         return number_format($this->ratings()->avg('value') / 10, 1);

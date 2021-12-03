@@ -19,7 +19,7 @@ class ProductRequest extends FormRequest
      */
     public function authorize()
     {
-        return isAdmin();
+        return true;
     }
 
     /**
@@ -43,20 +43,12 @@ class ProductRequest extends FormRequest
             'product_details' => 'required|min:30',
             'video_link' => 'max:60',
             'status' => [new EnumRule(ProductStatus::class)],
-            'cover' => 'required_without:id|file|mimes:jpeg,png,jpg,gif,svg|max:4096',
-            'image' => 'required_without:id',
+            'cover' => [Rule::requiredIf(!$this->product), 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:4096'],
+            'image' => [Rule::requiredIf(!$this->product)],
             'image.*' => 'file|mimes:jpeg,png,jpg,gif,svg|max:4096',
             'meta_title' => 'nullable|string|max:255',
             'meta_keywords' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string',
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'cover.required_without' => 'The cover field is required',
-            'image.required_without' => 'The image field is required'
         ];
     }
 }

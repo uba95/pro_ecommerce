@@ -1,3 +1,4 @@
+@if ($new_arrivals_products->isNotEmpty())
 <div class="new_arrivals">
     <div class="container">
         <div class="row">
@@ -54,3 +55,4 @@
         </div>
     </div>      
 </div>
+@endif

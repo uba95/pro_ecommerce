@@ -17,16 +17,16 @@
                     <div class="footer_social">
                         <ul>
                             @if ($site_settings->facebook)
-                            <li><a target="_blank" href="{{ $site_settings->facebook }}/"><i
-                                        class="fab fa-facebook-f"></i></a></li>
+                            <li><a target="_blank" href="{{ $site_settings->facebook }}/"><i class="fab fa-facebook-f"></i></a></li>
                             @endif
                             @if ($site_settings->twitter)
-                            <li><a target="_blank" href="{{ $site_settings->twitter }}/"><i
-                                        class="fab fa-twitter"></i></a></li>
+                            <li><a target="_blank" href="{{ $site_settings->twitter }}/"><i class="fab fa-twitter"></i></a></li>
                             @endif
                             @if ($site_settings->youtube)
-                            <li><a target="_blank" href="{{ $site_settings->youtube }}/"><i
-                                        class="fab fa-youtube"></i></a></li>
+                            <li><a target="_blank" href="{{ $site_settings->youtube }}/"><i class="fab fa-youtube"></i></a></li>
+                            @endif
+                            @if ($site_settings->instagram)
+                            <li><a target="_blank" href="{{ $site_settings->instagram }}/"><i class="fab fa-instagram"></i></a></li>
                             @endif
                         </ul>
                     </div>
@@ -52,21 +52,22 @@
                 </div>
             @endforeach
 
-            @auth('web')
                 <div class="col-lg-2">
                     <div class="footer_column">
                         <div class="footer_title">Customer Care</div>
                         <ul class="footer_list">
+                            @auth('web')
                             <li><a href ='{{ route('home') }}'>My Account</a></li>
                             <li><a href ='{{ route('cart.show') }}'>My Cart</a></li>
                             <li><a href ='{{ route('wishlist.index') }}'>My WishList</a></li>
                             <li><a href="{{ route('cancel_orders.index') }}">Cancel Order</a></li>
                             <li><a href="{{ route('return_orders.index') }}">Return Order</a></li>
+                            @endauth
+                            <li><a href ='{{ route('return_policy') }}'>Return & Refund Policy</a></li>
                             <li><a href ='{{ route('contact.index') }}'>Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
-            @endauth
             
         </div>
     </div>

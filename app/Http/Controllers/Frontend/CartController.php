@@ -25,32 +25,49 @@ class CartController extends Controller
 
     public function show() {
         return view('pages.cart', [
-            'cart_products' => Cart::content(),
-            'products' => DB::table('products')->get(['id', 'product_quantity']),
+            'cart_products' => $c = Cart::content(),
+            'products' => Product::whereIn('id', $c->pluck('id'))->pluck('product_quantity', 'id'),
         ]);
     }
     
-    public function store($id) {
+    public function store($productId, Request $request) {
         
-        $product = Product::where('id', $id)->active()->firstOrFail();
+        $product = Product::where('id', $productId)->active()->firstOrFail();
 
-        Cart::add($product, request()->product_quantity, [
-            'color' => request()->product_color,
-            'size' => request()->product_size,
+        if (!intval($request->product_quantity)) {
+            return response()->json(['error' => 'This Quantity Is Not Valid']);
+        }
+
+        Cart::add($product, $request->product_quantity, [
+            'color' => $request->product_color,
+            'size' => $request->product_size,
             'image' => $product->cover,
+            'slug' => $product->product_slug,
         ]);
 
         return $this->cart(['success' => 'Product Added To Your Cart']);
     }
 
-    public function update($rowId) {
-     
-        $item = Cart::update($rowId, request('val'));
+    public function update($rowId, Request $request) {
+
+        if (Cart::search(fn($v, $k) => $k == $rowId)->isEmpty()) {
+            return response()->json(['error' => 'Cart Item Not Found']);
+        }
+
+        if (!intval($request->quantity)) {
+            return response()->json(['error' => 'This Quantity Is Not Valid']);
+        }
+ 
+        $item = Cart::update($rowId, $request->quantity);
         return $this->cart(['cartItem_price' => round($item->qty * $item->price, 2)]);
     }
 
     public function destroy($rowId) {
-     
+        
+        if (Cart::search(fn($v, $k) => $k == $rowId)->isEmpty()) {
+            return response()->json(['error' => 'Cart Item Not Found']);
+        }
+
         Cart::remove($rowId);
         return $this->cart();
     }

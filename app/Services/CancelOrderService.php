@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Mail\CancelOrderMail;
+use App\Models\CancelOrderRequest;
 use App\Models\Shipment;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Shippo_Object;
 
@@ -19,19 +22,20 @@ class CancelOrderService
                 'updated_at' => now(),
             ];
 
-            $cancel_order_request_id = DB::table('cancel_order_requests')->insertGetId([
+            $cancel_order_request = CancelOrderRequest::create([
                 "order_id" => $data['order_id'],
                 'billing_address_id' => $data['billing_address'] ?? null,
                 'shipping_address_id' => $data['shipping_address'] ?? null,
                 'shipping_cost' => $courier['amount'],
                 'courier' => $courier['servicelevel'] ? ($courier['servicelevel']['name']  . '-' . $courier['provider']) : null,
+                'status' => 0,
             ] + $times);
 
             $items = $items ?: Session::get('cancel_order_items');
 
             DB::table('cancel_order_items')->insert(
                 $items->map(fn($item) => [
-                    'request_id' => $cancel_order_request_id,
+                    'request_id' => $cancel_order_request->id,
                     'order_item_id' => $item->id,
                     'product_quantity' => $item->product_quantity,
                     ] + $times
@@ -43,6 +47,8 @@ class CancelOrderService
             Session::forget('cancel_order_items');
             Shipment::session_remove();
 
+            Mail::to(current_user()->email)->send(new CancelOrderMail($cancel_order_request));
+            
             return redirect()->route('cancel_orders.index')->with(toastNotification('Your Request Is Submited Successfully'));
     
         } catch (\Exception $ex) {

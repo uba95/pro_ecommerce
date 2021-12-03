@@ -7,7 +7,10 @@ use App\Models\OrderItem;
 use App\Enums\OrderStatus;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\OrderMail;
 use App\Services\AjaxDatatablesService;
+use App\Services\OrderService;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Enum\Laravel\Rules\EnumRule;
 
 class OrderController extends Controller
@@ -26,7 +29,7 @@ class OrderController extends Controller
 
     public function show(Order $order) {
      
-        $orderItems = $order->orderItems()->where('product_quantity', '>', 0)->with('product')->get();
+        $orderItems = $order->orderItems()->notCanceled()->with('product')->get();
         return view('admin.orders.show', compact('order', 'orderItems')); 
     }
 
@@ -50,6 +53,14 @@ class OrderController extends Controller
         $request->status == 'delivered' ? $order->shipment->update(['delivered_at' => now()]) : '';
         $order->update(['status' => $validated['status']]);
 
+        Mail::to($order->user->email)->send(new OrderMail($order));
+
         return redirect()->route('admin.orders.show', $order->id)->with(toastNotification('Order', 'updated'));
+    }
+
+    public function showInvoice(Order $order) {
+        return $order->status == 'canceled'
+        ? redirect()->route('admin.orders.show', $order->id)->with(toastNotification('Error, Order Is Canceled', 'error')) 
+        : OrderService::generateInvoice($order);
     }
 }

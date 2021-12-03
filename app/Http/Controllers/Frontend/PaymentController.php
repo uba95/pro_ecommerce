@@ -9,6 +9,7 @@ use App\Services\StripeService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaymentRequest;
 use App\Models\Order;
+use App\Services\CheckoutService;
 use Illuminate\Support\Facades\Session;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Shippo_Object;
@@ -19,7 +20,7 @@ class PaymentController extends Controller
 
     public function store(PaymentRequest $request) {
 
-        if (Session::get('checkout_cart')->first() != Cart::content()->values()) {
+        if (CheckoutService::checkoutCartIsChanged()) {
             return redirect()->route('cart.show')->with(toastNotification('Please Refresh Your Cart', 'error'));
         }
 

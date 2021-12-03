@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\Coupon;
-use App\Models\SiteSettings;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(OrderSeeder::class);
         $this->call(BlogSeeder::class);
         $this->call(PermissionSeeder::class);
-        $this->call(SiteSettingSeeder::class);
     }
 
     private function truncateAllTables() {

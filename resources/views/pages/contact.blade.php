@@ -94,17 +94,17 @@
 
 	<!-- Map -->
 
-	{{-- <div class="contact_map">
+	<div class="contact_map">
 		<div id="google_map" class="google_map">
 			<div class="map_container">
 				<div id="map"></div>
 			</div>
 		</div>
-	</div> --}}
+	</div>
 
 	{!! NoCaptcha::renderJs() !!}
     @push('scripts')
-        {{-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCIwF204lFZg1y4kPSIhKaHEXMLYxxuMhA"></script> --}}
-        {{-- <script src="{{ asset('frontend/js/contact_custom.js')}}"></script> --}}
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCIwF204lFZg1y4kPSIhKaHEXMLYxxuMhA"></script>
+        <script src="{{ asset('frontend/js/contact_custom.js')}}"></script>
     @endpush
 @endsection

@@ -21,7 +21,7 @@
                 </div>
 
                 @can('edit orders')
-                @include('admin.orders.cancel_order_status_form', ['request' => $cancelOrder])
+                    @include('admin.orders.cancel_order_status_form', ['request' => $cancelOrder])
                 @endcan
           </div>
       </div>

@@ -1,7 +1,4 @@
 @if ($banner_slider_items->isNotEmpty())
-    @push('styles')	
-    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/star-rating-svg.css') }}">
-    @endpush
 
     <div class="banner_2">
     <div class="banner_2_background" style="background-image:url({{ asset('frontend/images/banner_2_background.jpg')}})"></div>
@@ -50,20 +47,18 @@
     </div>
     </div>
     @push('scripts')
-        <script src="{{ asset('frontend/js/jquery.star-rating-svg.js')}}"></script>
         <script>
-
-        var banner_slider_items = @json($banner_slider_items);
-        Object.values(banner_slider_items).forEach(function (item) { 
-            if (avg = item.product.ratings[0]?.avg) {
-                $(".banner_slider_rating" + item.product_id).starRating({
-                starSize: 22,
-                readOnly: true,
-                initialRating: avg,
-                ratedColor: '#3550bd',
-                }) 
-            }}
-        )
+            var banner_slider_items = @json($banner_slider_items);
+            Object.values(banner_slider_items).forEach(function (item) { 
+                if (avg = item.product.ratings[0]?.avg) {
+                    $(".banner_slider_rating" + item.product_id).starRating({
+                    starSize: 22,
+                    readOnly: true,
+                    initialRating: avg,
+                    ratedColor: '#3550bd',
+                    }) 
+                }}
+            )
         </script>
     @endpush
 @endif

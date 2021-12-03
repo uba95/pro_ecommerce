@@ -19,7 +19,7 @@
                             <div class="owl-item">
                                 <div
                                     class="viewed_item {{ $product->discount_price ? 'discount' :  ($product->isNew() ? 'is_new' : '') }} d-flex flex-column align-items-center justify-content-center text-center">
-                                    <div class="viewed_image"><img src="{{ $product->cover}}" alt="" height="120" width="100"></div>
+                                    <div class="viewed_image"><img src="{{ $product->cover}}" alt=""></div>
                                     <div class="viewed_content text-center">
                                         @if ($product->discount_price)
                                             <div class="viewed_price">
@@ -34,7 +34,9 @@
                                             </div>
                                         @endif
                                         <div class="viewed_name"><div>
-                                            <a href='{{ route('products.show', $product->product_slug) }}'>{{ $product->product_name}}</a>
+                                            <a href='{{ route('products.show', $product->product_slug) }}'  style="display: inline-block; width: 130px; overflow: hidden !important; text-overflow: ellipsis;white-space: nowrap;">
+                                                {{ $product->product_name}}
+                                            </a>
                                         </div></div>
                                     </div>
                                     <ul class="item_marks">

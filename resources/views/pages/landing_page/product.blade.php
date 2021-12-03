@@ -2,9 +2,9 @@
     <div class="border_active"></div>
     <div class="product_item  d-flex flex-column align-items-center justify-content-center text-center {{ $product->discount_price ? 'discount' :  ($product->isNew() ? 'is_new' : '') }}">
         <div class="product_image d-flex flex-column align-items-center justify-content-center">
-            <img src="{{ $product->cover}}" alt="" style="max-width: 70%;">
+            <img src="{{ $product->cover}}" alt="" width="140" style="max-height: 140px">
         </div>
-        <div class="product_content py-3">
+        <div class="product_content">
                 @if ($product->discount_price)
                 <div class="product_price discount">
                     ${{$product->discount_price}}
@@ -17,9 +17,11 @@
                     ${{$product->selling_price}}
                 </div>
             @endif
-            <div class="product_name d-flex justify-content-center">
-                <div style="width: 90%">
-                    <a href='{{ route('products.show', $product->product_slug) }}' class="px-2" style="white-space: normal;">{{ $product->product_name}}</a>
+            <div class="product_name">
+                <div>
+                    <a href='{{ route('products.show', $product->product_slug) }}' style="display: inline-block; width: 140px; overflow: hidden !important; text-overflow: ellipsis;">
+                        {{ $product->product_name}}
+                    </a>
                 </div>
             </div>
             <div class="product_extras">

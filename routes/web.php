@@ -1,6 +1,9 @@
 <?php
 
 use App\Enums\ReturnOrderStatus;
+use App\Mail\CancelOrderMail;
+use App\Models\Address;
+use App\Models\CancelOrderRequest;
 use App\Models\Coupon;
 use App\Models\LandingPageItem;
 use App\Models\Order;
@@ -8,13 +11,17 @@ use App\Models\Product;
 use App\Models\ProductRating;
 use App\Models\ReturnOrderRequest;
 use App\Models\User;
+use App\Services\AjaxDatatablesService;
+use App\Services\CheckoutService;
 use App\Services\OrderService;
+use App\Services\ReportService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\File as HttpFile;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
@@ -31,13 +38,14 @@ Route::group(['namespace' => 'Frontend'], function () {
     
     Route::get('/', 'LandingPageController')->name('pages.landing_page.index');
 
-    Route::get('cart', 'CartController@show')->name('cart.show');
-    Route::post('cart/{product}', 'CartController@store')->name('cart.store');
-    Route::delete('cart/{cartItem}', 'CartController@destroy')->name('cart.destroy');
-    Route::patch('cart/{cartItem}', 'CartController@update')->name('cart.update');
-    Route::delete('cart', 'CartController@destroyAll')->name('cart.destroyAll');
-    
-    
+    Route::group(['prefix' => 'cart', 'as' => 'cart.'], function () {
+        Route::get('/', 'CartController@show')->name('show');
+        Route::post('{product}', 'CartController@store')->name('store');
+        Route::delete('{cartItem}', 'CartController@destroy')->name('destroy');
+        Route::patch('{cartItem}', 'CartController@update')->name('update');
+        Route::delete('/', 'CartController@destroyAll')->name('destroyAll');
+    });
+
     Route::get('blog/posts', 'BlogController@index')->name('blog.index');
     Route::get('blog/posts/{blog_post}', 'BlogController@show')->name('blog.show');
     Route::get('blog/categories/{blog_category}', 'BlogController@showCategory')->name('blog.category');
@@ -46,6 +54,7 @@ Route::group(['namespace' => 'Frontend'], function () {
     Route::get('shop/search', 'ShopController@search')->name('shop.search');
 
     Route::resource('contact', 'ContactController')->only('index','store');
+    Route::get('return-policy', 'ReturnPolicyController')->name('return_policy');
     
     Route::post('newslaters', 'NewslaterController@store')->name('newslaters.store');
     Route::delete('newslaters', 'NewslaterController@destroy')->name('newslaters.destroy');
@@ -71,7 +80,8 @@ Route::group(['namespace' => 'Frontend'], function () {
         Route::get('payment/paypal/order', 'PaypalController')->name('payment.paypal.order');
         
         Route::resource('addresses', 'AddressController')->except('show');
-    
+        
+        Route::get('orders/{order}/invoice', 'OrderController@showInvoice')->name('orders.invoice');
         Route::resource('orders', 'OrderController')->only('index', 'show');
         
         Route::resource('cancel_orders', 'CancelOrderRequestController')->except('edit', 'update');
@@ -87,17 +97,13 @@ Route::group(['namespace' => 'Frontend'], function () {
         Route::put('products/reviews/{product}', 'ProductReviewController@update')->name('reviews.update');
         Route::delete('products/reviews/{product}', 'ProductReviewController@destroy')->name('reviews.destroy');
 
-        Route::get('ss', function () {
-
-            //  $faker = Faker\Factory::create();  
-            // $products = Product::all();
-            // for ($i=0; $i < 10; $i++) { 
-            //     factory(LandingPageItem::class)->create(['product_id' => $products->random()->id]);
-            // }
-                        
-     });
     });
 
     Route::get('products/{product_slug}', 'ShowProductController')->name('products.show');
-    Auth::guard('web')->loginUsingId(7);
+
+    // Auth::guard('web')->loginUsingId(7);
+    //Route::get('ss', function () {
+        //  $faker = Faker\Factory::create(); 
+    //});
+
 });

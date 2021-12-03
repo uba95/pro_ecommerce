@@ -24,7 +24,7 @@
                   <th class="wd-15p">Role Name</th>
                   <th class="wd-15p">Role Permissions</th>
                   @canany(['edit roles', 'delete roles'])
-                    <th class="wd-20p">Action</th>
+                    <th class="wd-20p" data-orderable="false" data-searchable="false">Action</th>
                   @endcanany
                 </tr>
               </thead>

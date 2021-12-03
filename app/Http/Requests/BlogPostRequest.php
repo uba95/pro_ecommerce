@@ -14,7 +14,7 @@ class BlogPostRequest extends FormRequest
      */
     public function authorize()
     {
-        return isAdmin();
+        return true;
     }
 
     /**

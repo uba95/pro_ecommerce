@@ -1,4 +1,4 @@
-    <!-- Banner -->
+@if ($main_banner)
 
     <div class="banner">
         <div class="banner_background" style="background-image:url({{ asset('frontend/images/banner_background.jpg')}})"></div>
@@ -27,3 +27,21 @@
             </div>
         </div>
     </div>
+
+@else
+
+<div class="banner">
+    <div class="banner_background" style="background-image:url({{ asset('frontend/images/banner_background.jpg')}})"></div>
+    <div class="container fill_height">
+        <div class="row fill_height">
+            <div class="banner_product_image"></div>
+            <div class="col-lg-5 offset-lg-4 fill_height">
+                <div class="banner_content">
+                    <h1 class="banner_text">WELCOME TO OUR STORE <br><br><br><br></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endif

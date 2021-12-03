@@ -61,8 +61,8 @@ class Shipment extends Model
             'state' => config('shop.warehouse.state'),
             'zip' => config('shop.warehouse.zip'),
             'country' => config('shop.warehouse.country'),
-            'phone' => config('shop.phone'),
-            'email' => config('shop.email')
+            'phone' => config('shop.warehouse.phone'),
+            'email' => config('shop.warehouse.email')
         ];
 
         $setAddress =  [

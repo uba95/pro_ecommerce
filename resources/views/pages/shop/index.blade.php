@@ -97,6 +97,15 @@
         <script src="{{ asset('frontend/plugins/parallax-js-master/parallax.min.js')}}"></script>
         <script src="{{ asset('frontend/js/shop_custom.js')}}"></script> 
         <script>
+            var $grid = $('.product_grid').isotope({
+                itemSelector: '.product_item',
+                animationOptions: {
+                    duration: 750,
+                    easing: 'linear',
+                    queue: false
+                }
+            });
+
             $(document).on('click', '.shop_sorting_button a, .sorting_text a, .pagination_shop a', function(e) {
                 e.preventDefault();
                 
@@ -111,12 +120,22 @@
                             return toastr.error(data.error);
                         }
 
-                        var el = $('.product_grid');
-                        el.fadeOut(200, function () {
-                            el.html(data.products);
+                        var container = $('.product_grid');
+                        var product_items = $('.product_grid .product_item');
+
+
+                        // container.append(items).isotope('appended',items);
+                        // container.isotope('layout');
+
+                        // container.fadeOut(200, function () {
+                            $grid.isotope('remove', product_items);
+                            container.html('').append(data.products);
+                            $grid.isotope('insert', $('.product_grid .product_item'));
                             $('.pagination_shop').html(data.pagination);
                             $('.sorting_text').html(data.sort_html);
-                        }).fadeIn(200);
+                            $('.shop_product_count span').html(data.products_count);
+
+                        // }).fadeIn(200);
                     },
                     beforeSend: function() {
                         $('.shop_content').css('opacity', '0.5');

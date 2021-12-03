@@ -20,7 +20,7 @@
           </tr>
         </thead>
         <tbody>
-          @foreach($order->orderItems as $orderItem)
+          @foreach($orderItems ?? $order->orderItems as $orderItem)
           <tr>
             <td>{{ $orderItem->id }}</td>
             <td>{{ $orderItem->product_id }}</td>

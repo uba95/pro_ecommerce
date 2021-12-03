@@ -10,7 +10,7 @@
                                 <div class="advert_text">{{ $advert->advert_text }}</div>
                             </div>
                             <div class="ml-auto"><div class="advert_image" style="height: 180px;width: auto;">
-                                <img src="{{ $advert->advert_img }}" alt="" style="max-height: 100%;">
+                                <img src="{{ $advert->advert_img }}" alt="" style="max-height: 100%;max-width: none;">
                             </div></div>
                         </div>
                     </div>

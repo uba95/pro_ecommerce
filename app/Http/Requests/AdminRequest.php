@@ -14,7 +14,7 @@ class AdminRequest extends FormRequest
      */
     public function authorize()
     {
-        return isAdmin();
+        return true;
     }
 
     /**

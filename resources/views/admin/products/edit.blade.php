@@ -165,7 +165,6 @@
                   <div class="form-group">
                     <label class="form-control-label">Cover <span class="tx-danger">*</span></label>
                     <label class="custom-file">
-                      <input type="hidden" name="id" value="1">
                       <input type="file" class="custom-file-input" name="cover" onchange="readURL(this)">
                       <span class="custom-file-control"></span>
                       <img class="mg-t-25" src="{{ $product->cover }}" alt="" id="cover" style="height: 80px; width: 80px;">

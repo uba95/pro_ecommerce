@@ -26,7 +26,7 @@
                             <th class="wd-15p">Started At</th>
                             <th class="wd-15p">Expired At</th>
                             @canany(['edit products', 'delete products'])
-                            <th class="wd-20p">Action</th>
+                            <th class="wd-20p" data-orderable="false" data-searchable="false">Action</th>
                             @endcanany
                         </tr>
                     </thead>

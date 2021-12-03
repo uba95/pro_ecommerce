@@ -2,7 +2,6 @@
 @section('section')
 
 @push('styles')
-<link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/star-rating-svg.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/contact_styles.css') }}">
 <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/contact_responsive.css') }}">
 
@@ -74,7 +73,6 @@
 </div>
 
 @push('scripts')
-<script src="{{ asset('frontend/js/jquery.star-rating-svg.js')}}"></script>
 
 <script>
     

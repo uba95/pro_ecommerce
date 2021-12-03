@@ -28,22 +28,22 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer(['layouts.app.index', 'layouts.app.main_nav', 'pages.shop.*', 'pages.product.index', 'pages.landing_page.*'], function ($view) {
+        view()->composer(['layouts.app.index', 'pages.shop.*', 'pages.product.index', 'pages.landing_page.*'], function ($view) {
             $view->with('categories', Cache::rememberForever('categories', function () {
                 return Category::with('subcategories:id,category_id,subcategory_name,subcategory_slug')->get();
             }));
         });
-        view()->composer(['layouts.app.index', 'layouts.app.main_nav', 'pages.shop.*', 'pages.product.index'], function ($view) {
+        view()->composer(['layouts.app.index', 'pages.shop.*', 'pages.product.index'], function ($view) {
             $view->with('brands', Cache::rememberForever('brands', function () {
                 return Brand::orderBy('id')->get();
             }));
         });
         view()->composer(['layouts.app.index', 'pages.contact'], function ($view) {
             $view->with('site_settings', Cache::rememberForever('site_settings', function () {
-                return SiteSettings::first(); 
+                return (object) config('shop'); 
             }));
         });
-        view()->composer(['layouts.app.index', 'layouts.app.main_nav'], function ($view) {
+        view()->composer(['layouts.app.index'], function ($view) {
             $view->with('blogCategories',Cache::rememberForever('blogCategories', function () {
                 return BlogCategory::orderBy('id')->pluck('blog_category_name', 'blog_category_slug');
             }));

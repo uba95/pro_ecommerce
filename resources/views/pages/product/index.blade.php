@@ -21,9 +21,8 @@
 		
 		<link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/product_styles.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/product_responsive.css') }}">
-		<link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/star-rating-svg.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/contact_styles.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/contact_responsive.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/contact_styles.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/contact_responsive.css') }}">
 
 		<style>
 			@media only screen and (min-width: 992px) {
@@ -95,7 +94,6 @@
 
 	@push('scripts')
 		<script src="{{ asset('frontend/js/product_custom.js')}}"></script>
-		<script src="{{ asset('frontend/js/jquery.star-rating-svg.js')}}"></script>
 		{{-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-6112a029d72c3999"></script> --}}
 		<script>
 			$(".get-rating").starRating({

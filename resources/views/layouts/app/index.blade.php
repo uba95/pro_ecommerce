@@ -13,12 +13,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" id="csrf-token" content="{{ csrf_token() }}">
+
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/bootstrap4/bootstrap.min.css') }}">
     <link href="{{ asset('frontend/plugins/fontawesome-free-5.0.1/css/fontawesome-all.css') }}" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/plugins/OwlCarousel2-2.2.1/owl.carousel.css') }} ">
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/plugins/OwlCarousel2-2.2.1/owl.theme.default.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/plugins/OwlCarousel2-2.2.1/animate.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/plugins/slick-1.8.0/slick.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/star-rating-svg.css') }}">
 
     @unless (in_array(Route::currentRouteName(), ['products.show', 'cart.show']))
         <link rel="stylesheet" type="text/css" href="{{ asset('frontend/styles/main_styles.css') }}">
@@ -94,6 +97,7 @@
 <script src="{{ asset('frontend/plugins/OwlCarousel2-2.2.1/owl.carousel.js')}}"></script>
 <script src="{{ asset('frontend/plugins/slick-1.8.0/slick.js')}}"></script>
 <script src="{{ asset('frontend/plugins/easing/easing.js')}}"></script>
+<script src="{{ asset('frontend/js/jquery.star-rating-svg.js')}}"></script>
 
 @if (in_array(Route::currentRouteName(), ['pages.landing_page.index']))
     <script src="{{ asset('frontend/js/custom.js')}}"></script>
@@ -169,7 +173,7 @@
             });
      
             }else{
-                alert('danger');
+                alert('error');
             }
         });
      
@@ -216,73 +220,10 @@
                      },
                 });
             }else{
-                 alert('danger');
+                 alert('error');
              }
           });
         });
-    </script>
-
-    <script>  
-        function deleteAjax(myclass, mytext) {
-            $(document).on('click', myclass, function (event) { 
-                    event.preventDefault();
-                    var form =  $(this);
-                    var route = form.attr('action');
-
-                    function cart_list_empty() {
-                        return $('.cart_list').fadeOut(1000, function () {
-                            $(this).empty().append(
-                                `<h4 style="padding: 20px;color:#888">Your Cart Is Empty</h4>`
-                            );
-                        }).fadeIn(1000);
-                    }
-
-                    Swal.fire({
-                        title: `Are You Sure You Want To Delete ${mytext} ?`,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Delete'
-                        
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Deleted!',
-                                text: 'Item Has Been Deleted.',
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                            $.ajax({
-                            url         :       route,
-                            type        :       "DELETE",
-                            data        :       {"_token": "{{  csrf_token() }}"},
-                            success     :       function(data) { 
-
-                                                    if (myclass === '.delete') {
-                                                    form.closest('.cart_item').fadeOut(1000, function () {
-                                                    $(this).remove();
-                                                    });
-
-                                                    $('.cart_list').children().length == 1 ?  cart_list_empty() : '';
-                                                    } else {
-
-                                                    cart_list_empty();
-                                                    }
-
-                                                    $('.order_total_amount').text('$' + data.cart_price);
-                                                    $('.cart_count').text(data.cart_count)
-                                                    $('.cart_price').text('$' + data.cart_price)
-                                                }
-                            });
-                        }
-                    })
-                });
-        }
-
-        deleteAjax('.delete', 'This Item');
-        deleteAjax('.destroyAll', 'All Items');
     </script>
 
     <script>

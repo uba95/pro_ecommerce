@@ -40,7 +40,9 @@
                                         </div>
                                             <div class="trends_info clearfix">
                                                 <div class="trends_name">
-                                                    <a href='{{ route('products.show', $product->product_slug) }}'>{{ $product->product_name }}</a>
+                                                    <a href='{{ route('products.show', $product->product_slug) }}' style="display: inline-block; width: 150px; overflow: hidden !important; text-overflow: ellipsis;white-space: nowrap;">
+                                                        {{ $product->product_name }}
+                                                    </a>
                                                 </div>
                                                 <div class="trends_price">${{ $product->discount_price ?? $product->selling_price }}</div>
                                             </div>

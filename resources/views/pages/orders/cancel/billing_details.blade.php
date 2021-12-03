@@ -1,5 +1,7 @@
 <div class="card">
-    <h6 class="card-header">Billing Details</h6>
+    @if ($cancelOrderRequest->billingAddress)
+      <h6 class="card-header">Billing Details</h6>
+    @endif
     <div class="card-body">
       <table class="table">
 
@@ -42,7 +44,7 @@
         </tr>
         <tr>
           <th> Shipping Cost : </th>
-          <th> {{ $cancelOrderRequest->shipping_cost }} $ </th>
+          <th> {{ $cancelOrderRequest->shipping_cost ?? 0 }} $ </th>
         </tr>
 
         <tr>

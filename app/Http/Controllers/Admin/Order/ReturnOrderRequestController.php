@@ -7,7 +7,9 @@ use App\Enums\ReturnOrderStatus;
 use Illuminate\Http\Request;
 use App\Models\ReturnOrderRequest;
 use App\Http\Controllers\Controller;
+use App\Mail\ReturnOrderMail;
 use App\Services\AjaxDatatablesService;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Enum\Laravel\Rules\EnumRule;
 
 class ReturnOrderRequestController extends Controller
@@ -43,17 +45,20 @@ class ReturnOrderRequestController extends Controller
         $request->status == 'shipped' ? $returnOrder->update(['shipping_started_at' => now()]) : '';
         $request->status == 'returned' ? $returnOrder->update(['shipping_returned_at' => now()]) : '';
         $returnOrder->update(['status' => $validated['status']]);
-        
+        $msg = toastNotification('Request', 'updated');
+
         if ($request->status == 'approved') {
             $returnOrder->order()->update(['status' => OrderStatus::returning()->getIndex()]);
-            return redirect()->route('admin.return_orders.index')->with(toastNotification('Request Is Approved And Order Is In Returning Process'));
+            $msg = toastNotification('Request Is Approved And Order Is In Returning Process');
         }
 
         if ($request->status == 'returned') {
             $returnOrder->order->update(['status' =>  $returnOrder->order->returnStatus()->getIndex()]);
-            return redirect()->route('admin.return_orders.index')->with(toastNotification('Order Is Returned'));
+            $msg = toastNotification('Order Is Returned');
         }
-        
-        return redirect()->route('admin.return_orders.index')->with(toastNotification('Request', 'updated'));
+
+        Mail::to($returnOrder->order->user->email)->send(new ReturnOrderMail($returnOrder));
+    
+        return redirect()->route('admin.return_orders.index')->with($msg);
     }
 }

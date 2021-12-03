@@ -38,7 +38,7 @@ function  snakeToTitle($value){
 
 function  camelToTitle($value){
 
-    return ucwords(implode(' ', preg_split('/(?=[A-Z])/', $value)));
+    return substr(ucwords(implode(' ', preg_split('/(?=[A-Z])/', $value))), 1);
 }
 
 function isAdmin() {
@@ -46,7 +46,7 @@ function isAdmin() {
     return Auth::guard('admin')->check();
 }
 
-function current_user(){
+function current_user() {
 
     return Auth::guard('web')->user();
 }
@@ -65,13 +65,14 @@ function current_user(){
 function img_upload($image, $path, $resize = false) {
 
     $image_name = $path . hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
-    Log::info($image_name);
+    $storage_path = storage_path("app/public/".$image_name);
+
     if ($resize) {
-        Image::make($image)->resize(300,300)->save(storage_path("app/public/".$image_name));
-        return $image_name;
+        Image::make($image)->resize(150,150)->save($storage_path);
+    } else {
+        Image::make($image)->save($storage_path);
     }
 
-    Image::make($image)->save(storage_path("app/public/".$image_name));
     return $image_name;
 }
 
@@ -79,7 +80,7 @@ function toastNotification($message, $type = 'success') {
 
     $notifications = [
         'not_found' => [
-            'message'=>"$message Not Found",
+            'message'=>"$message Is Not Found",
             'alert-type'=>'error'
         ],
 

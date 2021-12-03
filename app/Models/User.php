@@ -61,7 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function wishlistItems() {
         
-        return $this->belongsToMany(Product::class, 'wishlist_items')->withTimestamps()->select(['id','product_name','selling_price','discount_price','cover']);
+        return $this->belongsToMany(Product::class, 'wishlist_items')->withTimestamps()->select(['id','product_name','selling_price','discount_price','cover', 'products.created_at']);
     }
 
     public function hasProductOnWishlist($product_id) {

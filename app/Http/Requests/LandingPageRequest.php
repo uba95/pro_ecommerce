@@ -16,7 +16,7 @@ class LandingPageRequest extends FormRequest
      */
     public function authorize()
     {
-        return isAdmin();
+        return true;
     }
 
     /**
@@ -56,13 +56,4 @@ class LandingPageRequest extends FormRequest
             'advert_text.required_with' => 'The advert text field is required',
         ];
     }
-
-    // protected function prepareForValidation ()
-    // {
-    //     $this->merge([
-    //         'is_main_banner'   => (bool) $this->is_main_banner,
-    //         'is_banner_slider' => (bool) $this->is_banner_slider,
-    //         'is_advert'        => (bool) $this->is_advert,
-    //     ]);
-    // }
 }

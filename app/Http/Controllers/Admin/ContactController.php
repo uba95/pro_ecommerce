@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Mail\ReplyContact as MailReplyContact;
+use App\Mail\ReplyContactMail;
 use App\Models\Contact;
 use App\Services\AjaxDatatablesService;
 use Illuminate\Http\Request;
@@ -34,7 +34,7 @@ class ContactController extends Controller
     public function update(Contact $message, Request $request) {
 
         $reply = $request->validate(['reply' => 'required', 'subject' => 'required']);
-        Mail::to($message->email)->send(new MailReplyContact($message, (object) $reply));
+        Mail::to($message->email)->send(new ReplyContactMail($message, (object) $reply));
         $message->update(['replied' => true]);
 
         return redirect()->route('admin.contact.messages.index')->with(toastNotification('Reply Has Been Successfully Sent'));

@@ -13,17 +13,25 @@ use Faker\Generator as Faker;
 
 $factory->define(Product::class, function (Faker $faker) {
     
-    $category_id = Category::pluck('id')->random();
+    $categories_ids = Category::pluck('id');
+    $category = $categories_ids->isNotEmpty() ? $categories_ids->random() : factory(Category::class)->create();
+
+    $subcategories_ids = Subcategory::where('category_id', $category->id ?? $category)->pluck('id');
+    $subcategory = $subcategories_ids->isNotEmpty() ? $subcategories_ids->random() : null;
+
+    $brands_ids = Brand::pluck('id');
+    $brand = $brands_ids->isNotEmpty() ? $brands_ids->random() : null;
+
     $name = $faker->unique()->sentence(4);
     $selling_price =  $faker->optional(0.5, $faker->numberBetween(1, 10))->numberBetween(10, 50) * $faker->randomElement([10,50]);
-    $cover = $faker->image(storage_path('app\public\media\products\covers'), 200, 200, 'technics');
+    $cover = $faker->image(storage_path('app\public\media\products\covers'), 150, 150, 'technics');
 
     for ($i = 0; $i < rand(3,5); $i++) { $color[] = $faker->hexcolor; }
     
     return [
-        'category_id' => $category_id,
-        'subcategory_id' => Subcategory::where('category_id', $category_id)->pluck('id')->random(),
-        'brand_id' => Brand::pluck('id')->random(),
+        'category_id' => $category,
+        'subcategory_id' => $subcategory,
+        'brand_id' => $brand,
         'product_name' => $name,
         'product_slug' => Str::slug($name),
         'sku' => $faker->unique()->randomNumber(6, true),

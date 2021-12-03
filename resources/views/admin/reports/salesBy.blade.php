@@ -2,7 +2,7 @@
 
 @section('admin_content')
 
-  <div class="sl-mainpanel">
+  <div class="sl-mainpanel salesBy">
       <div class="sl-pagebody">
         <div class="sl-page-title">
           <h5>Sales By</h5>
@@ -51,10 +51,8 @@
             </div><!-- table-wrapper -->  
         </div><!-- card -->
         @push('datatableAjax')
-          "ajax": {
-              "url": `{{ request()->url() }}`,
-              "type": 'GET',
-              "data":  function () {return $('form').serialize()}
+          ajax: {
+              "url": `{{ request()->url() }}?` + $('.salesBy form').serialize(),
           },
           columns: [
             { data: "product_name" },

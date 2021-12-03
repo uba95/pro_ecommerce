@@ -2,12 +2,14 @@
 
 namespace App\Services;
 
+use App\Mail\ReturnOrderMail;
 use App\Models\ReturnOrderRequest;
 use App\Models\Shipment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\Mail;
 use Shippo_Object;
 use Stripe\Charge;
 
@@ -24,7 +26,7 @@ class ReturnOrderService
                 'updated_at' => now(),
             ];
 
-            $return_order_request_id = DB::table('return_order_requests')->insertGetId([
+            $return_order_request = ReturnOrderRequest::create([
                 'billing_address_id' => $data['billing_address'],
                 'shipping_address_id' => $data['shipping_address'],
                 'payment_method' => $payment_method,
@@ -33,13 +35,14 @@ class ReturnOrderService
                 "order_id" => $data['order_id'],
                 "reason" => $data['reason'],
                 "details" => $data['details'],
+                "status" => 0,
             ] + $times);
 
             $items = $items ?: Session::get('return_order_items');
 
             DB::table('return_order_items')->insert(
                 $items->map(fn($item) => [
-                    'request_id' => $return_order_request_id,
+                    'request_id' => $return_order_request->id,
                     'order_item_id' => $item->id,
                     'product_quantity' => $item->product_quantity,
                     ] + $times
@@ -50,6 +53,8 @@ class ReturnOrderService
     
             Session::forget('return_order_items');
             Shipment::session_remove();
+
+            Mail::to(current_user()->email)->send(new ReturnOrderMail($return_order_request));
 
             return redirect()->route('return_orders.index')->with(toastNotification('Your Request Is Submited Successfully'));
     

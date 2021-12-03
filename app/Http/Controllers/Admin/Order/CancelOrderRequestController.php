@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 use App\Enums\CancelOrderStatus;
 use App\Models\CancelOrderRequest;
 use App\Http\Controllers\Controller;
+use App\Mail\CancelOrderMail;
 use App\Models\CancelOrderItem;
 use App\Services\AjaxDatatablesService;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Enum\Laravel\Rules\EnumRule;
 
 class CancelOrderRequestController extends Controller
@@ -45,16 +47,17 @@ class CancelOrderRequestController extends Controller
         $validated = $request->validate(['status' => new EnumRule(CancelOrderStatus::class)]);
         $cancelOrder->update(['status' => $validated['status']]);
         $order = $cancelOrder->order;
+        $msg = toastNotification('Request', 'updated');
 
         if ($request->status == 'approved') {
 
             $cancelOrder->decrementOrderItems();
 
             $data = [
-                'subtotal_price' => $totalPrice = $order->orderItems->sum->totalPrice,
-                'discount' => $discount = (float) discountPrice($totalPrice, optional($order->coupon)->discount),
+                'subtotal_price' => $subtotalPrice = $order->orderItems->sum->totalPrice,
+                'discount' => $discount = (float) discountPrice($subtotalPrice, optional($order->coupon)->discount),
                 'shipping_cost' => $shipping = $cancelOrder->shipping_cost,
-                'total_price' => $totalPrice - $discount + $shipping,    
+                'total_price' => $subtotalPrice - $discount + $shipping,    
             ];
 
             if ($order->areAllItemsCanceled()) {
@@ -62,9 +65,11 @@ class CancelOrderRequestController extends Controller
             }
             
             $order->update($data);
-            return redirect()->route('admin.cancel_orders.index')->with(toastNotification('Request Is Approved And Order Items Are Canceled'));
+            $msg = toastNotification('Request Is Approved And Order Items Are Canceled');
         }
+
+        Mail::to($cancelOrder->order->user->email)->send(new CancelOrderMail($cancelOrder));
         
-        return redirect()->route('admin.cancel_orders.index')->with(toastNotification('Request', 'updated'));
+        return redirect()->route('admin.cancel_orders.index')->with($msg);
     }
 }

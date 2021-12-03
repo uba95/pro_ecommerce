@@ -16,7 +16,7 @@ class CouponRequest extends FormRequest
      */
     public function authorize()
     {
-        return isAdmin();
+        return true;
     }
 
     /**

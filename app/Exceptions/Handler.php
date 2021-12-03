@@ -58,14 +58,14 @@ class Handler extends ExceptionHandler
 
             if ($request->expectsJson()) {
 
-                return Request::routeIs('admin.*') && isAdmin() ? 
-                    Response::json(toastNotification($model, 'not_found')) :
-                    Response::json(['error' => "$model Not Found"]);
+                return Request::routeIs('admin.*') && Auth::guard('admin')->check() 
+                ? Response::json(toastNotification($model, 'not_found')) 
+                : Response::json(['error' => "$model Is Not Found"]);
             } else {
 
-                return Request::routeIs('admin.*') && isAdmin() ? 
-                    redirect()->route('admin.home')->with(toastNotification($model, 'not_found')) :
-                    redirect()->route('pages.landing_page.index')->with(toastNotification($model, 'not_found'));
+                return Request::routeIs('admin.*') && Auth::guard('admin')->check() 
+                ? redirect()->route('admin.home')->with(toastNotification($model, 'not_found')) 
+                : redirect()->route('pages.landing_page.index')->with(toastNotification($model, 'not_found'));
             }
         }
         

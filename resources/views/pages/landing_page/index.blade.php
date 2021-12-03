@@ -1,7 +1,4 @@
 @extends('layouts.app.index')
-@push('styles')
-    <style>.viewed {background-color: #fff !important}</style>
-@endpush
 @section('content')
     
     @include('pages.landing_page.main_banner')
@@ -31,7 +28,7 @@
     @include('pages.landing_page.trends')
 
     <!-- Reviews -->
-    {{-- @include('pages.landing_page.reviews') --}}
+    @include('pages.landing_page.reviews')
 
     <!-- Recently Viewed -->
     @include('layouts.recently_viewed')

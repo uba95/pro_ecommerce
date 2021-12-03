@@ -15,7 +15,7 @@ class HotDealRequest extends FormRequest
      */
     public function authorize()
     {
-        return isAdmin();
+        return true;
     }
 
     /**

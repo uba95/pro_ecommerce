@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\HotDealProduct;
 use App\Models\LandingPageItem;
 use App\Models\Product;
+use App\Models\ProductReview;
 use App\Services\ReportService;
 use Illuminate\Support\Facades\DB;
 
@@ -20,42 +21,53 @@ class LandingPageController extends Controller
         $trend_products = ReportService::mostSoldProducts(18)->map->product;
 
         $best_rated_products = Product::selection2()
-        ->orderByRaw('(SELECT AVG(value) FROM product_ratings WHERE products.id = product_ratings.product_id) DESC')
-        ->limit(18)
-        ->get();
+            ->orderByRaw('(SELECT AVG(value) FROM product_ratings WHERE products.id = product_ratings.product_id) DESC')
+            ->limit(18)
+            ->get();
 
         $hot_deal_products =  HotDealProduct::with([
-            'product' => fn($q) => $q->selection2()->soldQuantities()
-        ])->whereHas('product' ,  fn($q) => $q->where('product_quantity', '>', 0)->active())
-        ->where('started_at', '<', now())
-        ->active()
-        ->latest()
-        ->get();
+                'product' => fn($q) => $q->selection2()->soldQuantities()
+            ])->whereHas('product' ,  fn($q) => $q->where('product_quantity', '>', 0)->active())
+            ->where('started_at', '<', now())
+            ->active()
+            ->latest()
+            ->get();
 
         $new_arrivals_products = Product::selection2()->lastdays(30)->latest()->limit(20)->get();
 
         $discounts_products = Product::selection2()->with(['ratings' => fn($q) => $q->getAvg()])
-        ->whereNotNull('discount_price')
-        ->latest()
-        ->limit(20)
-        ->get();
+            ->whereNotNull('discount_price')
+            ->latest()
+            ->limit(20)
+            ->get();
 
         $trend_year_products = ReportService::mostSoldProducts(10, 'lastdays', 365)->map->product;
+        
+        $reviews_users_ids = ProductReview::latest()->limit(6)->pluck('user_id');
+        $reviews = ProductReview::with([
+                'product:id,product_name,product_slug,cover',
+                'user:id,name',
+                'product.ratings' =>fn($q) => $q->whereIn('user_id', $reviews_users_ids)
+            ])
+            ->latest()
+            ->limit(6)
+            ->get();
 
         $landing_page_items = LandingPageItem::active()
-        ->with([ 
-            'product:id,category_id,product_name,product_slug,discount_price,selling_price', 
-            'product.ratings' => fn($q) => $q->getAvg()
-        ])
-        ->get();
+            ->with([ 
+                'product:id,category_id,product_name,product_slug,discount_price,selling_price', 
+                'product.ratings' => fn($q) => $q->getAvg()
+            ])
+            ->get();
 
-        $main_banner = $landing_page_items->filter(fn($v) => $v->is_main_banner)->random();
+        $main_banners = $landing_page_items->filter(fn($v) => $v->is_main_banner);
+        $main_banner = $main_banners->isNotEmpty() ? $main_banners->random() : null;
 
         $banner_slider_items = $landing_page_items->filter(fn($v) => $v->is_banner_slider);
 
         $ad_count = $landing_page_items->filter(fn($v) => $v->is_advert)->count();
         $adverts = $landing_page_items->filter(fn($v) => $v->is_advert)->random($ad_count < 3 ? $ad_count : 3);
 
-        return view('pages.landing_page.index', compact('main_banner', 'featured_products', 'trend_products', 'best_rated_products', 'hot_deal_products', 'banner_slider_items', 'adverts', 'new_arrivals_products', 'discounts_products', 'trend_year_products'));
+        return view('pages.landing_page.index', compact('main_banner', 'featured_products', 'trend_products', 'best_rated_products', 'hot_deal_products', 'banner_slider_items', 'adverts', 'new_arrivals_products', 'discounts_products', 'trend_year_products', 'reviews'));
     }
 }

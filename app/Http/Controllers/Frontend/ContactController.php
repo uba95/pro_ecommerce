@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ContactRequest;
-use App\Mail\Contact as MailContact;
+use App\Mail\ContactMail;
 use App\Models\Contact;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -19,7 +19,7 @@ class ContactController extends Controller
     public function store(ContactRequest $request) {
 
         Contact::create(Arr::except($request->validated(), 'g-recaptcha-response'));
-        Mail::to($request->email)->send(new MailContact($request->name));
+        Mail::to($request->email)->send(new ContactMail($request->name));
 
         return redirect()->route('pages.landing_page.index')->with(toastNotification('Your Message Has Been Successfully Sent'));
     }

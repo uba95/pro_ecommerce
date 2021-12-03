@@ -1,10 +1,10 @@
-<div class="row justify-content-center">
+{{-- <div class="row justify-content-center"> --}}
 @forelse ($products as $product)
 
-<div class="product_item col-7 col-md-3 {{ $product->discount_price ? 'discount' :  ($product->isNew() ? 'is_new' : '') }}">
+<div class="product_item  {{ $product->discount_price ? 'discount' :  ($product->isNew() ? 'is_new' : '') }}">
     <div class="product_border"></div>
     <div class="product_image d-flex flex-column align-items-center justify-content-center">
-        <img src="{{$product->cover}}" alt="" >
+        <img src="{{$product->cover}}" alt="" width="120" style="max-height: 120px">
     </div>
     <div class="product_content py-4">
         <div class="product_price">
@@ -18,7 +18,7 @@
         </div>
         <div class="product_name">
             <div>
-                <a tabindex="0" href='{{ route('products.show', $product->product_slug) }}'  style="white-space: normal;">
+                <a tabindex="0" href='{{ route('products.show', $product->product_slug) }}' style="display: inline-block; width: 120px; overflow: hidden !important; text-overflow: ellipsis;">
                     {{ $product->product_name }}
                 </a>
             </div>
@@ -39,4 +39,4 @@
 @empty
 <div class="alert alert-danger my-4" style="position: absolute; left: 0; right: 0;">Sorry Nothing Found</div>
 @endforelse
-</div>
+{{-- </div> --}}

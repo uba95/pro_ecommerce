@@ -24,7 +24,7 @@
                   <th class="wd-15p">Admin Name</th>
                   <th class="wd-15p">Admin Roles</th>
                   @canany(['edit admins', 'delete admins'])
-                    <th class="wd-20p">Action</th>
+                    <th class="wd-20p" data-orderable="false" data-searchable="false">Action</th>
                   @endcanany
                 </tr>
               </thead>

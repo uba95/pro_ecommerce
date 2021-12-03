@@ -92,12 +92,13 @@ class Order extends Model
 
     public function scopeCancelable($q) {
         return $q->whereEnum('status', ['pending', 'paid'])
-        ->whereDoesntHave('cancelOrderRequests', fn($q) => $q->whereEnum('status', ['pending'])); 
+                ->whereDoesntHave('cancelOrderRequests', fn($q) => $q->whereEnum('status', ['pending'])); 
     }
 
     public function scopeReturnable($q) {
         return $q->whereEnum('status', ['delivered', 'partiallyReturned'])
-        ->whereDoesntHave('returnOrderRequests', fn($q) => $q->whereEnum('status', ['pending'])); 
+                ->whereDoesntHave('returnOrderRequests', fn($q) => $q->whereEnum('status', ['pending']))
+                ->lastDays(30); 
     }
 
     public function itemsAreAvailable() {

@@ -21,9 +21,9 @@
                                 <!-- Best Sellers Item -->
                                 @foreach ($discounts_products as $product)
                                 
-                                    <div class="bestsellers_item discount" style="height: 185px">
+                                    <div class="bestsellers_item discount">
                                         <div class="bestsellers_item_container d-flex flex-row align-items-center justify-content-start">
-                                            <div class="bestsellers_image"><img src="{{ $product->cover }}" alt="" width="75" height="75"></div>
+                                            <div class="bestsellers_image"><img src="{{ $product->cover }}" alt="" ></div>
                                             <div class="bestsellers_content">
                                                 <div class="bestsellers_category">
                                                     @php $category =  $categories->firstWhere('id', $product->category_id) @endphp
@@ -32,7 +32,9 @@
                                                     </a>    
                                                 </div>
                                                 <div class="bestsellers_name">
-                                                    <a href='{{ route('products.show', $product->product_slug) }}'>{{ $product->product_name }}</a>
+                                                    <a href='{{ route('products.show', $product->product_slug) }}'  style="display: inline-block; width: 150px; overflow: hidden !important; text-overflow: ellipsis;white-space: nowrap;">
+                                                        {{ $product->product_name }}
+                                                    </a>
                                                 </div>
                                                 <div class="rating_r rating_r_4 bestsellers_rating {{ 'discounts_rating' . $product->id }}"></div>
                                                 <div class="bestsellers_price discount">
@@ -64,20 +66,18 @@
         </div>
     </div>
     @push('scripts')
-    <script src="{{ asset('frontend/js/jquery.star-rating-svg.js')}}"></script>
     <script>
-
-    var discounts_products = @json($discounts_products);
-    Object.values(discounts_products).forEach(function (product) { 
-        if (avg = product.ratings[0]?.avg) {
-            $(".discounts_rating" + product.id).starRating({
-            starSize: 14,
-            readOnly: true,
-            initialRating: avg,
-            ratedColor: '#3550bd',
-            }) 
-        }}
-    )
+        var discounts_products = @json($discounts_products);
+        Object.values(discounts_products).forEach(function (product) { 
+            if (avg = product.ratings[0]?.avg) {
+                $(".discounts_rating" + product.id).starRating({
+                starSize: 16,
+                readOnly: true,
+                initialRating: avg,
+                ratedColor: '#3550bd',
+                }) 
+            }}
+        )
     </script>
     @endpush
 @endif

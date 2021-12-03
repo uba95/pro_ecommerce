@@ -3,8 +3,7 @@
 
         <div class="container py-5">
           <h2 class="text-center mb-3">Checkout</h2>
-          @if (count($addresses))
-            @if (count($cart_products))
+          @if ($addresses->isNotEmpty())
             <div class="row mt-5 py-2">
               <div class="col-md-8 order-md-1">
                 @if ($errors->any())
@@ -49,14 +48,9 @@
                 </form>
               </div>
             </div>
-            @else
-              <div class="alert alert-danger"> 
-                Your Cart Is Empty, Start  <a href ='{{ route('pages.landing_page.index') }}'>Shopping Now!</a>
-              </div> 
-            @endif
           @else
            <div class="alert alert-danger"> 
-             No Address Found, Please Add New <a href ='{{ route('addresses.create') }}'>Address</a>
+              No Address Is Found, Please Add <a href ='{{ route('addresses.create') }}'>New Address</a>
             </div>
           @endif
         </div>
@@ -182,7 +176,7 @@
                 $('.coupon_code').text(`${data.coupon.coupon_name}  ${data.coupon.discount}%`);
                 $('.discount_value').text(data.discount);
                 $('.total_pay').text((data.total).toFixed(2));
-                $('#coupon_delete').attr('action', data.route);
+                $('#coupon_delete').attr('action', '{{ route('checkout.coupon.destroy') }}');
               },
               beforeSend: function() {
                 spinner(true, '.cart_products', '.spinner2');

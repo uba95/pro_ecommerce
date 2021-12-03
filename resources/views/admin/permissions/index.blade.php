@@ -32,7 +32,7 @@
                   <th class="wd-15p">Permission ID</th>
                   <th class="wd-15p">Permission Name</th>
                   @canany(['edit permissions', 'delete permissions'])
-                    <th class="wd-20p">Action</th>
+                    <th class="wd-20p" data-orderable="false" data-searchable="false">Action</th>
                   @endcanany
                 </tr>
               </thead>

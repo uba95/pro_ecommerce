@@ -26,7 +26,7 @@
                   <th class="wd-15p">Text</th>
                   <th class="wd-15p">Status</th>
                   @canany(['view landing page items', 'edit landing page items', 'delete landing page items'])
-                    <th class="wd-20p">Action</th>
+                    <th class="wd-20p" data-orderable="false" data-searchable="false">Action</th>
                   @endcanany
                 </tr>
               </thead>
@@ -38,30 +38,9 @@
                           <a href ='{{ route('admin.products.show', $item->product_id) }}'>{{ $item->product->product_name }}</a>
                         </td>
                         <td>{{ $item->banner_slider_text }}</td>
-                        <td>
-                          @if ($item->status == 'active')
-                            <span class="badge badge-success">ACTIVE</span>
-                          @else
-                            <span class="badge badge-dark">INACTIVE</span>
-                          @endif
-                        </td>      
-                        @canany(['view landing page items', 'edit landing page items', 'delete landing page items'])
-                        <td>
-                              @can('view', $item)
-                              <a href ='{{ route('admin.landing_page_items.show', $item->id) }}' class="btn btn-sm btn-info">View</a>
-                              @endcan
-                              @can('edit', $item)
-                                <a href ='{{ route('admin.landing_page_items.edit', $item->id) }}' class="btn btn-sm btn-info">Edit</a>
-                                <a href ='{{ route('admin.landing_page_items.status', $item->id) }}' class="btn btn-sm btn-info"> Change Status</a>
-                                @endcan
-                              @can('delete', $item)
-                                <form method="POST" action='{{ route('admin.landing_page_items.destroy', $item->id) }}' class="btn btn-sm btn-danger delete">
-                                  @csrf @method('DELETE') Delete
-                                </form>
-                              @endcan
-                          </td>
-                        @endcanany
-                    </tr>
+                        
+                        @include('admin.landing_page_items.status_action')                    
+                      </tr>
                 @endforeach
               </tbody>
             </table>

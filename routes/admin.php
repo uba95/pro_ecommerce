@@ -44,6 +44,7 @@ Route::group(['middleware' => ['auth:admin', 'verified'], 'as' => 'admin.'], fun
 
     Route::resource('blog_posts', 'Blog\BlogPostController')->except('show');
 
+    Route::get('orders/{order}/invoice', 'Order\OrderController@showInvoice')->name('orders.invoice');
     Route::resource('orders', 'Order\OrderController')->only('index', 'show', 'update');
 
     Route::resource('cancel_orders', 'Order\CancelOrderRequestController')->only('index', 'show', 'update');
