@@ -45,6 +45,11 @@ class LoginController extends Controller
         return view('admin.auth.login');
     }
     
+    protected function logout(Request $request) {
+        $this->guard()->logout();
+        return $this->loggedOut($request) ?: redirect('/');
+    }
+
     protected function loggedOut(Request $request)
     {
         return redirect($this->redirectTo);

@@ -41,19 +41,23 @@ class LoginController extends Controller
         $this->middleware('guest:web')->except('logout');
     }
 
+    protected function credentials(Request $request) {
+        $value = $request->get('email');
+        $field = filter_var($value, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+        return [$field => $value, 'password' => $request->get('password')];
+    }
+
+    protected function logout(Request $request) {
+        $this->guard()->logout();
+        return $this->loggedOut($request) ?: redirect('/');
+    }
+
     protected function loggedOut(Request $request) {
         return redirect($this->redirectTo);
     }
 
     protected function guard() {
         return Auth::guard('web');
-    }
-
-    protected function credentials(Request $request) {
-
-        $value = $request->get('email');
-        $field = filter_var($value, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
-        return [$field => $value, 'password' => $request->get('password')];
     }
 
     public function redirectService($service) {

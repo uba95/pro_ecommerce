@@ -46,7 +46,7 @@ Route::group(['namespace' => 'Frontend'], function () {
         Route::delete('/', 'CartController@destroyAll')->name('destroyAll');
     });
 
-    Route::get('blog/posts', 'BlogController@index')->name('blog.index');
+    Route::get('blog', 'BlogController@index')->name('blog.index');
     Route::get('blog/posts/{blog_post}', 'BlogController@show')->name('blog.show');
     Route::get('blog/categories/{blog_category}', 'BlogController@showCategory')->name('blog.category');
 
@@ -71,7 +71,7 @@ Route::group(['namespace' => 'Frontend'], function () {
         Route::get('wishlist', 'WishlistController@index')->name('wishlist.index');
         Route::post('wishlist/{product}', 'WishlistController@store')->name('wishlist.store');
         
-        Route::get('checkout', 'CheckoutController@index')->name('checkout.index');
+        Route::get('checkout', 'CheckoutController@index')->name('checkout.index')->middleware('prevent-back-history');
         Route::post('checkout/coupon', 'CheckoutController@coupon')->name('checkout.coupon');
         Route::delete('checkout/coupon/delete', 'CheckoutController@couponDelete')->name('checkout.coupon.destroy');
         
